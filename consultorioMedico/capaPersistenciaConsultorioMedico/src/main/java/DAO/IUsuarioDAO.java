@@ -12,13 +12,15 @@ import java.util.List;
  *
  * @author Jp
  */
-public interface IUsuario {
+public interface IUsuarioDAO {
 
-    public boolean agregarUsuario() throws PersistenciaException;
+    public boolean agregarUsuario(Usuario usuario) throws PersistenciaException;
 
     public Usuario consultarUsuario(int id) throws PersistenciaException;
 
     public List<Usuario> consultarUsuarios() throws PersistenciaException;
 
     public boolean actualizarUsuario(Usuario usuario) throws PersistenciaException;
+    
+    public boolean existeUsuario(int id) throws PersistenciaException;
 }
