@@ -20,6 +20,9 @@ public class PacienteNuevoDTO {
     private String telefono;
     private String correoElectronico;
 
+    public PacienteNuevoDTO() {
+    }
+
     public PacienteNuevoDTO(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia, LocalDate fechaNacimiento, String telefono, String correoElectronico) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
