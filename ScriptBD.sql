@@ -6,7 +6,7 @@ CREATE TABLE Usuario (
     nombre VARCHAR(100) NOT NULL,
     apellido_paterno VARCHAR(50) NOT NULL,
     apellido_materno VARCHAR(50) NULL,
-    contrasenia VARCHAR(50) NOT NULL 
+    contrasenia VARCHAR(200) NOT NULL 
 );
 
 CREATE TABLE Paciente (

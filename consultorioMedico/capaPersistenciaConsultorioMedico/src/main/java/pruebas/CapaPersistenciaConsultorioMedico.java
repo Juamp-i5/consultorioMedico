@@ -22,6 +22,7 @@ public class CapaPersistenciaConsultorioMedico {
         } catch (PersistenciaException e) {
             e.printStackTrace(); 
         }
+        System.out.println("");
         
     }
 }
