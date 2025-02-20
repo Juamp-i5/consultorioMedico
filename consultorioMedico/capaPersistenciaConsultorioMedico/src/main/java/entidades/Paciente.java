@@ -3,13 +3,13 @@ package entidades;
 import java.time.LocalDate;
 
 /**
- * Representa un paciente en el sistema.
- * Extiende la clase Usuario e incluye información adicional como fecha de nacimiento,
- * teléfono y correo electrónico.
- * 
+ * Representa un paciente en el sistema. Extiende la clase Usuario e incluye
+ * información adicional como fecha de nacimiento, teléfono y correo
+ * electrónico.
+ *
  * @author Jp
  */
-public class Paciente extends Usuario{
+public class Paciente extends Usuario {
 
     private int idPaciente;
     private LocalDate fechaNacimiento;
@@ -20,37 +20,20 @@ public class Paciente extends Usuario{
      * Constructor por defecto.
      */
     public Paciente() {
-        super();
     }
 
     /**
-     * Constructor que inicializa solo al paciente con sus datos personales.
-     * 
+     * Constructor para crear un objeto Paciente con un ID específico.
+     *
      * @param idPaciente Identificador único del paciente.
      * @param fechaNacimiento Fecha de nacimiento del paciente.
      * @param telefono Número de teléfono del paciente.
      * @param correoElectronico Correo electrónico del paciente.
-     */
-    public Paciente(int idPaciente, LocalDate fechaNacimiento, String telefono, String correoElectronico) {
-        super();
-        this.idPaciente = idPaciente;
-        this.fechaNacimiento = fechaNacimiento;
-        this.telefono = telefono;
-        this.correoElectronico = correoElectronico;
-    }
-    
-    /**
-     * Constructor que inicializa todos los atributos incluyendo los ID.
-     * 
-     * @param idPaciente Identificador único del paciente.
-     * @param fechaNacimiento Fecha de nacimiento del paciente.
-     * @param telefono Número de teléfono del paciente.
-     * @param correoElectronico Correo electrónico del paciente.
-     * @param idUsuario Identificador del usuario.
+     * @param idUsuario Identificador del usuario asociado al paciente.
      * @param nombre Nombre del paciente.
      * @param apellidoPaterno Apellido paterno del paciente.
      * @param apellidoMaterno Apellido materno del paciente.
-     * @param contrasenia Contraseña del paciente.
+     * @param contrasenia Contraseña del usuario asociado al paciente.
      */
     public Paciente(int idPaciente, LocalDate fechaNacimiento, String telefono, String correoElectronico, int idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
         super(idUsuario, nombre, apellidoPaterno, apellidoMaterno, contrasenia);
@@ -61,15 +44,15 @@ public class Paciente extends Usuario{
     }
 
     /**
-     * Constructor que inicializa un paciente sin ID de Usuario y paciente.
-     * 
+     * Constructor para crear un objeto Paciente sin un ID específico
+     *
      * @param fechaNacimiento Fecha de nacimiento del paciente.
      * @param telefono Número de teléfono del paciente.
      * @param correoElectronico Correo electrónico del paciente.
      * @param nombre Nombre del paciente.
      * @param apellidoPaterno Apellido paterno del paciente.
      * @param apellidoMaterno Apellido materno del paciente.
-     * @param contrasenia Contraseña del paciente.
+     * @param contrasenia Contraseña del usuario asociado al paciente.
      */
     public Paciente(LocalDate fechaNacimiento, String telefono, String correoElectronico, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
         super(nombre, apellidoPaterno, apellidoMaterno, contrasenia);
@@ -80,7 +63,7 @@ public class Paciente extends Usuario{
 
     /**
      * Obtiene el identificador del paciente.
-     * 
+     *
      * @return ID del paciente.
      */
     public int getIdPaciente() {
@@ -89,7 +72,7 @@ public class Paciente extends Usuario{
 
     /**
      * Establece el identificador del paciente.
-     * 
+     *
      * @param idPaciente Nuevo ID del paciente.
      */
     public void setIdPaciente(int idPaciente) {
@@ -98,7 +81,7 @@ public class Paciente extends Usuario{
 
     /**
      * Obtiene la fecha de nacimiento del paciente.
-     * 
+     *
      * @return Fecha de nacimiento del paciente.
      */
     public LocalDate getFechaNacimiento() {
@@ -107,7 +90,7 @@ public class Paciente extends Usuario{
 
     /**
      * Establece la fecha de nacimiento del paciente.
-     * 
+     *
      * @param fechaNacimiento Nueva fecha de nacimiento del paciente.
      */
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
@@ -116,7 +99,7 @@ public class Paciente extends Usuario{
 
     /**
      * Obtiene el número de teléfono del paciente.
-     * 
+     *
      * @return Número de teléfono del paciente.
      */
     public String getTelefono() {
@@ -125,7 +108,7 @@ public class Paciente extends Usuario{
 
     /**
      * Establece el número de teléfono del paciente.
-     * 
+     *
      * @param telefono Nuevo número de teléfono del paciente.
      */
     public void setTelefono(String telefono) {
@@ -134,7 +117,7 @@ public class Paciente extends Usuario{
 
     /**
      * Obtiene el correo electrónico del paciente.
-     * 
+     *
      * @return Correo electrónico del paciente.
      */
     public String getCorreoElectronico() {
@@ -143,7 +126,7 @@ public class Paciente extends Usuario{
 
     /**
      * Establece el correo electrónico del paciente.
-     * 
+     *
      * @param correoElectronico Nuevo correo electrónico del paciente.
      */
     public void setCorreoElectronico(String correoElectronico) {
@@ -152,7 +135,7 @@ public class Paciente extends Usuario{
 
     /**
      * Retorna una representación en cadena del objeto Paciente.
-     * 
+     *
      * @return Cadena con la información del paciente.
      */
     @Override
