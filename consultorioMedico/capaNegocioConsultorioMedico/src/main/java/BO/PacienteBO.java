@@ -7,6 +7,7 @@ package BO;
 import DAO.IPacienteDAO;
 import DAO.PacienteDAO;
 import DTO.PacienteNuevoDTO;
+import entidades.DireccionPaciente;
 import entidades.Paciente;
 import excepciones.PersistenciaException;
 import exception.NegocioException;
@@ -28,9 +29,16 @@ public class PacienteBO {
         }
         pacienteNuevoDTO.setContrasenia(Password.hashPassword(pacienteNuevoDTO.getContrasenia()));
         Paciente paciente = PacienteMapper.toEntity(pacienteNuevoDTO);
+        DireccionPaciente direccionPaciente = new DireccionPaciente(
+                pacienteNuevoDTO.getCalle(),
+                pacienteNuevoDTO.getNumero(),
+                pacienteNuevoDTO.getColonia(),
+                pacienteNuevoDTO.getCodigoPostal(),
+                0
+        ); 
 
         try {
-            return pacienteDAO.agregarPaciente(paciente);
+            return pacienteDAO.agregarPaciente(paciente, direccionPaciente);
 
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al agregarPaciente: " + e.getMessage());

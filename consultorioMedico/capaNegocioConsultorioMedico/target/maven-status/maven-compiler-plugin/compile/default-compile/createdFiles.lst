@@ -1,6 +1,9 @@
-pruebas\CapaNegocioConsultorioMedico.class
-exception\NegocioException.class
 mappers\PacienteMapper.class
 utils\Password.class
+pruebas\CapaNegocioConsultorioMedico.class
+exception\NegocioException.class
+BO\MedicoBO.class
 DTO\PacienteNuevoDTO.class
+mappers\MedicoMapper.class
 BO\PacienteBO.class
+DTO\MedicoNuevoDTO.class

@@ -21,8 +21,12 @@ public class CapaNegocioConsultorioMedico {
         pacienteNuevoDTO.setApellidoMaterno("González");
         pacienteNuevoDTO.setContrasenia("password123");
         pacienteNuevoDTO.setFechaNacimiento(LocalDate.of(2005, 5, 15));
-        pacienteNuevoDTO.setTelefono("1224527230");
-        pacienteNuevoDTO.setCorreoElectronico("juanasssssssssssss.perez@example.com");
+        pacienteNuevoDTO.setTelefono("9223527230");
+        pacienteNuevoDTO.setCorreoElectronico("juanasssvczxcsssssssss.perez@example.com");
+        pacienteNuevoDTO.setCalle("Rio garona");
+        pacienteNuevoDTO.setNumero("2344");
+        pacienteNuevoDTO.setColonia("Villa Bonita");
+        pacienteNuevoDTO.setCodigoPostal("1234");
 
         PacienteBO pacienteBO = new PacienteBO();
         // Probar el método agregarPaciente

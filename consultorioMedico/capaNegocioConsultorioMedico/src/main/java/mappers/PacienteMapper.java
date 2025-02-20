@@ -25,15 +25,15 @@ public class PacienteMapper {
         );
     }
 
-    public static PacienteNuevoDTO toDTO(Paciente paciente) {
-        return new PacienteNuevoDTO(
-                paciente.getNombre(),
-                paciente.getApellidoPaterno(),
-                paciente.getApellidoMaterno(),
-                paciente.getContrasenia(),
-                paciente.getFechaNacimiento(),
-                paciente.getTelefono(),
-                paciente.getCorreoElectronico()
-        );
-    }
+//    public static PacienteNuevoDTO toDTO(Paciente paciente) {
+//        return new PacienteNuevoDTO(
+//                paciente.getNombre(),
+//                paciente.getApellidoPaterno(),
+//                paciente.getApellidoMaterno(),
+//                paciente.getContrasenia(),
+//                paciente.getFechaNacimiento(),
+//                paciente.getTelefono(),
+//                paciente.getCorreoElectronico()
+//        );
+//    }
 }

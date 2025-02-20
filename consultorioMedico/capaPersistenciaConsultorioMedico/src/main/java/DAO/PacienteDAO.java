@@ -5,6 +5,7 @@
 package DAO;
 
 import conexion.Conexion;
+import entidades.DireccionPaciente;
 import entidades.Paciente;
 import excepciones.PersistenciaException;
 import java.sql.Connection;
@@ -22,7 +23,7 @@ import java.util.List;
 public class PacienteDAO implements IPacienteDAO {
 
     @Override
-    public boolean agregarPaciente(Paciente paciente) throws PersistenciaException {
+    public boolean agregarPaciente(Paciente paciente, DireccionPaciente direccionPaciente) throws PersistenciaException {
         String queryUsuario = "INSERT INTO consultas_medicas.usuario (nombre, apellido_paterno, apellido_materno, contrasenia) VALUES (?, ?, ?, ?);";
         String queryPaciente = "INSERT INTO consultas_medicas.paciente (id_paciente, fecha_nacimiento, telefono, correo_electronico) VALUES (?, ?, ?, ?);";
 
@@ -49,8 +50,17 @@ public class PacienteDAO implements IPacienteDAO {
                         psPaciente.setString(4, paciente.getCorreoElectronico());
 
                         int affectedRowsPaciente = psPaciente.executeUpdate();
-                        return affectedRowsPaciente > 0;
+                        if (affectedRowsPaciente == 0) {
+                            throw new SQLException("No se pudo insertar el paciente");
+                        }
+
+                        direccionPaciente.setIdPaciente(idUsuario);
+
+                        DireccionPacienteDAO direccionPacienteDAO = new DireccionPacienteDAO();
+                        return direccionPacienteDAO.agregarDireccionPaciente(direccionPaciente);
+
                     }
+
                 }
             }
         } catch (SQLException e) {

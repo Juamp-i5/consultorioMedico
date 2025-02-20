@@ -19,11 +19,15 @@ public class PacienteNuevoDTO {
     private LocalDate fechaNacimiento;
     private String telefono;
     private String correoElectronico;
+    private String calle;
+    private String numero;
+    private String colonia;
+    private String codigoPostal;
 
     public PacienteNuevoDTO() {
     }
 
-    public PacienteNuevoDTO(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia, LocalDate fechaNacimiento, String telefono, String correoElectronico) {
+    public PacienteNuevoDTO(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia, LocalDate fechaNacimiento, String telefono, String correoElectronico, String calle, String numero, String colonia, String codigoPostal) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -31,6 +35,42 @@ public class PacienteNuevoDTO {
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.correoElectronico = correoElectronico;
+        this.calle = calle;
+        this.numero = numero;
+        this.colonia = colonia;
+        this.codigoPostal = codigoPostal;
+    }
+
+    public String getCalle() {
+        return calle;
+    }
+
+    public void setCalle(String calle) {
+        this.calle = calle;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getColonia() {
+        return colonia;
+    }
+
+    public void setColonia(String colonia) {
+        this.colonia = colonia;
+    }
+
+    public String getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
     }
 
     public String getNombre() {
@@ -93,6 +133,5 @@ public class PacienteNuevoDTO {
     public String toString() {
         return "PacienteNuevoDTO{" + "nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", contrasenia=" + contrasenia + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", correoElectronico=" + correoElectronico + '}';
     }
-    
-    
+
 }
