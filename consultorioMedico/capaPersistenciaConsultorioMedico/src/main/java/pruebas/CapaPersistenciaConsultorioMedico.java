@@ -11,6 +11,6 @@ package pruebas;
 public class CapaPersistenciaConsultorioMedico {
 
     public static void main(String[] args) {
-        System.out.println("asfddassdhfgkjsadg,kashgedgkjqwehglkqwejehg,kqwejehg");
+        System.out.println("Ahora si ya la buena");
     }
 }
