@@ -38,6 +38,24 @@ public class MedicoBO {
         
     }
     
+    
+    public Medico consultarMedico(int idMedico) throws NegocioException {
+        //Validar que el id sea valido
+        if(idMedico <=0){
+            throw new NegocioException("El idMedico no es valido ");
+        }
+        
+        try{
+            Medico medico = medicoDAO.consultarMedico(idMedico);
+            if (medico == null) {
+                throw new NegocioException("No se encontró un médico con el ID: " + idMedico);
+            }
+            return medico;
+        }catch(PersistenciaException e){
+            throw new NegocioException("Error al consultar el medico con ID " + idMedico + ": " + e.getMessage());
+        }
+    }
+    
     public boolean validarDatosMedicoNuevoDTO(MedicoNuevoDTO medicoNuevoDTO) {
         if(!validarNombre(medicoNuevoDTO.getNombre())){
             System.out.println("Error: el nombre no es valido");

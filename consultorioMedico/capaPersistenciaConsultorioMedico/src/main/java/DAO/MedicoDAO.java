@@ -38,24 +38,36 @@ public class MedicoDAO implements IMedicoDAO {
 
     @Override
     public Medico consultarMedico(int idMedico) throws PersistenciaException {
-        String query = "SELECT * FROM consultas_medicas.medico WHERE id_medico = ?;";
+        String query = "SELECT m.id_medico, u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, " +
+                       "m.especialidad, m.cedula_profesional, m.estado, u.contrasenia " +
+                       "FROM consultas_medicas.Medico m " +
+                       "JOIN consultas_medicas.Usuario u ON m.id_medico = u.id_usuario " +
+                       "WHERE m.id_medico = ?;";
+
         Medico medico = null;
 
-        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)) {
+        try (Connection conexion = Conexion.getConnection(); 
+             PreparedStatement ps = conexion.prepareStatement(query)) {
+
             ps.setInt(1, idMedico);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     medico = new Medico(
-                            rs.getInt("id_medico"),
-                            rs.getString("especialidad"),
-                            rs.getString("cedula_profesional"),
-                            rs.getString("estado")
+                            rs.getInt("id_medico"),              
+                            rs.getString("especialidad"),       
+                            rs.getString("cedula_profesional"), 
+                            rs.getString("estado"),             
+                            rs.getInt("id_usuario"),            
+                            rs.getString("nombre"),             
+                            rs.getString("apellido_paterno"),   
+                            rs.getString("apellido_materno"),   
+                            rs.getString("contrasenia")          
                     );
                 }
             }
         } catch (SQLException e) {
-            throw new PersistenciaException("Error al consultarMedico: " + e.getMessage());
+            throw new PersistenciaException("Error al consultar el medico: " + e.getMessage());
         }
 
         return medico;
