@@ -28,6 +28,7 @@ public class PacienteDAO implements IPacienteDAO {
         String queryPaciente = "INSERT INTO consultas_medicas.paciente (id_paciente, fecha_nacimiento, telefono, correo_electronico) VALUES (?, ?, ?, ?);";
 
         try (Connection conexion = Conexion.getConnection()) {
+            conexion.setAutoCommit(false); // Desactivar autoCommit para iniciar transacción
             try (PreparedStatement psUsuario = conexion.prepareStatement(queryUsuario, Statement.RETURN_GENERATED_KEYS)) {
                 psUsuario.setString(1, paciente.getNombre());
                 psUsuario.setString(2, paciente.getApellidoPaterno());
@@ -57,16 +58,30 @@ public class PacienteDAO implements IPacienteDAO {
                         direccionPaciente.setIdPaciente(idUsuario);
 
                         DireccionPacienteDAO direccionPacienteDAO = new DireccionPacienteDAO();
-                        return direccionPacienteDAO.agregarDireccionPaciente(direccionPaciente);
+                        boolean direccionInsertada = direccionPacienteDAO.agregarDireccionPaciente(direccionPaciente);
+                        if (direccionInsertada) {
+                            conexion.commit(); // Confirmar transacción si todo está bien
+                            return true;
+                        } else {
+                            throw new SQLException("No se pudo insertar la dirección del paciente");
+                        }
 
                     }
 
+                }else{
+                    throw new SQLException("No se pudo obtener el ID del usuario");
                 }
-            }
-        } catch (SQLException e) {
+            }catch (SQLException e) {
+                conexion.rollback(); // Revertir transacción en caso de error osea que se deshace de todos los cambios realizados en los datos
             throw new PersistenciaException("Error al agregarPaciente: " + e.getMessage());
+            } finally {
+                conexion.setAutoCommit(true); // Restaurar el autoCommit por seguridad(dejar todo en orden para que no haya problemas despues, que todo se guarde automaticamente como debe de ser)
+            }
+
+        }catch (SQLException e){
+            throw new PersistenciaException("Error al conectar con la base de datos: " + e.getMessage());
         }
-        return false;
+
     }
 
     @Override
