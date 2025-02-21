@@ -53,8 +53,7 @@ public class MedicoDAO implements IMedicoDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    medico = new Medico(
-                            rs.getInt("id_medico"),              
+                    medico = new Medico(          
                             rs.getString("especialidad"),       
                             rs.getString("cedula_profesional"), 
                             rs.getString("estado"),             
@@ -103,7 +102,6 @@ public class MedicoDAO implements IMedicoDAO {
             ps.setString(1, medico.getEspecialidad());
             ps.setString(2, medico.getCedulaProfesional());
             ps.setString(3, medico.getEstado());
-            ps.setInt(4, medico.getIdMedico());
 
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;

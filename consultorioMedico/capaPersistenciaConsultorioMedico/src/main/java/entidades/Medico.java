@@ -9,7 +9,6 @@ package entidades;
  */
 public class Medico extends Usuario {
 
-    private int idMedico;
     private String especialidad;
     private String cedulaProfesional;
     private String estado;
@@ -31,7 +30,6 @@ public class Medico extends Usuario {
      */
     public Medico(int idMedico, String especialidad, String cedulaProfesional, String estado) {
         super();
-        this.idMedico = idMedico;
         this.especialidad = especialidad;
         this.cedulaProfesional = cedulaProfesional;
         this.estado = estado;
@@ -50,9 +48,8 @@ public class Medico extends Usuario {
      * @param apellidoMaterno Apellido materno del médico.
      * @param contrasenia Contraseña del usuario médico.
      */
-    public Medico(int idMedico, String especialidad, String cedulaProfesional, String estado, int idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
+    public Medico(String especialidad, String cedulaProfesional, String estado, int idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
         super(idUsuario, nombre, apellidoPaterno, apellidoMaterno, contrasenia);
-        this.idMedico = idMedico;
         this.especialidad = especialidad;
         this.cedulaProfesional = cedulaProfesional;
         this.estado = estado;
@@ -76,23 +73,7 @@ public class Medico extends Usuario {
         this.estado = estado;
     }
     
-    /**
-     * Obtiene el identificador del médico.
-     * 
-     * @return ID del médico.
-     */
-    public int getIdMedico() {
-        return idMedico;
-    }
 
-    /**
-     * Establece el identificador del médico.
-     * 
-     * @param idMedico Nuevo ID del médico.
-     */
-    public void setIdMedico(int idMedico) {
-        this.idMedico = idMedico;
-    }
 
     /**
      * Obtiene la especialidad del médico.
@@ -155,6 +136,6 @@ public class Medico extends Usuario {
      */
     @Override
     public String toString() {
-        return "Medico{" + "idMedico=" + idMedico + ", especialidad=" + especialidad + ", cedulaProfesional=" + cedulaProfesional + ", estado=" + estado + '}';
+        return "Medico{" + ", especialidad=" + especialidad + ", cedulaProfesional=" + cedulaProfesional + ", estado=" + estado + '}';
     }
 }
