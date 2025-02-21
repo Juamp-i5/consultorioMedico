@@ -8,12 +8,12 @@ package GUI;
  *
  * @author Admin
  */
-public class datosPacienteForm extends javax.swing.JPanel {
+public class editarCuentaHospitalForm extends javax.swing.JPanel {
 
     /**
      * Creates new form crearCuentaForm
      */
-    public datosPacienteForm() {
+    public editarCuentaHospitalForm() {
         initComponents();
     }
 
@@ -52,7 +52,7 @@ public class datosPacienteForm extends javax.swing.JPanel {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        jLabel1.setText("Crear cuenta hospital");
+        jLabel1.setText("Editar cuenta hospital");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 35, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N

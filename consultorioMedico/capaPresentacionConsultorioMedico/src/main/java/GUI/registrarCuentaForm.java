@@ -8,12 +8,12 @@ package GUI;
  *
  * @author Admin
  */
-public class crearCuentaForm extends javax.swing.JPanel {
+public class registrarCuentaForm extends javax.swing.JPanel {
 
     /**
      * Creates new form crearCuentaForm
      */
-    public crearCuentaForm() {
+    public registrarCuentaForm() {
         initComponents();
     }
 
@@ -139,13 +139,26 @@ public class crearCuentaForm extends javax.swing.JPanel {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
         jLabel6.setText("<html><u>Iniciar Sesion</u></html>");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel6MouseExited(evt);
+            }
+        });
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(723, 9, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 816, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,6 +181,40 @@ public class crearCuentaForm extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
+        // TODO add your handling code here:
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0)); //Cambia el color del label a rojo cuando pasas el mouse por encima
+    }//GEN-LAST:event_jLabel6MouseEntered
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        // TODO add your handling code here:
+    // Obtener el JFrame que contiene este JPanel (la ventana actual)
+    javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+    
+    // Crear una nueva ventana (JFrame) con el título "Inicio de Sesión"
+    javax.swing.JFrame frame = new javax.swing.JFrame("Inicio de Sesion");
+    
+    // Crear una instancia del JPanel inicioSesionForm
+    inicioSesionForm iniciarSesion = new inicioSesionForm();
+    
+    // Configurar la nueva ventana
+    frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE); // Cierra solo esta ventana al cerrarla
+    frame.getContentPane().add(iniciarSesion); // Agregar el panel de inicio de sesión al JFrame
+    frame.pack();  // Ajustar el tamaño automáticamente según el contenido
+    frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+    frame.setVisible(true); // Hacer visible la nueva ventana
+    
+    // Cerrar la ventana actual (si existe)
+    if (frameActual != null) {
+        frameActual.dispose();
+    }
+    }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jLabel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseExited
+        // TODO add your handling code here:
+        jLabel6.setForeground(new java.awt.Color(102, 102, 102)); //Regresa el color del texto que tenia cuando quitas el mouse del label
+    }//GEN-LAST:event_jLabel6MouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
