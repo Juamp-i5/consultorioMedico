@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import conexion.Conexion;
@@ -11,28 +7,89 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Jp
  */
 public class MedicoDAO implements IMedicoDAO {
-
+    private static final Logger logger = Logger.getLogger(CitaDAO.class.getName());
     @Override
     public boolean agregarMedico(Medico medico) throws PersistenciaException {
-        String query = "INSERT INTO consultas_medicas.medico (especialidad, cedula_profesional, estado) VALUES (?, ?, ?);";
+        int idGeneradoDeUsuario = 0; //CUANDO SE AGREGA USUARIO, SE GUARDARA EN ESTE CAMPO SU ID PARA AGREGARLO EN LA BD DE PACIENTE
+        
+        //1. CONSULTAS SQL
+        String consultaUsuario = "INSERT INTO consultas_medicas.usuario (nombre, apellido_paterno, apellido_materno, contrasenia) VALUES (?, ?, ?, ?)";
+        String consultaMedico = "INSERT INTO consultas_medicas.medico (id_medico, especialidad, cedula_profesional, estado) VALUES (?, ?, ?, ?);";
 
-        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)) {
-            ps.setString(1, medico.getEspecialidad());
-            ps.setString(2, medico.getCedulaProfesional());
-            ps.setString(3, medico.getEstado());
+        //2. CREANDO LA CONEXION CON LA BD
+        try (Connection conexion = Conexion.getConnection();) {
+            conexion.setAutoCommit(false); // Desactivar autoCommit para iniciar transacción
+            
+            //INSERCION DE USUARIO
+            try (PreparedStatement ps = conexion.prepareStatement(consultaUsuario,Statement.RETURN_GENERATED_KEYS)){
+                ps.setString(1, medico.getNombre());
+                ps.setString(2, medico.getApellidoPaterno());
+                ps.setString(3, medico.getApellidoMaterno());
+                ps.setString(4, medico.getContrasenia());
+                
+                int filasAfectadas = ps.executeUpdate();
+                if(filasAfectadas > 0){
+                    logger.info("Se ha agregado usuario a la bd");
+                    //OBTENEMOS EL ID DEL USUARIO GUARDADO
+                    try (ResultSet obtenerIdDelNuevoUsuario = ps.getGeneratedKeys()){
+                        if(obtenerIdDelNuevoUsuario.next()){
+                            idGeneradoDeUsuario = obtenerIdDelNuevoUsuario.getInt(1);
+                        }
+                        else{
+                            logger.info("No se obtuvo el id del usuario"); 
+                        }
+                    } catch (SQLException e) {
+                        conexion.rollback(); //DESHACE TODAS LAS INSERCIONES
+                        throw new PersistenciaException("Error al obtener la id de usuario",e);
+                    }
 
-            int affectedRows = ps.executeUpdate();
-            return affectedRows > 0;
+                }
+                else{
+                    logger.severe("No se ha podido usuario a la bd");
+                }
+            } catch (SQLException e) {
+                 conexion.rollback(); //DESHACE TODAS LAS INSERCIONES
+                throw new PersistenciaException("Error al agregar al usuario a la BD",e);
+            }
+            
+            //INSERCION DE MEDICO{
+            try (PreparedStatement ps = conexion.prepareStatement(consultaMedico,Statement.RETURN_GENERATED_KEYS)){
+                ps.setInt(1, idGeneradoDeUsuario);
+                ps.setString(2, medico.getEspecialidad());
+                ps.setString(3, medico.getCedulaProfesional());
+                ps.setString(4,medico.getEstado());
+                
+                int filasAfectadas = ps.executeUpdate();
+                if(filasAfectadas > 0){
+                    logger.info("Se ha agregado medico a la bd");
+                    conexion.commit();
+                    return true;
+                }
+                else{
+                    logger.severe("No se ha podido usuario a la bd");
+                    return false;
+                }
+                
+            } catch (SQLException e) {
+                 conexion.rollback(); //DESHACE TODAS LAS INSERCIONES
+                throw new PersistenciaException("Error al agregar al medico a la BD",e);
+            }
+            finally{
+                conexion.setAutoCommit(true);
+            }
+
         } catch (SQLException e) {
-            throw new PersistenciaException("Error al agregarMedico: " + e.getMessage());
+            throw new PersistenciaException("Error al agregarMedico: " + e.getMessage(),e);
         }
     }
 
