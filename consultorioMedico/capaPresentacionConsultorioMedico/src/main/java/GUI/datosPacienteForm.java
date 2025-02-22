@@ -320,12 +320,11 @@ public class datosPacienteForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String nombre = jTextField1.getText();
+        String nombre = jTextField8.getText();
         String apellidoP = jTextField4.getText();
         String apellidoM = jTextField3.getText();
         String telefono = jTextField5.getText();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate fecha = LocalDate.parse(jTextField6.getText(), formatter);
+        String fecha = jTextField6.getText();
         String calle = jTextField9.getText();
         String numero = jTextField11.getText();
         String colonia = jTextField1.getText();
@@ -338,12 +337,15 @@ public class datosPacienteForm extends javax.swing.JPanel {
             if (!valido) {
                 JOptionPane.showMessageDialog(null, "Datos no validos");
             } else {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate fechaLocal = LocalDate.parse(fecha, formatter);
+                
                 PacienteNuevoDTO pacienteNuevo = new PacienteNuevoDTO(
                         nombre,
                         apellidoP,
                         apellidoM,
                         contrasenia,
-                        fecha,
+                        fechaLocal,
                         telefono,
                         correo,
                         calle,

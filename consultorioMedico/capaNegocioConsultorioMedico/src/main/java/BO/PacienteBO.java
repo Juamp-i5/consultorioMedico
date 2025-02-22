@@ -11,6 +11,8 @@ import entidades.Paciente;
 import excepciones.PersistenciaException;
 import exception.NegocioException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import mappers.PacienteMapper;
 import utils.Password;
 
@@ -31,7 +33,6 @@ public class PacienteBO {
 
         try {
             return pacienteDAO.agregarPaciente(paciente);
-
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al agregarPaciente: " + e.getMessage());
         }
@@ -62,7 +63,7 @@ public class PacienteBO {
         }
     }
 
-    public boolean validarDatosPaciente(String nombre, String apellidoPaterno, String apellidoMaterno, String numeroTelefono, LocalDate fechaNacimiento, String calle, String numero, String colonia, String codigoPostal) throws NegocioException {
+    public boolean validarDatosPaciente(String nombre, String apellidoPaterno, String apellidoMaterno, String numeroTelefono, String fechaNacimiento, String calle, String numero, String colonia, String codigoPostal) throws NegocioException {
         try {
             if (pacienteDAO.existeCelular(numeroTelefono)) {
                 throw new NegocioException("El celular ya está registrado");
@@ -126,8 +127,15 @@ public class PacienteBO {
         return contrasenia != null && !contrasenia.trim().isEmpty() && contrasenia.length() <= 50 && contrasenia.length() >= 8;
     }
 
-    public boolean validarFechaNacimiento(LocalDate fechaNacimiento) {
-        return fechaNacimiento != null && fechaNacimiento.isBefore(LocalDate.now());
+    public boolean validarFechaNacimiento(String fechaNacimiento) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        try {
+            LocalDate fecha = LocalDate.parse(fechaNacimiento, formatter);
+            return !fecha.isAfter(LocalDate.now());
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 
     public boolean validarTelefono(String telefono) {
