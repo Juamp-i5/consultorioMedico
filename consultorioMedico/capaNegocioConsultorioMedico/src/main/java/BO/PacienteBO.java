@@ -7,7 +7,6 @@ package BO;
 import DAO.IPacienteDAO;
 import DAO.PacienteDAO;
 import DTO.PacienteNuevoDTO;
-import entidades.DireccionPaciente;
 import entidades.Paciente;
 import excepciones.PersistenciaException;
 import exception.NegocioException;
@@ -24,57 +23,91 @@ public class PacienteBO {
     IPacienteDAO pacienteDAO = new PacienteDAO();
 
     public boolean agregarPaciente(PacienteNuevoDTO pacienteNuevoDTO) throws NegocioException {
-        if (pacienteNuevoDTO == null || !validarDatosPacienteNuevoDTO(pacienteNuevoDTO)) {
+        if (pacienteNuevoDTO == null) {
             return false;
         }
         pacienteNuevoDTO.setContrasenia(Password.hashPassword(pacienteNuevoDTO.getContrasenia()));
         Paciente paciente = PacienteMapper.toEntity(pacienteNuevoDTO);
-        DireccionPaciente direccionPaciente = new DireccionPaciente(
-                pacienteNuevoDTO.getCalle(),
-                pacienteNuevoDTO.getNumero(),
-                pacienteNuevoDTO.getColonia(),
-                pacienteNuevoDTO.getCodigoPostal(),
-                0
-        ); 
 
         try {
-            return pacienteDAO.agregarPaciente(paciente, direccionPaciente);
+            return pacienteDAO.agregarPaciente(paciente);
 
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al agregarPaciente: " + e.getMessage());
         }
     }
 
-    public boolean validarDatosPacienteNuevoDTO(PacienteNuevoDTO pacienteNuevoDTO) {
-        if (!validarNombre(pacienteNuevoDTO.getNombre())) {
-            System.out.println("Error: El nombre no es válido.");
-            return false;
+    public boolean validarDatosRegistrarCuenta(String correo, String contraseña, String contraseñaRepetida) throws NegocioException {
+        try {
+            if (!validarCorreoElectronico(correo)) {
+                throw new NegocioException("El correo no es valido");
+            }
+
+            if (pacienteDAO.existeCorreo(correo)) {
+                throw new NegocioException("El correo ya está registrado.");
+            }
+
+            if (!contraseña.equals(contraseñaRepetida)) {
+                throw new NegocioException("Las contraseñas no coinciden.");
+            }
+
+            if (!validarContrasenia(contraseña)) {
+                throw new NegocioException("Contraseñas no validas");
+            }
+
+            return true;
+
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al validar los datos del primer registro: " + e.getMessage());
         }
-        if (!validarApellidoPaterno(pacienteNuevoDTO.getApellidoPaterno())) {
-            System.out.println("Error: El apellido paterno no es válido.");
-            return false;
+    }
+
+    public boolean validarDatosPaciente(String nombre, String apellidoPaterno, String apellidoMaterno, String numeroTelefono, LocalDate fechaNacimiento, String calle, String numero, String colonia, String codigoPostal) throws NegocioException {
+        try {
+            if (pacienteDAO.existeCelular(numeroTelefono)) {
+                throw new NegocioException("El celular ya está registrado");
+            }
+
+            if (!validarNombre(nombre)) {
+                throw new NegocioException("El nombre no es válido");
+            }
+
+            if (!validarApellidoPaterno(apellidoPaterno)) {
+                throw new NegocioException("El apellido paterno no es válido");
+            }
+
+            if (!validarApellidoMaterno(apellidoMaterno)) {
+                throw new NegocioException("El apellido materno no es válido");
+            }
+
+            if (!validarTelefono(numeroTelefono)) {
+                throw new NegocioException("El número de teléfono no es válido");
+            }
+
+            if (!validarFechaNacimiento(fechaNacimiento)) {
+                throw new NegocioException("La fecha de nacimiento no es válida");
+            }
+
+            if (!validarCalle(calle)) {
+                throw new NegocioException("La calle no es valida");
+            }
+
+            if (!validarNumero(numero)) {
+                throw new NegocioException("El número no es válido");
+            }
+
+            if (!validarColonia(colonia)) {
+                throw new NegocioException("La colonia no es válida");
+            }
+
+            if (!validarCodigoPostal(codigoPostal)) {
+                throw new NegocioException("El código postal no es válido");
+            }
+
+            return true;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al validar los datos del usuario", ex);
         }
-        if (!validarApellidoMaterno(pacienteNuevoDTO.getApellidoMaterno())) {
-            System.out.println("Error: El apellido materno no es válido.");
-            return false;
-        }
-        if (!validarContrasenia(pacienteNuevoDTO.getContrasenia())) {
-            System.out.println("Error: La contraseña no es válida.");
-            return false;
-        }
-        if (!validarFechaNacimiento(pacienteNuevoDTO.getFechaNacimiento())) {
-            System.out.println("Error: La fecha de nacimiento no es válida.");
-            return false;
-        }
-        if (!validarTelefono(pacienteNuevoDTO.getTelefono())) {
-            System.out.println("Error: El teléfono no es válido.");
-            return false;
-        }
-        if (!validarCorreoElectronico(pacienteNuevoDTO.getCorreoElectronico())) {
-            System.out.println("Error: El correo electrónico no es válido.");
-            return false;
-        }
-        return true;
     }
 
     public boolean validarNombre(String nombre) {
@@ -90,11 +123,11 @@ public class PacienteBO {
     }
 
     public boolean validarContrasenia(String contrasenia) {
-        return contrasenia != null && !contrasenia.trim().isEmpty() && contrasenia.length() <= 50;
+        return contrasenia != null && !contrasenia.trim().isEmpty() && contrasenia.length() <= 50 && contrasenia.length() >= 8;
     }
 
     public boolean validarFechaNacimiento(LocalDate fechaNacimiento) {
-        return fechaNacimiento != null;
+        return fechaNacimiento != null && fechaNacimiento.isBefore(LocalDate.now());
     }
 
     public boolean validarTelefono(String telefono) {
@@ -104,4 +137,21 @@ public class PacienteBO {
     public boolean validarCorreoElectronico(String correoElectronico) {
         return correoElectronico != null && correoElectronico.length() <= 100 && correoElectronico.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
     }
+
+    public boolean validarCalle(String calle) {
+        return calle != null && !calle.trim().isEmpty() && calle.length() <= 30;
+    }
+
+    public boolean validarNumero(String numero) {
+        return numero != null && !numero.trim().isEmpty() && numero.length() <= 10;
+    }
+
+    public boolean validarColonia(String colonia) {
+        return colonia != null && !colonia.trim().isEmpty() && colonia.length() <= 60;
+    }
+
+    public boolean validarCodigoPostal(String codigoPostal) {
+        return codigoPostal != null && !codigoPostal.trim().isEmpty() && codigoPostal.matches("\\d{5}");
+    }
+
 }

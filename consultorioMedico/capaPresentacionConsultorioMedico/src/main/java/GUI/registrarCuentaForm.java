@@ -4,6 +4,12 @@
  */
 package GUI;
 
+import BO.PacienteBO;
+import exception.NegocioException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
@@ -179,7 +185,35 @@ public class registrarCuentaForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String correo = jTextField1.getText();
+        String contrasenia1 = jTextField4.getText();
+        String contrasenia2 = jTextField3.getText();
+
+        PacienteBO paciente = new PacienteBO();
+        try {
+            boolean valido = paciente.validarDatosRegistrarCuenta(correo, contrasenia1, contrasenia2);
+            if (!valido) {
+                JOptionPane.showMessageDialog(null, "Datos no válidos");
+            } else {
+                javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+                javax.swing.JFrame frame = new javax.swing.JFrame("Datos del Paciente");
+                datosPacienteForm datosPaciente = new datosPacienteForm(correo, contrasenia1);
+
+                frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(datosPaciente);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+
+                if (frameActual != null) {
+                    frameActual.dispose();
+                }
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
@@ -189,26 +223,26 @@ public class registrarCuentaForm extends javax.swing.JPanel {
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         // TODO add your handling code here:
-    // Obtener el JFrame que contiene este JPanel (la ventana actual)
-    javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-    
-    // Crear una nueva ventana (JFrame) con el título "Inicio de Sesión"
-    javax.swing.JFrame frame = new javax.swing.JFrame("Inicio de Sesion");
-    
-    // Crear una instancia del JPanel inicioSesionForm
-    inicioSesionForm iniciarSesion = new inicioSesionForm();
-    
-    // Configurar la nueva ventana
-    frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE); // Cierra solo esta ventana al cerrarla
-    frame.getContentPane().add(iniciarSesion); // Agregar el panel de inicio de sesión al JFrame
-    frame.pack();  // Ajustar el tamaño automáticamente según el contenido
-    frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
-    frame.setVisible(true); // Hacer visible la nueva ventana
-    
-    // Cerrar la ventana actual (si existe)
-    if (frameActual != null) {
-        frameActual.dispose();
-    }
+        // Obtener el JFrame que contiene este JPanel (la ventana actual)
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        // Crear una nueva ventana (JFrame) con el título "Inicio de Sesión"
+        javax.swing.JFrame frame = new javax.swing.JFrame("Inicio de Sesion");
+
+        // Crear una instancia del JPanel inicioSesionForm
+        inicioSesionForm iniciarSesion = new inicioSesionForm();
+
+        // Configurar la nueva ventana
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE); // Cierra solo esta ventana al cerrarla
+        frame.getContentPane().add(iniciarSesion); // Agregar el panel de inicio de sesión al JFrame
+        frame.pack();  // Ajustar el tamaño automáticamente según el contenido
+        frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+        frame.setVisible(true); // Hacer visible la nueva ventana
+
+        // Cerrar la ventana actual (si existe)
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void jLabel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseExited

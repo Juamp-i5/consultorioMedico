@@ -11,10 +11,10 @@ import java.time.LocalDate;
  */
 public class Paciente extends Usuario {
 
-    private int idPaciente;
     private LocalDate fechaNacimiento;
     private String telefono;
     private String correoElectronico;
+    private DireccionPaciente direccion;
 
     /**
      * Constructor por defecto.
@@ -22,61 +22,20 @@ public class Paciente extends Usuario {
     public Paciente() {
     }
 
-    /**
-     * Constructor para crear un objeto Paciente con un ID específico.
-     *
-     * @param idPaciente Identificador único del paciente.
-     * @param fechaNacimiento Fecha de nacimiento del paciente.
-     * @param telefono Número de teléfono del paciente.
-     * @param correoElectronico Correo electrónico del paciente.
-     * @param idUsuario Identificador del usuario asociado al paciente.
-     * @param nombre Nombre del paciente.
-     * @param apellidoPaterno Apellido paterno del paciente.
-     * @param apellidoMaterno Apellido materno del paciente.
-     * @param contrasenia Contraseña del usuario asociado al paciente.
-     */
-    public Paciente(int idPaciente, LocalDate fechaNacimiento, String telefono, String correoElectronico, int idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
+    public Paciente(LocalDate fechaNacimiento, String telefono, String correoElectronico, DireccionPaciente direccion, int idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
         super(idUsuario, nombre, apellidoPaterno, apellidoMaterno, contrasenia);
-        this.idPaciente = idPaciente;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.correoElectronico = correoElectronico;
+        this.direccion = direccion;
     }
 
-    /**
-     * Constructor para crear un objeto Paciente sin un ID específico
-     *
-     * @param fechaNacimiento Fecha de nacimiento del paciente.
-     * @param telefono Número de teléfono del paciente.
-     * @param correoElectronico Correo electrónico del paciente.
-     * @param nombre Nombre del paciente.
-     * @param apellidoPaterno Apellido paterno del paciente.
-     * @param apellidoMaterno Apellido materno del paciente.
-     * @param contrasenia Contraseña del usuario asociado al paciente.
-     */
-    public Paciente(LocalDate fechaNacimiento, String telefono, String correoElectronico, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
+    public Paciente(LocalDate fechaNacimiento, String telefono, String correoElectronico, DireccionPaciente direccion, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
         super(nombre, apellidoPaterno, apellidoMaterno, contrasenia);
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.correoElectronico = correoElectronico;
-    }
-
-    /**
-     * Obtiene el identificador del paciente.
-     *
-     * @return ID del paciente.
-     */
-    public int getIdPaciente() {
-        return idPaciente;
-    }
-
-    /**
-     * Establece el identificador del paciente.
-     *
-     * @param idPaciente Nuevo ID del paciente.
-     */
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
+        this.direccion = direccion;
     }
 
     /**
@@ -133,13 +92,17 @@ public class Paciente extends Usuario {
         this.correoElectronico = correoElectronico;
     }
 
-    /**
-     * Retorna una representación en cadena del objeto Paciente.
-     *
-     * @return Cadena con la información del paciente.
-     */
+    public DireccionPaciente getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(DireccionPaciente direccion) {
+        this.direccion = direccion;
+    }
+
     @Override
     public String toString() {
-        return "Paciente{" + "idPaciente=" + idPaciente + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", correoElectronico=" + correoElectronico + '}';
+        return "Paciente{" + "fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", correoElectronico=" + correoElectronico + ", direccion=" + direccion + '}';
     }
+
 }

@@ -5,6 +5,7 @@
 package mappers;
 
 import DTO.PacienteNuevoDTO;
+import entidades.DireccionPaciente;
 import entidades.Paciente;
 
 /**
@@ -14,10 +15,12 @@ import entidades.Paciente;
 public class PacienteMapper {
 
     public static Paciente toEntity(PacienteNuevoDTO pacienteNuevoDTO) {
+
         return new Paciente(
                 pacienteNuevoDTO.getFechaNacimiento(),
                 pacienteNuevoDTO.getTelefono(),
                 pacienteNuevoDTO.getCorreoElectronico(),
+                pacienteNuevoDTO.getDireccion(),
                 pacienteNuevoDTO.getNombre(),
                 pacienteNuevoDTO.getApellidoPaterno(),
                 pacienteNuevoDTO.getApellidoMaterno(),

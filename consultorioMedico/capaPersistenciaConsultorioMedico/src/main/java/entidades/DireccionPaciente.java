@@ -10,39 +10,19 @@ package entidades;
  */
 public class DireccionPaciente {
 
-    private int idDireccionPaciente;
     private String calle;
     private String numero;
     private String colonia;
     private String codigoPostal;
-    private int idPaciente;
 
     public DireccionPaciente() {
     }
 
-    public DireccionPaciente(int idDireccionPaciente, String calle, String numero, String colonia, String codigoPostal, int idPaciente) {
-        this.idDireccionPaciente = idDireccionPaciente;
+    public DireccionPaciente(String calle, String numero, String colonia, String codigoPostal) {
         this.calle = calle;
         this.numero = numero;
         this.colonia = colonia;
         this.codigoPostal = codigoPostal;
-        this.idPaciente = idPaciente;
-    }
-
-    public DireccionPaciente(String calle, String numero, String colonia, String codigoPostal, int idPaciente) {
-        this.calle = calle;
-        this.numero = numero;
-        this.colonia = colonia;
-        this.codigoPostal = codigoPostal;
-        this.idPaciente = idPaciente;
-    }
-
-    public int getIdDireccionPaciente() {
-        return idDireccionPaciente;
-    }
-
-    public void setIdDireccionPaciente(int idDireccionPaciente) {
-        this.idDireccionPaciente = idDireccionPaciente;
     }
 
     public String getCalle() {
@@ -77,17 +57,9 @@ public class DireccionPaciente {
         this.codigoPostal = codigoPostal;
     }
 
-    public int getIdPaciente() {
-        return idPaciente;
-    }
-
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
-    }
-
     @Override
     public String toString() {
-        return "DireccionPaciente{" + "idDireccionPaciente=" + idDireccionPaciente + ", calle=" + calle + ", numero=" + numero + ", colonia=" + colonia + ", codigoPostal=" + codigoPostal + ", idPaciente=" + idPaciente + '}';
+        return "DireccionPaciente{" + "calle=" + calle + ", numero=" + numero + ", colonia=" + colonia + ", codigoPostal=" + codigoPostal + '}';
     }
 
 }

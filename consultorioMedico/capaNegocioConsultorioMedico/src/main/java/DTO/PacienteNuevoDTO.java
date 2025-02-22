@@ -4,6 +4,7 @@
  */
 package DTO;
 
+import entidades.DireccionPaciente;
 import java.time.LocalDate;
 
 /**
@@ -41,6 +42,15 @@ public class PacienteNuevoDTO {
         this.codigoPostal = codigoPostal;
     }
 
+    public DireccionPaciente getDireccion(){
+        return new DireccionPaciente(
+                calle,
+                numero,
+                colonia,
+                codigoPostal
+        );
+    }
+    
     public String getCalle() {
         return calle;
     }

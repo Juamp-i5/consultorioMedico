@@ -18,13 +18,12 @@ CREATE TABLE Paciente (
 );
 
 CREATE TABLE Direccion_Paciente (
-	id_direccion_paciente INT AUTO_INCREMENT PRIMARY KEY,
-	id_paciente INT,
+	id_direccion_paciente INT PRIMARY KEY,
     calle VARCHAR(30) NOT NULL,
     numero VARCHAR(10) NOT NULL,
     colonia VARCHAR(60) NOT NULL,
-    codigo_postal INT NOT NULL,
-    FOREIGN KEY (id_paciente) REFERENCES Usuario(id_usuario)
+    codigo_postal VARCHAR(5) NOT NULL,
+    FOREIGN KEY (id_direccion_paciente) REFERENCES Paciente(id_paciente)
 );
 
 CREATE TABLE Medico (
@@ -62,16 +61,164 @@ CREATE TABLE Auditoria (
     id_auditoria INT AUTO_INCREMENT PRIMARY KEY,
     tipo_operacion enum("Se agendo una Cita", "Se atendio una cita", "Se cancelo una cita") NOT NULL,
     id_cita int not null,
-    fecha_hora DATETIME NOT NULL,
+    fecha_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     detalles VARCHAR(200) null,
     FOREIGN KEY (id_cita) REFERENCES Cita(id_cita)
 );
 
-CREATE TABLE Horario_Atencion(
-	id_horario_atencion int AUTO_INCREMENT primary key,
-    id_medico int not null,
-    dia_semana VARCHAR(50) not null,
-    hora_inicio datetime not null,
-    hora_fin datetime not null,
-    FOREIGN KEY (id_medico) REFERENCES Medico(id_medico)
+CREATE TABLE Horario_Atencion (
+    id_horario_atencion INT AUTO_INCREMENT PRIMARY KEY,
+    id_medico INT NOT NULL,
+    dia_semana ENUM('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado') NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL,
+    FOREIGN KEY (id_medico)
+        REFERENCES Medico (id_medico)
 );
+
+DELIMITER //
+
+CREATE PROCEDURE FiltrarMedicosPorEspecialidad(IN especialidad_busqueda VARCHAR(100))
+BEGIN
+    SELECT 
+        M.id_medico, 
+        U.nombre, 
+        U.apellido_paterno, 
+        U.apellido_materno, 
+        M.especialidad, 
+        M.cedula_profesional, 
+        M.estado
+    FROM Medico M
+    JOIN Usuario U ON M.id_medico = U.id_usuario
+    WHERE M.especialidad = especialidad_busqueda;
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE ObtenerHorariosMedico(IN idDoctor INT)
+BEGIN
+    SELECT 
+        H.dia_semana, 
+        H.hora_inicio, 
+        H.hora_fin
+    FROM Horario_Atencion H
+    WHERE H.id_medico = idDoctor
+    ORDER BY FIELD(H.dia_semana, 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'), 
+             H.hora_inicio;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+
+
+DELIMITER //
+
+CREATE FUNCTION EstaEnHorario(idMedico INT, fechaHora DATETIME) 
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+    DECLARE horario_valido BOOLEAN;
+
+    SELECT 
+        IF(
+            EXISTS (
+                SELECT 1
+                FROM Horario_Atencion H
+                WHERE H.id_medico = idMedico
+                AND DAYOFWEEK(fechaHora) = 
+                    CASE 
+                        WHEN H.dia_semana = 'Domingo' THEN 1
+                        WHEN H.dia_semana = 'Lunes' THEN 2
+                        WHEN H.dia_semana = 'Martes' THEN 3
+                        WHEN H.dia_semana = 'Miércoles' THEN 4
+                        WHEN H.dia_semana = 'Jueves' THEN 5
+                        WHEN H.dia_semana = 'Viernes' THEN 6
+                        WHEN H.dia_semana = 'Sábado' THEN 7
+                    END
+                AND TIME(H.hora_inicio) <= TIME(fechaHora)
+                AND TIME(H.hora_fin) >= TIME(fechaHora)
+            ), TRUE, FALSE
+        ) INTO horario_valido;
+
+    RETURN horario_valido;
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE FUNCTION VerificarCitaConflicto(idMedico INT, fechaHora DATETIME) 
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+    DECLARE cita_conflicto BOOLEAN;
+
+    SELECT 
+        IF(
+            EXISTS (
+                SELECT 1
+                FROM Cita C
+                WHERE C.id_medico = idMedico
+                AND ABS(TIMESTAMPDIFF(MINUTE, C.fecha_hora, fechaHora)) < 30
+            ), FALSE, TRUE
+        ) INTO cita_conflicto;
+
+    RETURN cita_conflicto;
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE InsertarCita(
+    IN idPaciente INT, 
+    IN idMedico INT, 
+    IN fechaHora DATETIME, 
+    IN tipoCita VARCHAR(50),
+    OUT resultado BOOLEAN
+)
+BEGIN
+    DECLARE horario_valido BOOLEAN;
+    DECLARE cita_conflicto BOOLEAN;
+
+    SET horario_valido = EstaEnHorario(idMedico, fechaHora);
+    SET cita_conflicto = VerificarCitaConflicto(idMedico, fechaHora);
+
+    IF horario_valido = FALSE OR cita_conflicto = FALSE THEN
+        SET resultado = FALSE;
+    ELSE
+        INSERT INTO Cita (id_paciente, id_medico, tipo, fecha_hora, estado) 
+        VALUES (idPaciente, idMedico, tipoCita, fechaHora, 'Programado');
+        
+        SET resultado = TRUE;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+CREATE VIEW VistaInicioSesion AS
+SELECT 
+    u.id_usuario,
+    CASE 
+        WHEN p.id_paciente IS NOT NULL THEN p.correo_electronico
+        ELSE NULL 
+    END AS correo,
+    CASE 
+        WHEN m.id_medico IS NOT NULL THEN m.cedula_profesional
+        ELSE NULL 
+    END AS cedula,
+    u.contrasenia
+FROM Usuario u
+LEFT JOIN Paciente p ON u.id_usuario = p.id_paciente
+LEFT JOIN Medico m ON u.id_usuario = m.id_medico;
