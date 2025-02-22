@@ -2,6 +2,7 @@ GUI\datosPacienteForm$11.class
 GUI\agendaCitasTableForm$1.class
 GUI\datosConsultaForm$5.class
 GUI\datosPacienteForm$4.class
+GUI\menuMedicoForm$4.class
 GUI\citaEmergenciaForm.class
 GUI\inicioSesionForm$1.class
 GUI\registrarCuentaForm$4.class
@@ -11,6 +12,7 @@ GUI\inicioSesionForm$4.class
 GUI\menuMedicoForm$1.class
 GUI\citaEmergenciaForm$2.class
 GUI\iniciarConsultaForm$1.class
+GUI\menuPacienteForm$6.class
 GUI\datosConsultaForm$2.class
 GUI\editarCuentaHospitalForm$4.class
 GUI\datosPacienteForm$1.class
