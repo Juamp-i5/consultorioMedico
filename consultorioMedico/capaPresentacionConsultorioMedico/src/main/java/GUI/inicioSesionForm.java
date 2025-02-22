@@ -4,6 +4,12 @@
  */
 package GUI;
 
+import BO.PacienteBO;
+import DTO.PacienteInicioSesionDTO;
+import exception.NegocioException;
+import javax.swing.JOptionPane;
+import utils.InicioSesion;
+
 /**
  *
  * @author Admin
@@ -16,7 +22,7 @@ public class inicioSesionForm extends javax.swing.JPanel {
     public inicioSesionForm() {
         initComponents();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,7 +58,7 @@ public class inicioSesionForm extends javax.swing.JPanel {
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setText("e-mail");
+        jLabel2.setText("e-mail o cedula");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,12 +168,37 @@ public class inicioSesionForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String identificador = jTextField1.getText();
+        String contrasenia = jTextField4.getText();
+
+        if (InicioSesion.esCorreo(identificador)) {
+            PacienteBO paciente = new PacienteBO();
+            PacienteInicioSesionDTO pacienteDTO = new PacienteInicioSesionDTO(identificador, contrasenia);
+            try {
+                int indice = paciente.inicioSesion(pacienteDTO);
+                javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+                javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
+                menuPacienteForm datosPaciente = new menuPacienteForm(indice);
+
+                frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(datosPaciente);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+
+                if (frameActual != null) {
+                    frameActual.dispose();
+                }
+            } catch (NegocioException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseEntered
         // TODO add your handling code here:
-        jLabel7.setForeground(new java.awt.Color(255, 0, 0)); 
+        jLabel7.setForeground(new java.awt.Color(255, 0, 0));
     }//GEN-LAST:event_jLabel7MouseEntered
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
@@ -181,8 +212,8 @@ public class inicioSesionForm extends javax.swing.JPanel {
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(registrarCuenta);
-        frame.pack();  
-        frame.setLocationRelativeTo(null); 
+        frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
         // Cerrar la ventana actual

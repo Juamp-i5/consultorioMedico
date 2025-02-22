@@ -1,4 +1,5 @@
 entidades\Paciente.class
+utils\Password.class
 DAO\IConsulta.class
 DAO\CitaDAO.class
 entidades\DireccionPaciente.class

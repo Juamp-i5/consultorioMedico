@@ -18,6 +18,7 @@ GUI\menuPacienteForm$3.class
 GUI\iniciarConsultaForm$2.class
 GUI\editarCuentaHospitalForm$2.class
 GUI\historialConsultasTableForm.class
+utils\InicioSesion.class
 GUI\datosPacienteForm$12.class
 GUI\datosPacienteForm$10.class
 GUI\registrarCuentaForm$5.class

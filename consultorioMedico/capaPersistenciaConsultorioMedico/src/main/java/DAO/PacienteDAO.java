@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import utils.Password;
 
 /**
  *
@@ -89,6 +90,35 @@ public class PacienteDAO implements IPacienteDAO {
         }
 
     }
+    
+    @Override
+    public int validarInicioSesion(Paciente paciente) throws PersistenciaException{
+        if (!existeCorreo(paciente.getCorreoElectronico())) {
+            throw new PersistenciaException("El correo no existe");
+        }
+        
+        String query = "Select id_usuario, contrasenia FROM VistaInicioSesion WHERE correo = ?";
+        
+        try (Connection conexion = Conexion.getConnection();
+                PreparedStatement ps = conexion.prepareStatement(query)){
+            ps.setString(1, paciente.getCorreoElectronico());
+            
+            try (ResultSet rs = ps.executeQuery()){
+                if (rs.next()) {
+                    if (Password.verifyPassword(paciente.getContrasenia(), rs.getString("contrasenia"))) {
+                        return rs.getInt("id_usuario");
+                    } else {
+                        throw new PersistenciaException("Contraseña incorrecta");
+                    }
+                } else{
+                    throw new PersistenciaException("El correo no existe");
+                }
+            }
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al validar inicio de sesion");
+        }
+    }
+    
 //
 //    @Override
 //    public Paciente consultarPaciente(int id) throws PersistenciaException {

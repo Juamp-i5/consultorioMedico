@@ -6,6 +6,7 @@ package BO;
 
 import DAO.IPacienteDAO;
 import DAO.PacienteDAO;
+import DTO.PacienteInicioSesionDTO;
 import DTO.PacienteNuevoDTO;
 import entidades.Paciente;
 import excepciones.PersistenciaException;
@@ -35,6 +36,22 @@ public class PacienteBO {
             return pacienteDAO.agregarPaciente(paciente);
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al agregarPaciente: " + e.getMessage());
+        }
+    }
+
+    public int inicioSesion(PacienteInicioSesionDTO pacienteInicioSesion) throws NegocioException {
+        if (pacienteInicioSesion == null) {
+            throw new NegocioException();
+        }
+        Paciente paciente = PacienteMapper.toEntity(pacienteInicioSesion);
+        try {
+            int id_usuario = pacienteDAO.validarInicioSesion(paciente);
+            if (id_usuario == -1) {
+                throw new NegocioException();
+            }
+            return id_usuario;
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Excepcion inicio sesion: " + e.getMessage());
         }
     }
 
@@ -127,17 +144,6 @@ public class PacienteBO {
         return contrasenia != null && !contrasenia.trim().isEmpty() && contrasenia.length() <= 50 && contrasenia.length() >= 8;
     }
 
-    public boolean validarFechaNacimiento(String fechaNacimiento) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        try {
-            LocalDate fecha = LocalDate.parse(fechaNacimiento, formatter);
-            return !fecha.isAfter(LocalDate.now());
-        } catch (DateTimeParseException e) {
-            return false;
-        }
-    }
-
     public boolean validarTelefono(String telefono) {
         return telefono != null && telefono.matches("\\d{10,15}");
     }
@@ -162,4 +168,14 @@ public class PacienteBO {
         return codigoPostal != null && !codigoPostal.trim().isEmpty() && codigoPostal.matches("\\d{5}");
     }
 
+    public boolean validarFechaNacimiento(String fechaNacimiento) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        try {
+            LocalDate fecha = LocalDate.parse(fechaNacimiento, formatter);
+            return !fecha.isAfter(LocalDate.now());
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
 }

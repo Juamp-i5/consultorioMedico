@@ -1,5 +1,6 @@
 mappers\PacienteMapper.class
 utils\Password.class
+DTO\PacienteInicioSesionDTO.class
 pruebas\CapaNegocioConsultorioMedico.class
 exception\NegocioException.class
 BO\MedicoBO.class

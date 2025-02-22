@@ -10,12 +10,20 @@ package GUI;
  */
 public class menuPacienteForm extends javax.swing.JPanel {
 
+    private int idUsuario;
     /**
      * Creates new form crearCuentaForm
      */
     public menuPacienteForm() {
         initComponents();
     }
+
+    public menuPacienteForm(int idUsuario) {
+        initComponents();
+        this.idUsuario = idUsuario;
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

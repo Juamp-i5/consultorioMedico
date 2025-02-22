@@ -4,6 +4,7 @@
  */
 package mappers;
 
+import DTO.PacienteInicioSesionDTO;
 import DTO.PacienteNuevoDTO;
 import entidades.DireccionPaciente;
 import entidades.Paciente;
@@ -26,6 +27,13 @@ public class PacienteMapper {
                 pacienteNuevoDTO.getApellidoMaterno(),
                 pacienteNuevoDTO.getContrasenia()
         );
+    }
+
+    public static Paciente toEntity(PacienteInicioSesionDTO pacienteInicioSesion) {
+        Paciente paciente = new Paciente();
+        paciente.setCorreoElectronico(pacienteInicioSesion.getCorreo());
+        paciente.setContrasenia(pacienteInicioSesion.getContrasenia());
+        return paciente;
     }
 
 //    public static PacienteNuevoDTO toDTO(Paciente paciente) {
