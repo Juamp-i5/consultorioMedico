@@ -18,7 +18,6 @@ import utils.InicioSesion;
  * @author Admin
  */
 public class inicioSesionForm extends javax.swing.JPanel {
-
     /**
      * Creates new form crearCuentaForm
      */

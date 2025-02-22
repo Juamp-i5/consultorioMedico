@@ -174,4 +174,24 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al verificar cedula: " + e.getMessage());
         }
     }
+
+    public String obtenerEspecialidad(int idMedico) throws PersistenciaException {
+        String consultaSQL = "SELECT especialidad FROM consultas_medicas.medico WHERE id_medico = ?";
+
+        try (Connection conexion = Conexion.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
+            ps.setInt(1, idMedico);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("especialidad");
+                } else {
+                    throw new PersistenciaException("No se encontró el médico con ID: " + idMedico);
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al obtener la especialidad del médico", e);
+        }
+    }
+
+
 }

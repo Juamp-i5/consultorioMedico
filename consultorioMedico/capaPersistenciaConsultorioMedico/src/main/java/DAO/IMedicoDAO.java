@@ -27,4 +27,6 @@ public interface IMedicoDAO {
     int validarInicioSesion(Medico medico) throws PersistenciaException;
     
     boolean existeCedula(String cedula) throws PersistenciaException;
+    
+    public String obtenerEspecialidad(int idMedico) throws PersistenciaException;
 }
