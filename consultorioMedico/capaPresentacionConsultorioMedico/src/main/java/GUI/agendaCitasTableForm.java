@@ -4,17 +4,26 @@
  */
 package GUI;
 
+import DAO.CitaDAO;
+import DAO.MedicoDAO;
+import DAO.UsuarioDAO;
+import entidades.Cita;
+import excepciones.PersistenciaException;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Admin
  */
 public class agendaCitasTableForm extends javax.swing.JPanel {
-
+    int idPaciente;
     /**
      * Creates new form crearCuentaForm
      */
     public agendaCitasTableForm() {
         initComponents();
+        cargarDatosEnTabla();
     }
 
     /**
@@ -104,7 +113,29 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+        private void cargarDatosEnTabla() {
+        //Instaciamos los DAOS para interactuar con las tablas en la base de datos
+        CitaDAO citaDAO = new CitaDAO();
+        MedicoDAO medicoDAO = new MedicoDAO();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0); // Limpia la tabla antes de cargar datos nuevos (proximos)
 
+        try {
+            // Utilizar el idPaciente pasado al constructor (falta agregar esa funcion)
+            List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(1); // falta ver como hacer para consultar las citas del paciente actual
+            for (Cita cita : citas) { //buscar en cada cita 
+                // Obtener los datos necesarios para agregarlos a una fila en la tabla
+                String fechaHora = cita.getFechaHora();
+                String especialidad = medicoDAO.obtenerEspecialidad(cita.getIdMedico());
+                String nombreMedico = usuarioDAO.obtenerNombre(cita.getIdMedico());
+
+                // Agregamos una fila con los datos obtenidos aqui arribita y SE AGREGA PASADO DE LANZA
+                tableModel.addRow(new Object[]{fechaHora, especialidad, nombreMedico});
+            }
+        } catch (PersistenciaException e) {
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;

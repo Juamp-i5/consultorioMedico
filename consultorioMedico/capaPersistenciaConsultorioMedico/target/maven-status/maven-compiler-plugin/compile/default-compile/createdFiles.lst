@@ -2,6 +2,7 @@ entidades\Paciente.class
 utils\Password.class
 DAO\IConsulta.class
 DAO\CitaDAO.class
+DAO\UsuarioDAO.class
 entidades\DireccionPaciente.class
 excepciones\PersistenciaException.class
 DAO\MedicoDAO.class
@@ -11,6 +12,7 @@ DAO\PacienteDAO.class
 entidades\Consulta.class
 DAO\ICita.class
 DAO\IPacienteDAO.class
+DAO\IUsuarioDAO.class
 conexion\Conexion.class
 entidades\Cita.class
 entidades\Usuario.class
