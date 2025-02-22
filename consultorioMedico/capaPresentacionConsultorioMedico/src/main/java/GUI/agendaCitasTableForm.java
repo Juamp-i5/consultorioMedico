@@ -9,7 +9,10 @@ import DAO.MedicoDAO;
 import DAO.UsuarioDAO;
 import entidades.Cita;
 import excepciones.PersistenciaException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -134,6 +137,8 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
                 tableModel.addRow(new Object[]{fechaHora, especialidad, nombreMedico});
             }
         } catch (PersistenciaException e) {
+        } catch (SQLException ex) {
+            Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
