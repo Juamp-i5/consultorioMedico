@@ -222,3 +222,7 @@ SELECT
 FROM Usuario u
 LEFT JOIN Paciente p ON u.id_usuario = p.id_paciente
 LEFT JOIN Medico m ON u.id_usuario = m.id_medico;
+
+CREATE VIEW VistaEspecialidades AS
+SELECT DISTINCT especialidad
+FROM medico;
