@@ -4,9 +4,12 @@
  */
 package GUI;
 
+import BO.MedicoBO;
 import BO.PacienteBO;
+import DTO.MedicoInicioSesionDTO;
 import DTO.PacienteInicioSesionDTO;
 import exception.NegocioException;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import utils.InicioSesion;
 
@@ -192,6 +195,28 @@ public class inicioSesionForm extends javax.swing.JPanel {
                 }
             } catch (NegocioException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        } else {
+            MedicoBO medico = new MedicoBO();
+            MedicoInicioSesionDTO medicoDTO = new MedicoInicioSesionDTO(identificador, contrasenia);
+            try {
+                int indice = medico.iniciarSesion(medicoDTO);
+                javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+                javax.swing.JFrame frame = new javax.swing.JFrame("Menu medicoPaciente");
+                menuMedicoForm datosPaciente = new menuMedicoForm(indice);
+
+                frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(datosPaciente);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+
+                if (frameActual != null) {
+                    frameActual.dispose();
+                }
+            } catch (NegocioException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed

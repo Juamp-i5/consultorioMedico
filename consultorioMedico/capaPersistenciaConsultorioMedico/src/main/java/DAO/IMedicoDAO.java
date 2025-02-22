@@ -23,4 +23,8 @@ public interface IMedicoDAO {
     boolean actualizarMedico(Medico medico) throws PersistenciaException;
 
     boolean existeMedico(int idMedico) throws PersistenciaException;
+    
+    int validarInicioSesion(Medico medico) throws PersistenciaException;
+    
+    boolean existeCedula(String cedula) throws PersistenciaException;
 }

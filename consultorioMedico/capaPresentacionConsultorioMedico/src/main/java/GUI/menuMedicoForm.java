@@ -10,11 +10,17 @@ package GUI;
  */
 public class menuMedicoForm extends javax.swing.JPanel {
 
+    private int id;
     /**
      * Creates new form crearCuentaForm
      */
     public menuMedicoForm() {
         initComponents();
+    }
+
+    public menuMedicoForm(int id) {
+        initComponents();
+        this.id = id;
     }
 
     /**

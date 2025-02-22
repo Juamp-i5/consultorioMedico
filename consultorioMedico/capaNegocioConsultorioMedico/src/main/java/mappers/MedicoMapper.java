@@ -4,6 +4,7 @@
  */
 package mappers;
 
+import DTO.MedicoInicioSesionDTO;
 import DTO.MedicoNuevoDTO;
 import entidades.Medico;
 
@@ -12,11 +13,9 @@ import entidades.Medico;
  * @author Admin
  */
 public class MedicoMapper {
-    
-    
-    public static Medico toEntity(MedicoNuevoDTO medicoNuevo){
 
-        
+    public static Medico toEntity(MedicoNuevoDTO medicoNuevo) {
+
 // public Medico(String especialidad, String cedulaProfesional, String estado, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasenia) {
         return new Medico(
                 medicoNuevo.getEspecialidad(),
@@ -29,16 +28,25 @@ public class MedicoMapper {
         );
 
     }
-    public static MedicoNuevoDTO toDTO(Medico medico){
+
+    public static MedicoNuevoDTO toDTO(Medico medico) {
         return new MedicoNuevoDTO(
-            medico.getNombre(),
-            medico.getApellidoPaterno(),
-            medico.getApellidoMaterno(),
-            medico.getEspecialidad(),
-            medico.getCedulaProfesional(),
-            medico.getEstado(),
-            medico.getContrasenia()
+                medico.getNombre(),
+                medico.getApellidoPaterno(),
+                medico.getApellidoMaterno(),
+                medico.getEspecialidad(),
+                medico.getCedulaProfesional(),
+                medico.getEstado(),
+                medico.getContrasenia()
         );
-    
+
+    }
+
+    public static Medico toEntity(MedicoInicioSesionDTO medicoDTO) {
+        Medico medico = new Medico();
+        medico.setCedulaProfesional(medicoDTO.getCedula());
+        medico.setContrasenia(medicoDTO.getContrasenia());
+
+        return medico;
     }
 }

@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import utils.Password;
 
 /**
  *
@@ -38,30 +39,29 @@ public class MedicoDAO implements IMedicoDAO {
 
     @Override
     public Medico consultarMedico(int idMedico) throws PersistenciaException {
-        String query = "SELECT m.id_medico, u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, " +
-                       "m.especialidad, m.cedula_profesional, m.estado, u.contrasenia " +
-                       "FROM consultas_medicas.Medico m " +
-                       "JOIN consultas_medicas.Usuario u ON m.id_medico = u.id_usuario " +
-                       "WHERE m.id_medico = ?;";
+        String query = "SELECT m.id_medico, u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, "
+                + "m.especialidad, m.cedula_profesional, m.estado, u.contrasenia "
+                + "FROM consultas_medicas.Medico m "
+                + "JOIN consultas_medicas.Usuario u ON m.id_medico = u.id_usuario "
+                + "WHERE m.id_medico = ?;";
 
         Medico medico = null;
 
-        try (Connection conexion = Conexion.getConnection(); 
-             PreparedStatement ps = conexion.prepareStatement(query)) {
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)) {
 
             ps.setInt(1, idMedico);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    medico = new Medico(          
-                            rs.getString("especialidad"),       
-                            rs.getString("cedula_profesional"), 
-                            rs.getString("estado"),             
-                            rs.getInt("id_usuario"),            
-                            rs.getString("nombre"),             
-                            rs.getString("apellido_paterno"),   
-                            rs.getString("apellido_materno"),   
-                            rs.getString("contrasenia")          
+                    medico = new Medico(
+                            rs.getString("especialidad"),
+                            rs.getString("cedula_profesional"),
+                            rs.getString("estado"),
+                            rs.getInt("id_usuario"),
+                            rs.getString("nombre"),
+                            rs.getString("apellido_paterno"),
+                            rs.getString("apellido_materno"),
+                            rs.getString("contrasenia")
                     );
                 }
             }
@@ -127,5 +127,51 @@ public class MedicoDAO implements IMedicoDAO {
         }
 
         return false;
+    }
+
+    @Override
+    public int validarInicioSesion(Medico medico) throws PersistenciaException {
+        if (!existeCedula(medico.getCedulaProfesional())) {
+            throw new PersistenciaException("No existe la cedula");
+        }
+        
+        String query = "SELECT id_usuario, contrasenia from vistainiciosesion WHERE cedula = ?";
+        
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)){
+            ps.setString(1, medico.getCedulaProfesional());
+            
+            try(ResultSet rs = ps.executeQuery()){
+                if (rs.next()) {
+                    if (Password.verifyPassword(medico.getContrasenia(), rs.getString("contrasenia"))) {
+                        return rs.getInt("id_usuario");
+                    } else {
+                        throw new PersistenciaException("Contraseña incorrecta");
+                    }
+                }
+                throw new PersistenciaException("Error al verificar cedula");
+            }
+            
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al validar inicio de sesion medico" + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean existeCedula(String cedula) throws PersistenciaException {
+        String query = "SELECT COUNT(*) FROM VistaInicioSesion WHERE cedula = ?";
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)) {
+            ps.setString(1, cedula);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al verificar cedula: " + e.getMessage());
+        }
     }
 }

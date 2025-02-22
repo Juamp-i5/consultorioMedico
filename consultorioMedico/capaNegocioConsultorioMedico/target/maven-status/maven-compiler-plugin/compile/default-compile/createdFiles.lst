@@ -1,3 +1,4 @@
+DTO\MedicoInicioSesionDTO.class
 mappers\PacienteMapper.class
 utils\Password.class
 DTO\PacienteInicioSesionDTO.class
