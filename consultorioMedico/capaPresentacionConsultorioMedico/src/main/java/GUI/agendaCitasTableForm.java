@@ -133,7 +133,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
         javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
-        menuPacienteForm datosPaciente = new menuPacienteForm(idUsuario);
+        menuPacienteForm datosPaciente = new menuPacienteForm(utils.InicioSesion.getIdUsuario());
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(datosPaciente);
