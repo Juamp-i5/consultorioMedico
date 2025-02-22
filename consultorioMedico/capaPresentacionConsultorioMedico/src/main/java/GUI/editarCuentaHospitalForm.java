@@ -4,6 +4,11 @@
  */
 package GUI;
 
+import BO.PacienteBO;
+import DAO.PacienteDAO;
+import entidades.Paciente;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
@@ -29,8 +34,6 @@ public class editarCuentaHospitalForm extends javax.swing.JPanel {
         jTextField2 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -54,16 +57,6 @@ public class editarCuentaHospitalForm extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel1.setText("Editar cuenta hospital");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 35, -1, -1));
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel5.setText("¿Ya tienes cuenta?");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(593, 9, -1, -1));
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel6.setText("<html><u>Iniciar Sesion</u></html>");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(711, 9, -1, -1));
 
         jButton2.setBackground(new java.awt.Color(153, 153, 153));
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -208,10 +201,26 @@ public class editarCuentaHospitalForm extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String nombre = jTextField1.getText();//usuario
+        String apellidoP = jTextField1.getText();//usuario
+        String apellidoM = jTextField1.getText();//usuario
+        int fechaNacimiento = Integer.parseInt(jTextField1.getText());//paciente
+
+        //PacienteNuevoDTO paciente = new PacienteNuevoDTO(nombre, apellidoP, apellidoM, );
+        PacienteDAO pacienteDAO = new PacienteDAO();
+        
+//        boolean actualizado = pacienteDAO.actualizarPaciente();
+//
+//        if (actualizado) {
+//            JOptionPane.showMessageDialog(this, "Datos actualizados correctamente.");
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Error al actualizar los datos.");
+//        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -242,8 +251,6 @@ public class editarCuentaHospitalForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;

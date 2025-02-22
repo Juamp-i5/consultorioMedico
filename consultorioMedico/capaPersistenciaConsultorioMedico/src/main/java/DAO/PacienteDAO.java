@@ -182,42 +182,39 @@ public class PacienteDAO implements IPacienteDAO {
 //        }
 //    }
 //
-//    @Override
-//    public boolean actualizarPaciente(Paciente paciente) throws PersistenciaException {
-//        if (!existePaciente(paciente.getIdPaciente())) {
-//            throw new PersistenciaException("No existe el paciente con el id #" + paciente.getIdPaciente());
-//        }
-//
-//        String queryUsuario = "UPDATE consultas_medicas.usuario SET nombre = ?, apellido_paterno = ?, apellido_materno = ?, contrasenia = ? WHERE id_usuario = ?;";
-//        String queryPaciente = "UPDATE consultas_medicas.paciente SET fecha_nacimiento = ?, telefono = ?, correo_electronico = ? WHERE id_paciente = ?;";
-//
-//        try (Connection conexion = Conexion.getConnection()) {
-//            try (PreparedStatement psUsuario = conexion.prepareStatement(queryUsuario)) {
-//                psUsuario.setString(1, paciente.getNombre());
-//                psUsuario.setString(2, paciente.getApellidoPaterno());
-//                psUsuario.setString(3, paciente.getApellidoMaterno());
-//                psUsuario.setString(4, paciente.getContrasenia());
-//                psUsuario.setInt(5, paciente.getIdPaciente());
-//
-//                int affectedRowsUsuario = psUsuario.executeUpdate();
-//                if (affectedRowsUsuario == 0) {
-//                    throw new SQLException("No se pudo actualizar el usuario");
-//                }
-//
-//                try (PreparedStatement psPaciente = conexion.prepareStatement(queryPaciente)) {
-//                    psPaciente.setObject(1, paciente.getFechaNacimiento());
-//                    psPaciente.setString(2, paciente.getTelefono());
-//                    psPaciente.setString(3, paciente.getCorreoElectronico());
-//                    psPaciente.setInt(4, paciente.getIdPaciente());
-//
-//                    int affectedRowsPaciente = psPaciente.executeUpdate();
-//                    return affectedRowsPaciente > 0;
-//                }
-//            }
-//        } catch (SQLException e) {
-//            throw new PersistenciaException("Error al actualizarPaciente: " + e.getMessage());
-//        }
-//    }
+    public boolean actualizarPaciente(Paciente paciente) throws PersistenciaException {
+        if (!existePaciente(paciente.getIdUsuario())) {
+            throw new PersistenciaException("No existe el paciente con el id #" + paciente.getIdUsuario());
+        }
+
+        String queryUsuario = "UPDATE consultas_medicas.usuario SET nombre = ?, apellido_paterno = ?, apellido_materno = ?, contrasenia = ? WHERE id_usuario = ?;";
+        String queryPaciente = "UPDATE consultas_medicas.paciente SET fecha_nacimiento = ?, telefono = ?, correo_electronico = ? WHERE id_paciente = ?;";
+
+        try (Connection conexion = Conexion.getConnection()) {
+            try (PreparedStatement psUsuario = conexion.prepareStatement(queryUsuario)) {
+                psUsuario.setString(1, paciente.getNombre());
+                psUsuario.setString(2, paciente.getApellidoPaterno());
+                psUsuario.setString(3, paciente.getApellidoMaterno());
+                psUsuario.setString(4, paciente.getContrasenia());
+
+                int affectedRowsUsuario = psUsuario.executeUpdate();
+                if (affectedRowsUsuario == 0) {
+                    throw new SQLException("No se pudo actualizar el usuario");
+                }
+
+                try (PreparedStatement psPaciente = conexion.prepareStatement(queryPaciente)) {
+                    psPaciente.setObject(1, paciente.getFechaNacimiento());
+                    psPaciente.setString(2, paciente.getTelefono());
+                    psPaciente.setString(3, paciente.getCorreoElectronico());
+
+                    int affectedRowsPaciente = psPaciente.executeUpdate();
+                    return affectedRowsPaciente > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al actualizarPaciente: " + e.getMessage());
+        }
+    }
 
     @Override
     public boolean existePaciente(int id) throws PersistenciaException {
