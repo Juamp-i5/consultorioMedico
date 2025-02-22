@@ -24,7 +24,7 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>pruebas.CapaPresentacionConsultorioMedico</exec.mainClass>
     </properties>

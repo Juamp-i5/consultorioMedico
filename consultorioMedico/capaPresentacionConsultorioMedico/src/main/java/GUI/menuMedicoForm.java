@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import utils.InicioSesion;
+
 /**
  *
  * @author Admin
@@ -123,6 +125,7 @@ public class menuMedicoForm extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
+        InicioSesion.resetIdUsuario();
         javax.swing.JFrame frame = new javax.swing.JFrame("Inicio sesion");
         inicioSesionForm datosPaciente = new inicioSesionForm();
 

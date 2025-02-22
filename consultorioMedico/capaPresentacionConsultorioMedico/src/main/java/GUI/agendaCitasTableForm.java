@@ -20,12 +20,13 @@ import javax.swing.table.DefaultTableModel;
  * @author Admin
  */
 public class agendaCitasTableForm extends javax.swing.JPanel {
-    int idPaciente;
+    int idUsuario;
     /**
      * Creates new form crearCuentaForm
      */
-    public agendaCitasTableForm() {
+    public agendaCitasTableForm(int idUsuario) {
         initComponents();
+        this.idUsuario = idUsuario;
         cargarDatosEnTabla();
     }
 
@@ -50,6 +51,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
+        jButton7 = new javax.swing.JButton();
 
         jTextField2.setText("jTextField2");
 
@@ -101,6 +103,16 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 120, 30));
 
+        jButton7.setBackground(new java.awt.Color(153, 153, 153));
+        jButton7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jButton7.setText("Atras");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 54));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,6 +128,23 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
+        menuPacienteForm datosPaciente = new menuPacienteForm(idUsuario);
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(datosPaciente);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
         private void cargarDatosEnTabla() {
         //Instaciamos los DAOS para interactuar con las tablas en la base de datos
         CitaDAO citaDAO = new CitaDAO();
@@ -143,6 +172,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton7;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

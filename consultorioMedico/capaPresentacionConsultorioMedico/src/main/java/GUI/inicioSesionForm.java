@@ -180,8 +180,9 @@ public class inicioSesionForm extends javax.swing.JPanel {
                 int indice = paciente.inicioSesion(pacienteDTO);
                 javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
+                InicioSesion.setIdUsuario(indice);
                 javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
-                menuPacienteForm datosPaciente = new menuPacienteForm(indice);
+                menuPacienteForm datosPaciente = new menuPacienteForm();
 
                 frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
                 frame.getContentPane().add(datosPaciente);
@@ -201,9 +202,9 @@ public class inicioSesionForm extends javax.swing.JPanel {
             try {
                 int indice = medico.iniciarSesion(medicoDTO);
                 javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-
+                InicioSesion.setIdUsuario(indice);
                 javax.swing.JFrame frame = new javax.swing.JFrame("Menu medicoPaciente");
-                menuMedicoForm datosPaciente = new menuMedicoForm(indice);
+                menuMedicoForm datosPaciente = new menuMedicoForm();
 
                 frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
                 frame.getContentPane().add(datosPaciente);

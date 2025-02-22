@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import utils.InicioSesion;
+
 /**
  *
  * @author Admin
@@ -146,15 +148,10 @@ public class menuPacienteForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
-        javax.swing.JFrame frame = new javax.swing.JFrame("Agenda Citas");
-        agendaCitasTableForm agendaCitas = new agendaCitasTableForm();
+        javax.swing.JFrame frame = new javax.swing.JFrame("Agendar Cita");
+        agendarCitaForm agendaCitas = new agendarCitaForm(idUsuario);
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(agendaCitas);
@@ -164,7 +161,26 @@ public class menuPacienteForm extends javax.swing.JPanel {
 
         if (frameActual != null) {
             frameActual.dispose();
-        }        
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        InicioSesion.resetIdUsuario();
+        javax.swing.JFrame frame = new javax.swing.JFrame("Agenda Citas");
+        agendaCitasTableForm agendaCitas = new agendaCitasTableForm(idUsuario);
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed

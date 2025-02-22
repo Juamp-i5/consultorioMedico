@@ -12,9 +12,18 @@ public class agendarCitaForm extends javax.swing.JPanel {
 
     /**
      * Creates new form crearCuentaForm
+     *
+     *
      */
+    private int idUsuario;
+
     public agendarCitaForm() {
         initComponents();
+    }
+
+    agendarCitaForm(int idUsuario) {
+        initComponents();
+        this.idUsuario = idUsuario;
     }
 
     /**
@@ -103,7 +112,20 @@ public class agendarCitaForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
+        menuPacienteForm agendaCitas = new menuPacienteForm(idUsuario);
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
