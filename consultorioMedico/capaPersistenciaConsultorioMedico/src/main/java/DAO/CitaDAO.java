@@ -131,7 +131,7 @@ public class CitaDAO implements ICita{
                             rs.getInt("id_cita"),
                               rs.getString("tipo"),
                              rs.getString("folio"),
-                          rs.getObject("fecha_hora").toString(), 
+                          rs.getDate("fecha_hora"), 
                             rs.getString("estado"),
                          rs.getInt("id_paciente"),
                            rs.getInt("id_medico"));
@@ -166,7 +166,7 @@ public class CitaDAO implements ICita{
                             rs.getInt("id_cita"),
                             rs.getString("tipo"),
                             rs.getString("folio"),
-                            rs.getObject("fecha_hora").toString(),
+                            rs.getDate("fecha_hora"),
                             rs.getString("estado"),
                             rs.getInt("id_paciente"),
                             rs.getInt("id_medico")
@@ -201,7 +201,7 @@ public class CitaDAO implements ICita{
                             rs.getInt("id_cita"),
                             rs.getString("tipo"),
                             rs.getString("folio"),
-                            rs.getObject("fecha_hora").toString(),
+                            rs.getDate("fecha_hora"),
                             rs.getString("estado"),
                             rs.getInt("id_paciente"),
                             rs.getInt("id_medico")
@@ -222,3 +222,4 @@ public class CitaDAO implements ICita{
     }
     
 }
+
