@@ -166,7 +166,7 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
             for (Cita cita : citas) { //buscar en cada cita 
                 int idConsulta = cita.getIdCita();
                 // Obtener los datos necesarios para agregarlos a una fila en la tabla
-                String fechaHora = cita.getFechaHora();
+                String fechaHora = cita.getFechaHora().toString();
                 String tipo = cita.getTipo();
                 String estado = consultaDAO.getEstado(cita.getIdPaciente());
                 String especialidad = medicoDAO.obtenerEspecialidad(cita.getIdMedico());
