@@ -4,6 +4,9 @@
  */
 package GUI;
 
+import java.util.List;
+import utils.Info;
+
 /**
  *
  * @author Admin
@@ -15,6 +18,10 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
      */
     public citaEmergenciaForm() {
         initComponents();
+        List<String> especialidades = Info.getEspecialidades();
+        for (String especialidad : especialidades) {
+            jComboBox1.addItem(especialidad);
+        }
     }
 
     /**
@@ -73,7 +80,6 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
         jLabel2.setText("Especialidad");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, -1, -1));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -120,7 +126,21 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        //Regresar
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Agenda Citas");
+        menuPacienteForm agendaCitas = new menuPacienteForm();
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed

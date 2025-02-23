@@ -8,6 +8,7 @@ import BO.MedicoBO;
 import BO.PacienteBO;
 import DTO.MedicoInicioSesionDTO;
 import DTO.PacienteInicioSesionDTO;
+import entidades.Medico;
 import exception.NegocioException;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -18,6 +19,7 @@ import utils.InicioSesion;
  * @author Admin
  */
 public class inicioSesionForm extends javax.swing.JPanel {
+
     /**
      * Creates new form crearCuentaForm
      */
@@ -201,6 +203,24 @@ public class inicioSesionForm extends javax.swing.JPanel {
             MedicoInicioSesionDTO medicoDTO = new MedicoInicioSesionDTO(identificador, contrasenia);
             try {
                 int indice = medico.iniciarSesion(medicoDTO);
+
+                Medico medicoEntity = medico.consultarMedico(indice);
+
+                if (medicoEntity.getEstado().equals("Inactivo")) {
+                    int confirmacion = JOptionPane.showConfirmDialog(
+                            null,
+                            "El médico está inactivo. ¿Desea darlo de alta?",
+                            "Confirmación",
+                            JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (confirmacion == JOptionPane.NO_OPTION || confirmacion == JOptionPane.CLOSED_OPTION) {
+                        return;
+                    }
+
+                    medico.darAlta(indice);
+                }
+
                 javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
                 InicioSesion.setIdUsuario(indice);
                 javax.swing.JFrame frame = new javax.swing.JFrame("Menu medicoPaciente");

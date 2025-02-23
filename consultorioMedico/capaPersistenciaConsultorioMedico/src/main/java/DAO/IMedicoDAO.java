@@ -14,24 +14,31 @@ import java.util.List;
  */
 public interface IMedicoDAO {
     
-    boolean agregarMedico(Medico medico) throws PersistenciaException;
+    public boolean agregarMedico(Medico medico) throws PersistenciaException;
 
-    Medico consultarMedico(int idMedico) throws PersistenciaException;
+    public Medico consultarMedico(int idMedico) throws PersistenciaException;
 
-    List<Medico> consultarTodosLosMedicos() throws PersistenciaException;
+    public List<Medico> consultarTodosLosMedicos() throws PersistenciaException;
 
-    boolean actualizarMedico(Medico medico) throws PersistenciaException;
+    public boolean actualizarMedico(Medico medico) throws PersistenciaException;
 
-    boolean existeMedico(int idMedico) throws PersistenciaException;
+    public boolean existeMedico(int idMedico) throws PersistenciaException;
     
-    int validarInicioSesion(Medico medico) throws PersistenciaException;
+    public int validarInicioSesion(Medico medico) throws PersistenciaException;
     
-    boolean existeCedula(String cedula) throws PersistenciaException;
+    public boolean existeCedula(String cedula) throws PersistenciaException;
     
     public String obtenerEspecialidad(int idMedico) throws PersistenciaException;
     
     public List<String> obtenerEspecialidadesMedicos() throws PersistenciaException;
     
     public List<Medico> obtenerMedicosPorEspecialidadActivos(String especialidad) throws PersistenciaException;
+    
+    public boolean citasPendientes(int idMedico) throws PersistenciaException;
+    
+    public boolean darBaja(int idMedico) throws PersistenciaException;
+    
+    public boolean darAlta(int idMedico) throws PersistenciaException;
+    
 }
 

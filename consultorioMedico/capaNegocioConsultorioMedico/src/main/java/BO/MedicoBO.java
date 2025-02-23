@@ -90,6 +90,30 @@ public class MedicoBO {
             throw new NegocioException("Error al iniciarSesion: " + ex.getMessage());
         }
     }
+    
+    public boolean citasPendientes(int idMedico) throws NegocioException {
+        try {
+            return medicoDAO.citasPendientes(idMedico);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al verificar citas pendientes: " + ex.getMessage());
+        }
+    }
+    
+    public boolean darAlta(int idMedico) throws NegocioException {
+        try {
+            return medicoDAO.darAlta(idMedico);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al dar de alta: " + ex.getMessage());
+        }
+    }
+    
+    public boolean darBaja(int idMedico) throws NegocioException {
+        try {
+            return medicoDAO.darBaja(idMedico);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al dar de baja: " + ex.getMessage()); 
+        }
+    }
 
     public boolean validarDatosMedicoNuevoDTO(MedicoNuevoDTO medicoNuevoDTO) {
         if (!validarNombre(medicoNuevoDTO.getNombre())) {

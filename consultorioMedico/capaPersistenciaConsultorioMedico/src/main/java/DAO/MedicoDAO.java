@@ -60,7 +60,7 @@ public class MedicoDAO implements IMedicoDAO {
                                 throw new SQLException("No se pudo insertar el médico.");
                             }
 
-                            conexion.commit(); 
+                            conexion.commit();
                             return true;
                         }
                     } else {
@@ -68,7 +68,7 @@ public class MedicoDAO implements IMedicoDAO {
                     }
                 }
             } catch (SQLException e) {
-                conexion.rollback(); 
+                conexion.rollback();
                 throw new PersistenciaException("Error al agregar médico: " + e.getMessage(), e);
             } finally {
                 conexion.setAutoCommit(true);
@@ -77,7 +77,6 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al conectar con la base de datos: " + e.getMessage(), e);
         }
     }
-
 
     @Override
     public Medico consultarMedico(int idMedico) throws PersistenciaException {
@@ -176,13 +175,13 @@ public class MedicoDAO implements IMedicoDAO {
         if (!existeCedula(medico.getCedulaProfesional())) {
             throw new PersistenciaException("No existe la cedula");
         }
-        
+
         String query = "SELECT id_usuario, contrasenia from vistainiciosesion WHERE cedula = ?";
-        
-        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)){
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)) {
             ps.setString(1, medico.getCedulaProfesional());
-            
-            try(ResultSet rs = ps.executeQuery()){
+
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     if (Password.verifyPassword(medico.getContrasenia(), rs.getString("contrasenia"))) {
                         return rs.getInt("id_usuario");
@@ -192,7 +191,7 @@ public class MedicoDAO implements IMedicoDAO {
                 }
                 throw new PersistenciaException("Error al verificar cedula");
             }
-            
+
         } catch (SQLException e) {
             throw new PersistenciaException("Error al validar inicio de sesion medico" + e.getMessage());
         }
@@ -217,11 +216,11 @@ public class MedicoDAO implements IMedicoDAO {
         }
     }
 
+    @Override
     public String obtenerEspecialidad(int idMedico) throws PersistenciaException {
         String consultaSQL = "SELECT especialidad FROM consultas_medicas.medico WHERE id_medico = ?";
 
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
             ps.setInt(1, idMedico);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -238,61 +237,111 @@ public class MedicoDAO implements IMedicoDAO {
     @Override
     public List<String> obtenerEspecialidadesMedicos() throws PersistenciaException {
         List<String> listaEspecialidades = new LinkedList<>();
-        
+
         //CONSULTA SQL
         String ConsultaSQL = "SELECT * FROM consultas_medicas.vistaespecialidades";
-        
+
         //CONECTAR CON LA BASE DE DATOS
-        try (Connection conexion = Conexion.getConnection()){
+        try (Connection conexion = Conexion.getConnection()) {
             //EJECUTAR LA CONSULTA SQL
-            try (PreparedStatement ps = conexion.prepareStatement(ConsultaSQL)){
+            try (PreparedStatement ps = conexion.prepareStatement(ConsultaSQL)) {
                 ResultSet rs = ps.executeQuery();
                 //AGREGAR LOS DATOS OBTENIDOS A LA LISTA
-                while(rs.next()){
+                while (rs.next()) {
                     listaEspecialidades.add(rs.getString("especialidad"));
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
-                throw new PersistenciaException("Error al conseguir la tabla de especialidades",e);
+                throw new PersistenciaException("Error al conseguir la tabla de especialidades", e);
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new PersistenciaException("Error al conectar con la base de datos", e);
         }
-        
+
         return listaEspecialidades;
     }
 
     @Override
     public List<Medico> obtenerMedicosPorEspecialidadActivos(String especialidad) throws PersistenciaException {
         List<Medico> listaMedicosDisponiblesPorEspecialidad = new LinkedList<>();
-        
+
         String ConsultaSQL = "{CALL FiltrarMedicosPorEspecialidadYQueEsteActivo(?)}";
-        
+
         try (Connection conexion = Conexion.getConnection()) {
             CallableStatement cs = conexion.prepareCall(ConsultaSQL);
-            cs.setString(1,especialidad);
+            cs.setString(1, especialidad);
             ResultSet rs = cs.executeQuery();
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 Medico medico = new Medico(rs.getString("nombre"),
-                        rs.getString("cedula_profesional"), 
-                        rs.getString("estado"), 
-                        rs.getString("nombre"), 
-                        rs.getString("apellido_paterno"), 
-                        rs.getString("apellido_materno"), 
+                        rs.getString("cedula_profesional"),
+                        rs.getString("estado"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido_paterno"),
+                        rs.getString("apellido_materno"),
                         null);
-                
+
                 listaMedicosDisponiblesPorEspecialidad.add(medico);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new PersistenciaException("Error al obtener los medicos", e);
         }
-        
+
         return listaMedicosDisponiblesPorEspecialidad;
     }
 
+    @Override
+    public boolean citasPendientes(int idMedico) throws PersistenciaException {
+        if (!existeMedico(idMedico)) {
+            throw new PersistenciaException("No existe el medico");
+        }
+
+        String query = "SELECT TieneCitasPendientes(?)";
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement stmt = conexion.prepareStatement(query)) {
+
+            stmt.setInt(1, idMedico);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al verificar citas pendientes: " + e.getMessage(), e);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean darBaja(int idMedico) throws PersistenciaException {
+        String query = "UPDATE Medico SET estado = 'Inactivo' WHERE id_medico = ?";
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, idMedico);
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al dar de baja al médico: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean darAlta(int idMedico) throws PersistenciaException {
+        String query = "UPDATE Medico SET estado = 'Activo' WHERE id_medico = ?";
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, idMedico);
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al dar de alta al médico: " + e.getMessage());
+        }
+    }
 
 }

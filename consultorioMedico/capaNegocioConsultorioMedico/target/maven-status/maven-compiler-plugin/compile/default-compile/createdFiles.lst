@@ -1,3 +1,4 @@
+BO\CitaBO.class
 DTO\UsuarioNuevoDTO.class
 utils\Password.class
 pruebas\CapaNegocioConsultorioMedico.class
@@ -8,6 +9,7 @@ DTO\MedicoInicioSesionDTO.class
 mappers\PacienteMapper.class
 BO\UsuarioBO.class
 DTO\PacienteInicioSesionDTO.class
+DTO\CitaDTO.class
 BO\MedicoBO.class
 DTO\PacienteNuevoDTO.class
 mappers\MedicoMapper.class

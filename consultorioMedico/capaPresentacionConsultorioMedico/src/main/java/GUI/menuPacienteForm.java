@@ -4,6 +4,9 @@
  */
 package GUI;
 
+import Excepciones.PresentacionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.InicioSesion;
 
 /**
@@ -158,8 +161,8 @@ public class menuPacienteForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-                javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-        
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
         javax.swing.JFrame frame = new javax.swing.JFrame("Actualizar datos Paciente");
         editarCuentaHospitalForm actualizarDatosPacienteForm;
         try {
@@ -169,9 +172,9 @@ public class menuPacienteForm extends javax.swing.JPanel {
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-        if (frameActual != null) {
-            frameActual.dispose();
-        }
+            if (frameActual != null) {
+                frameActual.dispose();
+            }
         } catch (PresentacionException ex) {
             Logger.getLogger(menuPacienteForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -214,16 +217,29 @@ public class menuPacienteForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        //Cita emergencia
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        //InicioSesion.resetIdUsuario();
+        javax.swing.JFrame frame = new javax.swing.JFrame("Agenda Citas");
+        agendaCitasTableForm agendaCitas = new agendaCitasTableForm();
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
-        
-        InicioSesion.resetIdUsuario();
-        javax.swing.JFrame frame = new javax.swing.JFrame("Inicio sesion");
-        inicioSesionForm datosPaciente = new inicioSesionForm();
+        javax.swing.JFrame frame = new javax.swing.JFrame("Cita emergencia");
+        citaEmergenciaForm datosPaciente = new citaEmergenciaForm();
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(datosPaciente);

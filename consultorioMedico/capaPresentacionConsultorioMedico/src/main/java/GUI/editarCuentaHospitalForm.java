@@ -6,7 +6,7 @@ package GUI;
 
 import BO.PacienteBO;
 import DAO.PacienteDAO;
-import DTO.PacienteActualizarDatosDTO;
+//import DTO.PacienteActualizarDatosDTO;
 import Excepciones.PresentacionException;
 import entidades.DireccionPaciente;
 import entidades.Paciente;

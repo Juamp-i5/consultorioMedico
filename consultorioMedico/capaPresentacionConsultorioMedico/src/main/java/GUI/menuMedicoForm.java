@@ -4,6 +4,11 @@
  */
 package GUI;
 
+import BO.MedicoBO;
+import exception.NegocioException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import utils.InicioSesion;
 
 /**
@@ -111,11 +116,47 @@ public class menuMedicoForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        //Darse de baja temporalmente
+        try {
+
+            MedicoBO medico = new MedicoBO();
+
+            if (medico.citasPendientes(InicioSesion.getIdUsuario())) {
+                JOptionPane panel = new JOptionPane("Tiene citas pendientes, no puede darse de baja");
+            } else {
+                int respuesta = JOptionPane.showConfirmDialog(null, "¿Deseas continuar?", "Confirmación", JOptionPane.YES_NO_OPTION);
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    boolean baja = medico.darBaja(InicioSesion.getIdUsuario());
+                    if (baja) {
+                        JOptionPane panel2 = new JOptionPane("Dado de baja, redireccionando a inicio sesion");
+                        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+                        InicioSesion.resetIdUsuario();
+                        javax.swing.JFrame frame = new javax.swing.JFrame("Inicio sesion");
+                        inicioSesionForm citasPendientes = new inicioSesionForm();
+
+                        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+                        frame.getContentPane().add(citasPendientes);
+                        frame.pack();
+                        frame.setLocationRelativeTo(null);
+                        frame.setVisible(true);
+
+                        if (frameActual != null) {
+                            frameActual.dispose();
+                        }
+                    } else {
+                        JOptionPane panel3 = new JOptionPane("No se pudo dar de baja");
+                    }
+                }
+            }
+        } catch (NegocioException ex) {
+            JOptionPane panel = new JOptionPane("Error: " + ex.getMessage());
+        }
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        //Consultar citas pendientes
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
         //InicioSesion.resetIdUsuario();
@@ -134,14 +175,29 @@ public class menuMedicoForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        //Historial consultas realizadas
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Menu medico");
+        historialConsultasMedicoTableForm agendaCitas = new historialConsultasMedicoTableForm   ();
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        //Cerrar Sesion
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
         InicioSesion.resetIdUsuario();
-        javax.swing.JFrame frame = new javax.swing.JFrame("Inicio sesion");
+        javax.swing.JFrame frame = new javax.swing.JFrame("Inicio Sesion");
         inicioSesionForm datosPaciente = new inicioSesionForm();
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);

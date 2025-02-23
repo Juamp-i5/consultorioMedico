@@ -122,12 +122,25 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here: regresar
-        
+        //Regresar
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Menu medico");
+        menuMedicoForm agendaCitas = new menuMedicoForm();
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
     private void cargarDatosEnTabla() {
         // Instanciamos los DAOs para interactuar con las tablas en la base de datos
@@ -158,38 +171,40 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
 
         } catch (PersistenciaException | SQLException ex) {
             Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }
 
     class ButtonRenderer extends JButton implements TableCellRenderer { // Se encarga de mostrar un botón dentro de una celda de la JTable.
-            public ButtonRenderer() {
-                setOpaque(true);
-            }
 
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                setText((value == null) ? "" : value.toString());
-                return this;
-            }
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
     }
 
     class ButtonEditor extends DefaultCellEditor { //permite que los botones dentro de la JTable sean clickeables
-            private JButton button;
-            private String frameName;
 
-            public ButtonEditor(JCheckBox checkBox, String frameName) {
-                super(checkBox);
-                this.frameName = frameName;
-                button = new JButton();
-                button.setOpaque(true);
+        private JButton button;
+        private String frameName;
 
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        abrirJFrame(frameName);
-                        fireEditingStopped();
-                    }
-                });
+        public ButtonEditor(JCheckBox checkBox, String frameName) {
+            super(checkBox);
+            this.frameName = frameName;
+            button = new JButton();
+            button.setOpaque(true);
+
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    abrirJFrame(frameName);
+                    fireEditingStopped();
+                }
+            });
         }
 
         @Override
@@ -227,7 +242,7 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }   
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
