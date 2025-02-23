@@ -80,6 +80,65 @@ public class PacienteBO {
         }
     }
 
+    public boolean actualizarUsuario(int idPaciente, Paciente paciente) throws NegocioException{  
+        try {
+            pacienteDAO.actualizarPaciente(paciente);
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+            throw new NegocioException("Error al actualizar los datos del paciente", e);
+        }
+        
+        return true;
+    }
+    
+    public Paciente consultarPacientePorId(int idPaciente) throws NegocioException{
+        try {
+            return pacienteDAO.consultarPaciente(idPaciente);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al consultar paciente", e);
+        }
+    }
+
+     public boolean validarDatosPacienteParaActualizar(String nombre, String apellidoPaterno, String apellidoMaterno, String numeroTelefono, String fechaNacimiento, String calle, String numero, String colonia, String codigoPostal) throws NegocioException {
+            if (!validarNombre(nombre)) {
+                throw new NegocioException("El nombre no es válido");
+            }
+
+            if (!validarApellidoPaterno(apellidoPaterno)) {
+                throw new NegocioException("El apellido paterno no es válido");
+            }
+
+            if (!validarApellidoMaterno(apellidoMaterno)) {
+                throw new NegocioException("El apellido materno no es válido");
+            }
+
+            if (!validarTelefono(numeroTelefono)) {
+                throw new NegocioException("El número de teléfono no es válido");
+            }
+
+            if (!validarFechaNacimiento(fechaNacimiento)) {
+                throw new NegocioException("La fecha de nacimiento no es válida");
+            }
+
+            if (!validarCalle(calle)) {
+                throw new NegocioException("La calle no es valida");
+            }
+
+            if (!validarNumero(numero)) {
+                throw new NegocioException("El número no es válido");
+            }
+
+            if (!validarColonia(colonia)) {
+                throw new NegocioException("La colonia no es válida");
+            }
+
+            if (!validarCodigoPostal(codigoPostal)) {
+                throw new NegocioException("El código postal no es válido");
+            }
+
+            return true;
+    }
+
     public boolean validarDatosPaciente(String nombre, String apellidoPaterno, String apellidoMaterno, String numeroTelefono, String fechaNacimiento, String calle, String numero, String colonia, String codigoPostal) throws NegocioException {
         try {
             if (pacienteDAO.existeCelular(numeroTelefono)) {
