@@ -158,7 +158,23 @@ public class menuPacienteForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+                javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        
+        javax.swing.JFrame frame = new javax.swing.JFrame("Actualizar datos Paciente");
+        editarCuentaHospitalForm actualizarDatosPacienteForm;
+        try {
+            actualizarDatosPacienteForm = new editarCuentaHospitalForm(InicioSesion.getIdUsuario());
+            frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+            frame.getContentPane().add(actualizarDatosPacienteForm);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
+        } catch (PresentacionException ex) {
+            Logger.getLogger(menuPacienteForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
