@@ -13,6 +13,8 @@ entidades\Consulta.class
 DAO\ICita.class
 DAO\IPacienteDAO.class
 DAO\IUsuarioDAO.class
+DAO\ConsultaDAO.class
+DAO\IConsultaDAO.class
 conexion\Conexion.class
 entidades\Cita.class
 entidades\Usuario.class

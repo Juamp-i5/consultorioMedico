@@ -8,12 +8,12 @@ package GUI;
  *
  * @author Admin
  */
-public class historialConsultasTableForm extends javax.swing.JPanel {
+public class historialConsultasMedicoTableForm extends javax.swing.JPanel {
 
     /**
      * Creates new form crearCuentaForm
      */
-    public historialConsultasTableForm() {
+    public historialConsultasMedicoTableForm() {
         initComponents();
     }
 
@@ -54,18 +54,18 @@ public class historialConsultasTableForm extends javax.swing.JPanel {
         jTable1.setBackground(new java.awt.Color(153, 153, 153));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Fecha_Hora", "Tipo", "Paciente", "Iniciar Consulta", "Historial"
+                "Fecha_Hora", "Tipo", "Estado", "Especialidad", "Medico", "Diagnostico", "Tratamiento"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 740, 410));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 830, 410));
 
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox1.setText("Filtrar Citas");
@@ -111,7 +111,7 @@ public class historialConsultasTableForm extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

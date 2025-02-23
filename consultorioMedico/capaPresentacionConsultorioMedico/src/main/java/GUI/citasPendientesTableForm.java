@@ -212,7 +212,7 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
             if (panelName.equals("iniciarConsultaForm")) {
                 panel = new iniciarConsultaForm();
             } else if (panelName.equals("historialConsultasTableForm")) {
-                panel = new historialConsultasTableForm();
+                panel = new historialConsultasPacienteTableForm();
             } else {
                 throw new ClassNotFoundException("Panel no encontrado");
             }
