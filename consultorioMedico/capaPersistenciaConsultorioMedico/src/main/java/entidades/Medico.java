@@ -134,8 +134,8 @@ public class Medico extends Usuario {
      * 
      * @return Cadena con la información del médico.
      */
-    @Override
+@Override
     public String toString() {
-        return "Medico{" + ", especialidad=" + especialidad + ", cedulaProfesional=" + cedulaProfesional + ", estado=" + estado + '}';
+        return "Dr. "+ this.getNombre() + " " + this.getApellidoPaterno() + " " + this.getApellidoMaterno();
     }
 }
