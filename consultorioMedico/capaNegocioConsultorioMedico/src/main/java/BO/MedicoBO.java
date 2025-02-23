@@ -11,6 +11,8 @@ import DTO.MedicoNuevoDTO;
 import entidades.Medico;
 import excepciones.PersistenciaException;
 import exception.NegocioException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mappers.MedicoMapper;
@@ -57,6 +59,25 @@ public class MedicoBO {
         }
     }
 
+    public List<String> obtenerEspecialidadesMedicos() throws NegocioException{
+        try {
+            return medicoDAO.obtenerEspecialidadesMedicos(); 
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+            throw new NegocioException("Error obtener las especialidades de los medicos", e);
+        }
+    }
+    
+    public List<Medico> obtenerMedicosDisponiblesActivos(String especialidad) throws NegocioException{
+        try {
+            return medicoDAO.obtenerMedicosPorEspecialidadActivos(especialidad);
+        } catch (PersistenciaException e) {
+            e.printStackTrace();
+            throw new NegocioException("Error al cargar los datos de Medicos", e);
+        }
+    }
+    
+    
     public int iniciarSesion(MedicoInicioSesionDTO medico) throws NegocioException {
         if (medico == null) {
             throw new NegocioException("medico es null");
@@ -130,3 +151,4 @@ public class MedicoBO {
     }
 
 }
+
