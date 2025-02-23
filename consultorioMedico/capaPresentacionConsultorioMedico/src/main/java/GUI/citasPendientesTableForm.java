@@ -143,7 +143,7 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
 
             for (Cita cita : citas) { // Buscar en cada cita
                 // Obtener los datos necesarios
-                String fechaHora = cita.getFechaHora();
+                String fechaHora = cita.getFechaHora().toString();
                 String tipoCita = cita.getTipo();
                 String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
 
