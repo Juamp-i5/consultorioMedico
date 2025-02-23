@@ -7,12 +7,14 @@ package DAO;
 import conexion.Conexion;
 import entidades.Medico;
 import excepciones.PersistenciaException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -231,6 +233,65 @@ public class MedicoDAO implements IMedicoDAO {
         } catch (SQLException e) {
             throw new PersistenciaException("Error al obtener la especialidad del médico", e);
         }
+    }
+
+    @Override
+    public List<String> obtenerEspecialidadesMedicos() throws PersistenciaException {
+        List<String> listaEspecialidades = new LinkedList<>();
+        
+        //CONSULTA SQL
+        String ConsultaSQL = "SELECT * FROM consultas_medicas.vistaespecialidades";
+        
+        //CONECTAR CON LA BASE DE DATOS
+        try (Connection conexion = Conexion.getConnection()){
+            //EJECUTAR LA CONSULTA SQL
+            try (PreparedStatement ps = conexion.prepareStatement(ConsultaSQL)){
+                ResultSet rs = ps.executeQuery();
+                //AGREGAR LOS DATOS OBTENIDOS A LA LISTA
+                while(rs.next()){
+                    listaEspecialidades.add(rs.getString("especialidad"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new PersistenciaException("Error al conseguir la tabla de especialidades",e);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new PersistenciaException("Error al conectar con la base de datos", e);
+        }
+        
+        return listaEspecialidades;
+    }
+
+    @Override
+    public List<Medico> obtenerMedicosPorEspecialidadActivos(String especialidad) throws PersistenciaException {
+        List<Medico> listaMedicosDisponiblesPorEspecialidad = new LinkedList<>();
+        
+        String ConsultaSQL = "{CALL FiltrarMedicosPorEspecialidadYQueEsteActivo(?)}";
+        
+        try (Connection conexion = Conexion.getConnection()) {
+            CallableStatement cs = conexion.prepareCall(ConsultaSQL);
+            cs.setString(1,especialidad);
+            ResultSet rs = cs.executeQuery();
+            
+            while(rs.next()){
+                Medico medico = new Medico(rs.getString("nombre"),
+                        rs.getString("cedula_profesional"), 
+                        rs.getString("estado"), 
+                        rs.getString("nombre"), 
+                        rs.getString("apellido_paterno"), 
+                        rs.getString("apellido_materno"), 
+                        null);
+                
+                listaMedicosDisponiblesPorEspecialidad.add(medico);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new PersistenciaException("Error al obtener los medicos", e);
+        }
+        
+        return listaMedicosDisponiblesPorEspecialidad;
     }
 
 
