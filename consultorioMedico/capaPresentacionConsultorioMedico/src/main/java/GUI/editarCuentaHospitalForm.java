@@ -290,10 +290,37 @@ public class editarCuentaHospitalForm extends javax.swing.JPanel {
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {                                              
         actualizarDatosPaciente();
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
+        menuPacienteForm agendaCitas = new menuPacienteForm(idUsuario);
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
     }                                             
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
+        menuPacienteForm agendaCitas = new menuPacienteForm(idUsuario);
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
         
     }                                        
 
