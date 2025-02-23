@@ -4,6 +4,25 @@
  */
 package GUI;
 
+import DAO.CitaDAO;
+import DAO.PacienteDAO;
+import DAO.UsuarioDAO;
+import entidades.Cita;
+import excepciones.PersistenciaException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  *
  * @author Admin
@@ -15,6 +34,7 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
      */
     public citasPendientesTableForm() {
         initComponents();
+        cargarDatosEnTabla();
     }
 
     /**
@@ -35,6 +55,7 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
 
         jTextField2.setText("jTextField2");
 
@@ -59,7 +80,7 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 740, 470));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 740, 440));
 
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox1.setText("Filtrar Citas");
@@ -78,6 +99,16 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 110, 30));
 
+        jButton1.setBackground(new java.awt.Color(0, 0, 0));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Regresar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 570, -1, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,7 +117,7 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -94,8 +125,113 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here: regresar
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+    private void cargarDatosEnTabla() {
+        // Instanciamos los DAOs para interactuar con las tablas en la base de datos
+        CitaDAO citaDAO = new CitaDAO();
+        PacienteDAO pacienteDAO = new PacienteDAO();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0); // Limpia la tabla antes de cargar datos nuevos      
+
+        try {
+            // Obtener citas pendientes del médico actual
+            List<Cita> citas = citaDAO.obtenerCitasPendientesMedico(utils.InicioSesion.getIdUsuario());
+
+            for (Cita cita : citas) { // Buscar en cada cita
+                // Obtener los datos necesarios
+                String fechaHora = cita.getFechaHora();
+                String tipoCita = cita.getTipo();
+                String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
+
+                // Agregar la fila con los datos y los botones
+                tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, "Iniciar consulta", "Ver historial"});
+            }
+
+            jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
+            jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm"));
+            jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
+            jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasTableForm"));
+
+        } catch (PersistenciaException | SQLException ex) {
+            Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
+
+    class ButtonRenderer extends JButton implements TableCellRenderer { // Se encarga de mostrar un botón dentro de una celda de la JTable.
+            public ButtonRenderer() {
+                setOpaque(true);
+            }
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                setText((value == null) ? "" : value.toString());
+                return this;
+            }
+    }
+
+    class ButtonEditor extends DefaultCellEditor { //permite que los botones dentro de la JTable sean clickeables
+            private JButton button;
+            private String frameName;
+
+            public ButtonEditor(JCheckBox checkBox, String frameName) {
+                super(checkBox);
+                this.frameName = frameName;
+                button = new JButton();
+                button.setOpaque(true);
+
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        abrirJFrame(frameName);
+                        fireEditingStopped();
+                    }
+                });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            button.setText((value == null) ? "" : value.toString());
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return button.getText();
+        }
+    }
+
+    private void abrirJFrame(String panelName) {
+        try {
+            JFrame frame = new JFrame();
+            JPanel panel;
+
+            if (panelName.equals("iniciarConsultaForm")) {
+                panel = new iniciarConsultaForm();
+            } else if (panelName.equals("historialConsultasTableForm")) {
+                panel = new historialConsultasTableForm();
+            } else {
+                throw new ClassNotFoundException("Panel no encontrado");
+            }
+
+            // Configurar el frame y agregar el panel
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setSize(850, 700);
+            frame.setLocationRelativeTo(null);
+            frame.add(panel);
+            frame.setVisible(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }   
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

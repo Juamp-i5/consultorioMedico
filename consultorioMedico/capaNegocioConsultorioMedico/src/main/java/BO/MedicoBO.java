@@ -25,19 +25,20 @@ public class MedicoBO {
     IMedicoDAO medicoDAO = new MedicoDAO();
 
     public boolean agregarMedico(MedicoNuevoDTO medicoNuevoDTO) throws NegocioException {
-        if (medicoNuevoDTO == null || !validarDatosMedicoNuevoDTO(medicoNuevoDTO)) {
+        if (medicoNuevoDTO == null) {
             return false;
         }
+
         medicoNuevoDTO.setContrasenia(Password.hashPassword(medicoNuevoDTO.getContrasenia()));
         Medico medico = MedicoMapper.toEntity(medicoNuevoDTO);
 
         try {
             return medicoDAO.agregarMedico(medico);
         } catch (PersistenciaException e) {
-            throw new NegocioException("Error al agregarMedico: " + e.getMessage());
+            throw new NegocioException("Error al agregar médico: " + e.getMessage(), e);
         }
-
     }
+
 
     public Medico consultarMedico(int idMedico) throws NegocioException {
         //Validar que el id sea valido

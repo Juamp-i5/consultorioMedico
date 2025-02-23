@@ -27,3 +27,4 @@ public class CapaPresentacionConsultorioMedico {
         frame.setVisible(true);
     }
 }
+

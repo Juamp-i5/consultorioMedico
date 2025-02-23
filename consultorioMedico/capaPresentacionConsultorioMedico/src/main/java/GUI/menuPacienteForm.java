@@ -168,9 +168,9 @@ public class menuPacienteForm extends javax.swing.JPanel {
         // TODO add your handling code here:
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
-        InicioSesion.resetIdUsuario();
+        //InicioSesion.resetIdUsuario();
         javax.swing.JFrame frame = new javax.swing.JFrame("Agenda Citas");
-        agendaCitasTableForm agendaCitas = new agendaCitasTableForm(idUsuario);
+        agendaCitasTableForm agendaCitas = new agendaCitasTableForm();
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(agendaCitas);
@@ -190,6 +190,8 @@ public class menuPacienteForm extends javax.swing.JPanel {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
+        
+        InicioSesion.resetIdUsuario();
         javax.swing.JFrame frame = new javax.swing.JFrame("Inicio sesion");
         inicioSesionForm datosPaciente = new inicioSesionForm();
 

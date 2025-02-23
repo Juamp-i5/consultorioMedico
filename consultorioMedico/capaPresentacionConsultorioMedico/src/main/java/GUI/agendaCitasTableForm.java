@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JCheckBox;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,7 +25,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
     /**
      * Creates new form crearCuentaForm
      */
-    public agendaCitasTableForm(int idUsuario) {
+    public agendaCitasTableForm() {
         initComponents();
         this.idUsuario = idUsuario;
         cargarDatosEnTabla();
@@ -59,7 +60,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        jLabel1.setText("Citas Pendientes");
+        jLabel1.setText("Agenda de Citas");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, -1, -1));
 
         jTable1.setBackground(new java.awt.Color(153, 153, 153));
@@ -155,7 +156,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
 
         try {
             // Utilizar el idPaciente pasado al constructor (falta agregar esa funcion)
-            List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(1); // falta ver como hacer para consultar las citas del paciente actual
+            List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(utils.InicioSesion.getIdUsuario());
             for (Cita cita : citas) { //buscar en cada cita 
                 // Obtener los datos necesarios para agregarlos a una fila en la tabla
                 String fechaHora = cita.getFechaHora();
@@ -163,8 +164,11 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
                 String nombreMedico = usuarioDAO.obtenerNombre(cita.getIdMedico());
 
                 // Agregamos una fila con los datos obtenidos aqui arribita y SE AGREGA PASADO DE LANZA
-                tableModel.addRow(new Object[]{fechaHora, especialidad, nombreMedico});
+                tableModel.addRow(new Object[]{fechaHora, especialidad, nombreMedico, "Cancelar Cita"});
+                
             }
+           
+                
         } catch (PersistenciaException e) {
         } catch (SQLException ex) {
             Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);

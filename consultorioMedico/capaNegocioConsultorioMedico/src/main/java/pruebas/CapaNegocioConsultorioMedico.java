@@ -5,6 +5,7 @@ package pruebas;
 
 import BO.MedicoBO;
 import BO.PacienteBO;
+import DTO.MedicoNuevoDTO;
 import DTO.PacienteNuevoDTO;
 import entidades.Medico;
 import exception.NegocioException;
@@ -16,33 +17,53 @@ import java.time.LocalDate;
  */
 public class CapaNegocioConsultorioMedico {
 
-    public static void main(String[] args) {
-        PacienteNuevoDTO pacienteNuevoDTO = new PacienteNuevoDTO();
-        pacienteNuevoDTO.setNombre("Juan");
-        pacienteNuevoDTO.setApellidoPaterno("Pérez");
-        pacienteNuevoDTO.setApellidoMaterno("González");
-        pacienteNuevoDTO.setContrasenia("password123");
-        pacienteNuevoDTO.setFechaNacimiento(LocalDate.of(2005, 5, 15));
-        pacienteNuevoDTO.setTelefono("9223527230");
-        pacienteNuevoDTO.setCorreoElectronico("juanasssvczxcsssssssss.perez@example.com");
-        pacienteNuevoDTO.setCalle("Rio garona");
-        pacienteNuevoDTO.setNumero("2344");
-        pacienteNuevoDTO.setColonia("Villa Bonita");
-        pacienteNuevoDTO.setCodigoPostal("1234");
+    public static void main(String[] args) throws NegocioException {
+//        PacienteNuevoDTO pacienteNuevoDTO = new PacienteNuevoDTO();
+//        pacienteNuevoDTO.setNombre("Juan");
+//        pacienteNuevoDTO.setApellidoPaterno("Pérez");
+//        pacienteNuevoDTO.setApellidoMaterno("González");
+//        pacienteNuevoDTO.setContrasenia("password123");
+//        pacienteNuevoDTO.setFechaNacimiento(LocalDate.of(2005, 5, 15));
+//        pacienteNuevoDTO.setTelefono("9223527230");
+//        pacienteNuevoDTO.setCorreoElectronico("juanasssvczxcsssssssss.perez@example.com");
+//        pacienteNuevoDTO.setCalle("Rio garona");
+//        pacienteNuevoDTO.setNumero("2344");
+//        pacienteNuevoDTO.setColonia("Villa Bonita");
+//        pacienteNuevoDTO.setCodigoPostal("1234");
+//
+//        PacienteBO pacienteBO = new PacienteBO();
+//        // Probar el método agregarPaciente
+//        try {
+//            boolean resultado = pacienteBO.agregarPaciente(pacienteNuevoDTO);
+//            if (resultado) {
+//                System.out.println("Paciente agregado correctamente.");
+//            } else {
+//                System.out.println("Error al agregar el paciente.");
+//            }
+//        } catch (NegocioException e) {
+//            System.out.println("Excepción de negocio: " + e.getMessage());
+//        }
 
-        PacienteBO pacienteBO = new PacienteBO();
-        // Probar el método agregarPaciente
-        try {
-            boolean resultado = pacienteBO.agregarPaciente(pacienteNuevoDTO);
-            if (resultado) {
-                System.out.println("Paciente agregado correctamente.");
-            } else {
-                System.out.println("Error al agregar el paciente.");
-            }
-        } catch (NegocioException e) {
-            System.out.println("Excepción de negocio: " + e.getMessage());
+        MedicoNuevoDTO medicoNuevoDTO = new MedicoNuevoDTO();
+        medicoNuevoDTO.setNombre("Jorge");
+        medicoNuevoDTO.setApellidoPaterno("Marquez");
+        medicoNuevoDTO.setApellidoMaterno("Valenzuela");
+        medicoNuevoDTO.setEspecialidad("Genetica");
+        medicoNuevoDTO.setCedulaProfesional("12903478");
+        medicoNuevoDTO.setEstado("Activo");
+        medicoNuevoDTO.setContrasenia("control123");
+        MedicoBO medicoBO = new MedicoBO();
+
+        try{    
+          boolean resultado = medicoBO.agregarMedico(medicoNuevoDTO);
+          if(resultado){
+              System.out.println("Medico Agregado correctamente.");
+          }else{
+              System.out.println("Error al agregar paciente.");
+          }
+        }catch(NegocioException e){
+                  System.out.println("Excepcion de negocio: " + e.getMessage());
         }
-//        MedicoBO medicoBO = new MedicoBO();
 
             
 //        try {
@@ -59,6 +80,11 @@ public class CapaNegocioConsultorioMedico {
 //            System.out.println("Excepcion de negocio al consultar medico: " + e.getMessage());
 //        }
 //        
+
+
+
+
+            
     }
     
 }

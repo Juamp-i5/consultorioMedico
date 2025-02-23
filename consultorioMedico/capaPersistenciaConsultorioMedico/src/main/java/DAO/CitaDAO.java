@@ -151,4 +151,74 @@ public class CitaDAO implements ICita{
         
     }
     
+    public List<Cita> obtenerCitasActivasMedico(int idMedico) throws PersistenciaException {
+        List<Cita> listaCitasActivas = new LinkedList<>();
+        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? ";
+
+        try (Connection conexion = Conexion.getConnection()) {
+
+            try (PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
+                ps.setInt(1, idMedico); 
+                ResultSet rs = ps.executeQuery(); 
+
+                while (rs.next()) {
+                    Cita cita = new Cita(
+                            rs.getInt("id_cita"),
+                            rs.getString("tipo"),
+                            rs.getString("folio"),
+                            rs.getObject("fecha_hora").toString(),
+                            rs.getString("estado"),
+                            rs.getInt("id_paciente"),
+                            rs.getInt("id_medico")
+                    );
+
+                    listaCitasActivas.add(cita);
+                }
+
+                return listaCitasActivas;
+
+            } catch (SQLException e) {
+                throw new PersistenciaException("Error al consultar las citas activas del médico", e);
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al conectar a la base de datos", e);
+        }
+    }
+    
+        public List<Cita> obtenerCitasPendientesMedico(int idMedico) throws PersistenciaException {
+        List<Cita> listaCitasActivas = new LinkedList<>();
+        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND estado = 'No atendida'";
+
+        try (Connection conexion = Conexion.getConnection()) {
+
+            try (PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
+                ps.setInt(1, idMedico); 
+                ResultSet rs = ps.executeQuery(); 
+
+                while (rs.next()) {
+                    Cita cita = new Cita(
+                            rs.getInt("id_cita"),
+                            rs.getString("tipo"),
+                            rs.getString("folio"),
+                            rs.getObject("fecha_hora").toString(),
+                            rs.getString("estado"),
+                            rs.getInt("id_paciente"),
+                            rs.getInt("id_medico")
+                    );
+
+                    listaCitasActivas.add(cita);
+                }
+
+                return listaCitasActivas;
+
+            } catch (SQLException e) {
+                throw new PersistenciaException("Error al consultar las citas activas del médico", e);
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al conectar a la base de datos", e);
+        }
+    }
+    
 }

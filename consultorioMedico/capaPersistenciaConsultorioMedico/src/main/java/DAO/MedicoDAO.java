@@ -11,8 +11,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.Password;
 
 /**
@@ -23,19 +26,56 @@ public class MedicoDAO implements IMedicoDAO {
 
     @Override
     public boolean agregarMedico(Medico medico) throws PersistenciaException {
-        String query = "INSERT INTO consultas_medicas.medico (especialidad, cedula_profesional, estado) VALUES (?, ?, ?);";
+        String queryUsuario = "INSERT INTO consultas_medicas.usuario (nombre, apellido_paterno, apellido_materno, contrasenia) VALUES (?, ?, ?, ?);";
+        String queryMedico = "INSERT INTO consultas_medicas.medico (id_medico, especialidad, cedula_profesional, estado) VALUES (?, ?, ?, ?);";
 
-        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)) {
-            ps.setString(1, medico.getEspecialidad());
-            ps.setString(2, medico.getCedulaProfesional());
-            ps.setString(3, medico.getEstado());
+        try (Connection conexion = Conexion.getConnection()) {
+            conexion.setAutoCommit(false);
 
-            int affectedRows = ps.executeUpdate();
-            return affectedRows > 0;
+            try (PreparedStatement psUsuario = conexion.prepareStatement(queryUsuario, Statement.RETURN_GENERATED_KEYS)) {
+                psUsuario.setString(1, medico.getNombre());
+                psUsuario.setString(2, medico.getApellidoPaterno());
+                psUsuario.setString(3, medico.getApellidoMaterno());
+                psUsuario.setString(4, medico.getContrasenia());
+
+                int affectedRowsUsuario = psUsuario.executeUpdate();
+                if (affectedRowsUsuario == 0) {
+                    throw new SQLException("No se pudo insertar el usuario.");
+                }
+
+                try (ResultSet generatedKeys = psUsuario.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int idUsuario = generatedKeys.getInt(1);
+
+                        try (PreparedStatement psMedico = conexion.prepareStatement(queryMedico)) {
+                            psMedico.setInt(1, idUsuario);
+                            psMedico.setString(2, medico.getEspecialidad());
+                            psMedico.setString(3, medico.getCedulaProfesional());
+                            psMedico.setString(4, medico.getEstado());
+
+                            int affectedRowsMedico = psMedico.executeUpdate();
+                            if (affectedRowsMedico == 0) {
+                                throw new SQLException("No se pudo insertar el médico.");
+                            }
+
+                            conexion.commit(); 
+                            return true;
+                        }
+                    } else {
+                        throw new PersistenciaException("No se pudo obtener el ID del usuario.");
+                    }
+                }
+            } catch (SQLException e) {
+                conexion.rollback(); 
+                throw new PersistenciaException("Error al agregar médico: " + e.getMessage(), e);
+            } finally {
+                conexion.setAutoCommit(true);
+            }
         } catch (SQLException e) {
-            throw new PersistenciaException("Error al agregarMedico: " + e.getMessage());
+            throw new PersistenciaException("Error al conectar con la base de datos: " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public Medico consultarMedico(int idMedico) throws PersistenciaException {

@@ -2,6 +2,7 @@ GUI\datosPacienteForm$11.class
 GUI\agendaCitasTableForm$1.class
 GUI\datosConsultaForm$5.class
 GUI\datosPacienteForm$4.class
+GUI\citasPendientesTableForm$ButtonRenderer.class
 GUI\menuMedicoForm$4.class
 GUI\citaEmergenciaForm.class
 GUI\inicioSesionForm$1.class
@@ -14,6 +15,7 @@ GUI\historialConsultasTableForm$2.class
 GUI\citaEmergenciaForm$2.class
 GUI\iniciarConsultaForm$1.class
 GUI\menuPacienteForm$6.class
+GUI\citasPendientesTableForm$ButtonEditor$1.class
 GUI\datosConsultaForm$2.class
 GUI\editarCuentaHospitalForm$4.class
 GUI\datosPacienteForm$1.class
@@ -35,10 +37,12 @@ GUI\inicioSesionForm.class
 GUI\menuPacienteForm$4.class
 GUI\citasPendientesTableForm$1.class
 GUI\datosConsultaForm$6.class
+GUI\citasPendientesTableForm$ButtonEditor.class
 GUI\datosPacienteForm$9.class
 GUI\editarCuentaHospitalForm$3.class
 GUI\menuMedicoForm.class
 GUI\datosPacienteForm$2.class
+GUI\citasPendientesTableForm$2.class
 GUI\datosConsultaForm$7.class
 GUI\editarCuentaHospitalForm$6.class
 GUI\menuPacienteForm$5.class
