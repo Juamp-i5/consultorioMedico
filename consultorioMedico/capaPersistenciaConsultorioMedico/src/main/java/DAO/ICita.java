@@ -39,5 +39,5 @@ public interface ICita {
      * @throws PersistenciaException Si no se logra obtener el listado
      */
     public List<Cita> obtenerCitasActivasPaciente(int idPaciente) throws PersistenciaException;
-    
+     
 }
