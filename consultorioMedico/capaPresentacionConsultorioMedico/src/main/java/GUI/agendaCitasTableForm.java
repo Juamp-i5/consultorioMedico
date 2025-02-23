@@ -159,7 +159,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
             List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(utils.InicioSesion.getIdUsuario());
             for (Cita cita : citas) { //buscar en cada cita 
                 // Obtener los datos necesarios para agregarlos a una fila en la tabla
-                String fechaHora = cita.getFechaHora();
+                String fechaHora = cita.getFechaHora().toString();
                 String especialidad = medicoDAO.obtenerEspecialidad(cita.getIdMedico());
                 String nombreMedico = usuarioDAO.obtenerNombre(cita.getIdMedico());
 
