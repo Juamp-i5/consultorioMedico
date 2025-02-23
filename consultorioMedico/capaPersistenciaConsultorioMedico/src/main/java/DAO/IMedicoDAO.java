@@ -29,4 +29,9 @@ public interface IMedicoDAO {
     boolean existeCedula(String cedula) throws PersistenciaException;
     
     public String obtenerEspecialidad(int idMedico) throws PersistenciaException;
+    
+    public List<String> obtenerEspecialidadesMedicos() throws PersistenciaException;
+    
+    public List<Medico> obtenerMedicosPorEspecialidadActivos(String especialidad) throws PersistenciaException;
 }
+
