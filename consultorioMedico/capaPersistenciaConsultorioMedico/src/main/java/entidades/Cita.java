@@ -4,6 +4,8 @@
  */
 package entidades;
 
+import java.sql.Date;
+
 /**
  *
  * @author Jp
@@ -13,7 +15,7 @@ public class Cita {
     private int idCita;
     private String tipo;
     private String folio;
-    private String fechaHora;
+    private Date fechaHora;
     private String estado;
     private int idPaciente;
     private int idMedico;
@@ -21,7 +23,7 @@ public class Cita {
     public Cita() {
     }
 
-    public Cita(int idCita, String tipo, String folio, String fechaHora, String estado, int idPaciente, int idMedico) {
+    public Cita(int idCita, String tipo, String folio, Date fechaHora, String estado, int idPaciente, int idMedico) {
         this.idCita = idCita;
         this.tipo = tipo;
         this.folio = folio;
@@ -31,7 +33,7 @@ public class Cita {
         this.idMedico = idMedico;
     }
 
-    public Cita(String tipo, String folio, String fechaHora, String estado, int idPaciente, int idMedico) {
+    public Cita(String tipo, String folio, Date fechaHora, String estado, int idPaciente, int idMedico) {
         this.tipo = tipo;
         this.folio = folio;
         this.fechaHora = fechaHora;
@@ -64,11 +66,11 @@ public class Cita {
         this.folio = folio;
     }
 
-    public String getFechaHora() {
+    public Date getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(String fechaHora) {
+    public void setFechaHora(Date fechaHora) {
         this.fechaHora = fechaHora;
     }
 
@@ -102,3 +104,4 @@ public class Cita {
     }
 
 }
+
