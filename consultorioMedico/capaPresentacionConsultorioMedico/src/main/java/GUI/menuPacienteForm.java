@@ -238,11 +238,11 @@ public class menuPacienteForm extends javax.swing.JPanel {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
-        javax.swing.JFrame frame = new javax.swing.JFrame("Cita emergencia");
-        citaEmergenciaForm datosPaciente = new citaEmergenciaForm();
+        javax.swing.JFrame frame = new javax.swing.JFrame("Iniciar Sesion");
+        inicioSesionForm inicioSesion = new inicioSesionForm();
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        frame.getContentPane().add(datosPaciente);
+        frame.getContentPane().add(inicioSesion);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

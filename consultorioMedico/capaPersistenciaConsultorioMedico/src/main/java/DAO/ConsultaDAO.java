@@ -12,6 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
+import java.time.LocalDateTime;
 
 public class ConsultaDAO {
     
@@ -72,6 +75,30 @@ public class ConsultaDAO {
             throw new PersistenciaException("Error al obtener tratamiento de la consulta", e);
         }
         return tratamiento;
+    }
+    
+    public List<Consulta> obtenerConsultasPaciente(int idPaciente) throws PersistenciaException {
+        List<Consulta> consultas = new ArrayList<>();
+        String sql = "SELECT * FROM consulta as con join cita as cit on con.id_cita = cit.id_cita where id_paciente = ?;";  
+
+        try (Connection conexion = Conexion.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idPaciente);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Consulta consulta = new Consulta();
+                consulta.setIdConsulta(rs.getInt("id_consulta"));
+                consulta.setDiagnostico(rs.getString("diagnostico"));
+                consulta.setTratamiento(rs.getString("tratamiento"));
+                consulta.setEstado(rs.getString("estado"));
+                consultas.add(consulta);
+            }
+        } catch (SQLException e) {
+            logger.severe("Error al obtener consultas del paciente: " + e.getMessage());
+            throw new PersistenciaException("Error al obtener consultas del paciente", e);
+        }
+        return consultas;
     }
 }
 

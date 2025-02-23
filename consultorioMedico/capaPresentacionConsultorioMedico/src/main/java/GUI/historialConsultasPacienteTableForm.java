@@ -9,12 +9,16 @@ import DAO.ConsultaDAO;
 import DAO.MedicoDAO;
 import DAO.UsuarioDAO;
 import entidades.Cita;
+import entidades.Consulta;
 import excepciones.PersistenciaException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -153,37 +157,43 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton7ActionPerformed
     private void cargarDatosEnTabla() {
-        CitaDAO citaDAO = new CitaDAO();
+        ConsultaDAO consultaDAO = new ConsultaDAO();
         MedicoDAO medicoDAO = new MedicoDAO();
         UsuarioDAO usuarioDAO = new UsuarioDAO();
-        ConsultaDAO consultaDAO = new ConsultaDAO();
+        CitaDAO citaDAO = new CitaDAO();
         DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
-        tableModel.setRowCount(0); // Limpia la tabla antes de cargar datos nuevos (proximos)
-        
-        try {
-            // Utilizar el idPaciente pasado al constructor (falta agregar esa funcion)
-            List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(utils.InicioSesion.getIdUsuario());
-            for (Cita cita : citas) { //buscar en cada cita 
-                int idConsulta = cita.getIdCita();
-                // Obtener los datos necesarios para agregarlos a una fila en la tabla
-                String fechaHora = cita.getFechaHora().toString();
-                String tipo = cita.getTipo();
-                String estado = consultaDAO.getEstado(cita.getIdPaciente());
-                String especialidad = medicoDAO.obtenerEspecialidad(cita.getIdMedico());
-                String medico = usuarioDAO.obtenerNombre(cita.getIdMedico());
-                String diagnostico = consultaDAO.getDiagnostico(idConsulta);
-                String tratamiento = consultaDAO.getTratamiento(idConsulta);
+        tableModel.setRowCount(0); // Limpiar la tabla antes de cargar datos nuevos
 
-                // Agregamos una fila con los datos obtenidos aqui arribita y SE AGREGA PASADO DE LANZA
-                tableModel.addRow(new Object[]{fechaHora, tipo, estado, especialidad, medico, diagnostico, tratamiento});
-                
+        try {
+            // Obtener las consultas del paciente
+            List<Consulta> consultas = consultaDAO.obtenerConsultasPaciente(utils.InicioSesion.getIdUsuario());
+            for (Consulta consulta : consultas) { // Recorrer cada consulta
+                LocalDateTime ahora = LocalDateTime.now();
+
+                // Obtener los datos para la fila
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); //formato para la fecha
+                String fechaHora = ahora.format(formatter);
+                String tipo = "Consulta"; // Puedes cambiar esto si hay diferentes tipos de consulta
+                String estado = consulta.getEstado();
+                List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(utils.InicioSesion.getIdUsuario());
+                String especialidad = "";
+                String nombreMedico = "";
+                for (Cita cita : citas) {
+                    especialidad = medicoDAO.obtenerEspecialidad(cita.getIdMedico());
+                    nombreMedico = usuarioDAO.obtenerNombre(cita.getIdMedico());
+                }
+
+                String diagnostico = consulta.getDiagnostico();
+                String tratamiento = consulta.getTratamiento();
+
+                // Agregar una fila con los datos de la consulta
+                tableModel.addRow(new Object[]{fechaHora, tipo, estado, especialidad, nombreMedico, diagnostico, tratamiento});
             }
-           
-                
         } catch (PersistenciaException | SQLException ex) {
-            Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+            Logger.getLogger(historialConsultasPacienteTableForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton7;
