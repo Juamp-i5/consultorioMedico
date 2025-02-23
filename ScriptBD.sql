@@ -226,3 +226,24 @@ LEFT JOIN Medico m ON u.id_usuario = m.id_medico;
 CREATE VIEW VistaEspecialidades AS
 SELECT DISTINCT especialidad
 FROM medico;
+
+DELIMITER //
+
+CREATE PROCEDURE FiltrarMedicosPorEspecialidadYQueEsteActivo(IN especialidad_busqueda VARCHAR(100))
+BEGIN
+    SELECT 
+        M.id_medico, 
+        U.nombre, 
+        U.apellido_paterno, 
+        U.apellido_materno, 
+        M.especialidad, 
+        M.cedula_profesional, 
+        M.estado
+    FROM Medico M
+    JOIN Usuario U ON M.id_medico = U.id_usuario
+    WHERE M.especialidad = especialidad_busqueda AND M.estado = "Activo";
+END //
+
+DELIMITER ;
+
+
