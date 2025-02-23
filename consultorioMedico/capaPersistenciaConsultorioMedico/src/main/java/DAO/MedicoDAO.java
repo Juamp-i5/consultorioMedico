@@ -32,6 +32,7 @@ public class MedicoDAO implements IMedicoDAO {
         String queryMedico = "INSERT INTO consultas_medicas.medico (id_medico, especialidad, cedula_profesional, estado) VALUES (?, ?, ?, ?);";
 
         try (Connection conexion = Conexion.getConnection()) {
+            // AutoCommit desactivado
             conexion.setAutoCommit(false);
 
             try (PreparedStatement psUsuario = conexion.prepareStatement(queryUsuario, Statement.RETURN_GENERATED_KEYS)) {
@@ -40,6 +41,7 @@ public class MedicoDAO implements IMedicoDAO {
                 psUsuario.setString(3, medico.getApellidoMaterno());
                 psUsuario.setString(4, medico.getContrasenia());
 
+                // Comprobamos si se inserto el usuario
                 int affectedRowsUsuario = psUsuario.executeUpdate();
                 if (affectedRowsUsuario == 0) {
                     throw new SQLException("No se pudo insertar el usuario.");
@@ -55,11 +57,13 @@ public class MedicoDAO implements IMedicoDAO {
                             psMedico.setString(3, medico.getCedulaProfesional());
                             psMedico.setString(4, medico.getEstado());
 
+                            //Comprobamos si se inserto el medico
                             int affectedRowsMedico = psMedico.executeUpdate();
                             if (affectedRowsMedico == 0) {
                                 throw new SQLException("No se pudo insertar el médico.");
                             }
 
+                            //Si sale bien todo hacemos el commit
                             conexion.commit();
                             return true;
                         }

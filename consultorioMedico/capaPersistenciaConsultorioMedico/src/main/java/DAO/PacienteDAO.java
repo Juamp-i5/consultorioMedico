@@ -13,8 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import utils.Password;
 
 /**
@@ -30,7 +28,8 @@ public class PacienteDAO implements IPacienteDAO {
         String queryDireccion = "INSERT INTO consultas_medicas.direccion_paciente (id_direccion_paciente, calle, numero, colonia, codigo_postal) VALUES (?, ?, ?, ?, ?);";
 
         try (Connection conexion = Conexion.getConnection()) {
-            conexion.setAutoCommit(false); // Desactivar autoCommit para iniciar transacción
+            // Desactivar autoCommit para iniciar transacción
+            conexion.setAutoCommit(false);
 
             try (PreparedStatement psUsuario = conexion.prepareStatement(queryUsuario, Statement.RETURN_GENERATED_KEYS)) {
                 psUsuario.setString(1, paciente.getNombre());

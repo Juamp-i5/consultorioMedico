@@ -1,16 +1,26 @@
 package entidades;
 
 /**
- * Representa un médico en el sistema.
- * Extiende la clase Usuario e incluye información adicional como especialidad,
- * cédula profesional y estado.
- * 
+ * Representa un médico en el sistema. Extiende la clase Usuario e incluye
+ * información adicional como especialidad, cédula profesional y estado.
+ *
  * @author Jp
  */
 public class Medico extends Usuario {
 
+    /**
+     * Especialidad médica del doctor.
+     */
     private String especialidad;
+
+    /**
+     * Cédula profesional que certifica al médico.
+     */
     private String cedulaProfesional;
+
+    /**
+     * Si el doctor esta dado de alta o de baja
+     */
     private String estado;
 
     /**
@@ -22,7 +32,7 @@ public class Medico extends Usuario {
 
     /**
      * Constructor que inicializa solo al médico con sus datos básicos.
-     * 
+     *
      * @param idMedico Identificador único del médico.
      * @param especialidad Especialidad médica del doctor.
      * @param cedulaProfesional Cédula profesional del médico.
@@ -37,8 +47,7 @@ public class Medico extends Usuario {
 
     /**
      * Constructor que inicializa un médico con datos personales y de usuario.
-     * 
-     * @param idMedico Identificador único del médico.
+     *
      * @param especialidad Especialidad médica del doctor.
      * @param cedulaProfesional Cédula profesional del médico.
      * @param estado Estado en el que ejerce el médico.
@@ -57,7 +66,7 @@ public class Medico extends Usuario {
 
     /**
      * Constructor que inicializa un médico sin ID asignado.
-     * 
+     *
      * @param especialidad Especialidad médica del doctor.
      * @param cedulaProfesional Cédula profesional del médico.
      * @param estado Estado en el que ejerce el médico.
@@ -72,12 +81,10 @@ public class Medico extends Usuario {
         this.cedulaProfesional = cedulaProfesional;
         this.estado = estado;
     }
-    
-
 
     /**
      * Obtiene la especialidad del médico.
-     * 
+     *
      * @return Especialidad médica del doctor.
      */
     public String getEspecialidad() {
@@ -86,7 +93,7 @@ public class Medico extends Usuario {
 
     /**
      * Establece la especialidad del médico.
-     * 
+     *
      * @param especialidad Nueva especialidad del médico.
      */
     public void setEspecialidad(String especialidad) {
@@ -95,7 +102,7 @@ public class Medico extends Usuario {
 
     /**
      * Obtiene la cédula profesional del médico.
-     * 
+     *
      * @return Cédula profesional del médico.
      */
     public String getCedulaProfesional() {
@@ -104,7 +111,7 @@ public class Medico extends Usuario {
 
     /**
      * Establece la cédula profesional del médico.
-     * 
+     *
      * @param cedulaProfesional Nueva cédula profesional del médico.
      */
     public void setCedulaProfesional(String cedulaProfesional) {
@@ -113,7 +120,7 @@ public class Medico extends Usuario {
 
     /**
      * Obtiene el estado donde ejerce el médico.
-     * 
+     *
      * @return Estado donde ejerce el médico.
      */
     public String getEstado() {
@@ -122,7 +129,7 @@ public class Medico extends Usuario {
 
     /**
      * Establece el estado donde ejerce el médico.
-     * 
+     *
      * @param estado Nuevo estado donde ejerce el médico.
      */
     public void setEstado(String estado) {
@@ -131,11 +138,11 @@ public class Medico extends Usuario {
 
     /**
      * Retorna una representación en cadena del objeto Medico.
-     * 
+     *
      * @return Cadena con la información del médico.
      */
-@Override
+    @Override
     public String toString() {
-        return "Dr. "+ this.getNombre() + " " + this.getApellidoPaterno() + " " + this.getApellidoMaterno();
+        return "Dr. " + this.getNombre() + " " + this.getApellidoPaterno() + " " + this.getApellidoMaterno();
     }
 }

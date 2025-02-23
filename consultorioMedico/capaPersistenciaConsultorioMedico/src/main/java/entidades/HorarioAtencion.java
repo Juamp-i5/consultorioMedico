@@ -7,17 +7,41 @@ package entidades;
 import java.time.LocalTime;
 
 /**
+ * Representa el horario de atención de un médico en el sistema. Cada horario
+ * incluye el día de la semana, la hora de inicio y fin, y el médico asociado.
  *
  * @author Jp
  */
 public class HorarioAtencion {
 
+    /**
+     * Identificador único del horario de atención.
+     */
     private int idHorarioAtencion;
+
+    /**
+     * Día de la semana en el que aplica este horario.
+     */
     private String diaSemana;
+
+    /**
+     * Hora de inicio de la atención médica.
+     */
     private LocalTime horaInicio;
+
+    /**
+     * Hora de finalización de la atención médica.
+     */
     private LocalTime horaFin;
+
+    /**
+     * Identificador del médico al que pertenece este horario.
+     */
     private int idMedico;
 
+    /**
+     * Constructor por defecto.
+     */
     public HorarioAtencion() {
     }
 

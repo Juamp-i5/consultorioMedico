@@ -34,7 +34,7 @@ public interface ICita {
     /**
      * Obtiene todas las citas que estan activas del paciente que tiene ese id
      * 
-     * @param id Id del paciente del que se quiere saber sus citas disponibles
+     * @param idPaciente Id del paciente del que se quiere saber sus citas disponibles
      * @return Una lista con todas las citas activas del paciente
      * @throws PersistenciaException Si no se logra obtener el listado
      */
