@@ -308,4 +308,30 @@ public class PacienteDAO implements IPacienteDAO {
 
         return false;
     }
+    
+    
+    public boolean filtroConsultasPaciente(int idPaciente, String especialidad, String fechaInicio, String fechaFin) {
+        String query = "SELECT * FROM consulta as con " +
+                       "JOIN cita as cit ON con.id_cita = cit.id_cita " +
+                       "JOIN medico as m ON m.id_medico = cit.id_medico " +
+                       "WHERE cit.id_paciente = ? AND m.especialidad = ? " +
+                       "AND cit.fecha_hora BETWEEN ? AND ?;";
+
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, idPaciente);
+            pstmt.setString(2, especialidad);
+            pstmt.setString(3, fechaInicio);
+            pstmt.setString(4, fechaFin);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return true; 
+            }
+        } catch (SQLException e) {
+        }
+        return false; // No se encontraron consultas
+    }
 }

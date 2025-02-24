@@ -1,5 +1,6 @@
 BO\CitaBO.class
 DTO\UsuarioNuevoDTO.class
+mappers\CitaMapper.class
 utils\Password.class
 pruebas\CapaNegocioConsultorioMedico.class
 exception\NegocioException.class
