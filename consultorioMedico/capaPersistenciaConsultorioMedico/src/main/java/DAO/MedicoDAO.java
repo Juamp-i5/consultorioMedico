@@ -268,29 +268,31 @@ public class MedicoDAO implements IMedicoDAO {
     @Override
     public List<Medico> obtenerMedicosPorEspecialidadActivos(String especialidad) throws PersistenciaException {
         List<Medico> listaMedicosDisponiblesPorEspecialidad = new LinkedList<>();
-
+        
         String ConsultaSQL = "{CALL FiltrarMedicosPorEspecialidadYQueEsteActivo(?)}";
-
+        
         try (Connection conexion = Conexion.getConnection()) {
             CallableStatement cs = conexion.prepareCall(ConsultaSQL);
-            cs.setString(1, especialidad);
+            cs.setString(1,especialidad);
             ResultSet rs = cs.executeQuery();
-
-            while (rs.next()) {
-                Medico medico = new Medico(rs.getString("nombre"),
-                        rs.getString("cedula_profesional"),
+            
+            while(rs.next()){
+                Medico medico = new Medico(rs.getString("especialidad"),
+                        rs.getString("cedula_profesional"), 
                         rs.getString("estado"),
-                        rs.getString("nombre"),
-                        rs.getString("apellido_paterno"),
-                        rs.getString("apellido_materno"),
+                              rs.getInt("id_medico"),
+                        rs.getString("nombre"), 
+                        rs.getString("apellido_paterno"), 
+                        rs.getString("apellido_materno"), 
                         null);
-
+                
                 listaMedicosDisponiblesPorEspecialidad.add(medico);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new PersistenciaException("Error al obtener los medicos", e);
         }
-
+        
         return listaMedicosDisponiblesPorEspecialidad;
     }
 

@@ -4,7 +4,8 @@
  */
 package entidades;
 
-import java.sql.Date;
+
+import java.time.LocalDateTime;
 
 /**
  * Representa una cita médica en el sistema. Contiene información sobre el tipo
@@ -33,7 +34,7 @@ public class Cita {
     /**
      * Fecha y hora programada para la cita.
      */
-    private Date fechaHora;
+    private LocalDateTime fechaHora;
 
     /**
      * Estado actual de la cita (ej. "Pendiente", "Cancelada", "Finalizada").
@@ -67,7 +68,7 @@ public class Cita {
      * @param idPaciente Identificador del paciente asociado.
      * @param idMedico Identificador del médico que atenderá la cita.
      */
-    public Cita(int idCita, String tipo, String folio, Date fechaHora, String estado, int idPaciente, int idMedico) {
+    public Cita(int idCita, String tipo, String folio, LocalDateTime fechaHora, String estado, int idPaciente, int idMedico) {
         this.idCita = idCita;
         this.tipo = tipo;
         this.folio = folio;
@@ -87,7 +88,7 @@ public class Cita {
      * @param idPaciente Identificador del paciente asociado.
      * @param idMedico Identificador del médico que atenderá la cita.
      */
-    public Cita(String tipo, String folio, Date fechaHora, String estado, int idPaciente, int idMedico) {
+    public Cita(String tipo, String folio, LocalDateTime fechaHora, String estado, int idPaciente, int idMedico) {
         this.tipo = tipo;
         this.folio = folio;
         this.fechaHora = fechaHora;
@@ -155,7 +156,7 @@ public class Cita {
      *
      * @return Fecha y hora de la cita.
      */
-    public Date getFechaHora() {
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
@@ -164,7 +165,7 @@ public class Cita {
      *
      * @param fechaHora Nueva fecha y hora de la cita.
      */
-    public void setFechaHora(Date fechaHora) {
+    public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 

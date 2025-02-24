@@ -3,11 +3,14 @@ package DAO;
 import conexion.Conexion;
 import entidades.Cita;
 import excepciones.PersistenciaException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -32,39 +35,40 @@ public class CitaDAO implements ICita{
      */
     @Override
     public boolean agendarCita(Cita cita) throws PersistenciaException {
-        //1. CONSULTA PARA AGREGAR UNA CITA A LA BASE DE DATOS
-        String consultaSQL = "INSERT INTO consultas_medicas.cita (id_paciente, id_medico, tipo, folio, fecha_hora, estado) VALUES(?,?,?,?,?,?)";
-        
-        //2.HACER LA CONEXION CON LA BASE DE DATOS
-        try (Connection conexion = Conexion.getConnection()){
-            
-            //3. EJECUTAR LA CONSULTA SQL
-            try (PreparedStatement ps = conexion.prepareStatement(consultaSQL,Statement.RETURN_GENERATED_KEYS)){
-                ps.setInt(1, cita.getIdPaciente());
-                ps.setInt(2,cita.getIdMedico());
-                ps.setString(3,cita.getTipo());
-                ps.setString(4,cita.getFolio());
-                ps.setObject(5, cita.getFechaHora());
-                ps.setString(6, cita.getEstado());
-                
-                int filasAfectadas = ps.executeUpdate();
-                if(filasAfectadas > 0){
-                    logger.info("Se agrego la cita a la bd");
-                    return true;
-                }
-                else{
-                    logger.severe("No se pudo agregar la cita a la bd");
+        Timestamp timestamp = Timestamp.valueOf(cita.getFechaHora());
+        String consultaInsertarCita = "{CALL InsertarCita(?,?,?,?,?)}";
+        //CONECTAR CON LA BASE DE DATOS
+        try(Connection conexion = Conexion.getConnection()) {
+            //EJECUTAR EL PROCEDIMIENTO ALMACENADO
+            try(CallableStatement cs = conexion.prepareCall(consultaInsertarCita)) {
+                cs.setInt(1, cita.getIdPaciente());
+                cs.setInt(2,cita.getIdMedico());
+                cs.setTimestamp(3,timestamp);
+                cs.setString(4,cita.getTipo());
+                cs.registerOutParameter(5, Types.BOOLEAN); 
+                //EJECUTO EL PROCEDIMIENTO ALMACENADO
+                cs.execute();
+                //GUARDO LA SALIDA
+                boolean seAgendo = cs.getBoolean(5);
+
+                if (!seAgendo) {
                     return false;
                 }
-                
             } catch (SQLException e) {
-                throw new PersistenciaException("Error al intentar agendar cita", e);
+                e.printStackTrace();
+                throw new PersistenciaException("Error al ejecutar la consultaSQL",e);
             }
             
+            
         } catch (SQLException e) {
-            throw new PersistenciaException("Error al conectar a la BD", e);
+            e.printStackTrace();
+            throw new PersistenciaException("Error al conectarse con la bd", e);
         }
+        
+        return true;
     }
+
+
 
     /**
      * Cancela una cita, cambiando su estado a cancelado en la bd
@@ -131,7 +135,7 @@ public class CitaDAO implements ICita{
                             rs.getInt("id_cita"),
                               rs.getString("tipo"),
                              rs.getString("folio"),
-                          rs.getDate("fecha_hora"), 
+                          rs.getTimestamp("fecha_hora").toLocalDateTime(), 
                             rs.getString("estado"),
                          rs.getInt("id_paciente"),
                            rs.getInt("id_medico"));
@@ -166,7 +170,7 @@ public class CitaDAO implements ICita{
                             rs.getInt("id_cita"),
                             rs.getString("tipo"),
                             rs.getString("folio"),
-                            rs.getDate("fecha_hora"),
+                            rs.getTimestamp("fecha_hora").toLocalDateTime(),
                             rs.getString("estado"),
                             rs.getInt("id_paciente"),
                             rs.getInt("id_medico")
@@ -201,7 +205,7 @@ public class CitaDAO implements ICita{
                             rs.getInt("id_cita"),
                             rs.getString("tipo"),
                             rs.getString("folio"),
-                            rs.getDate("fecha_hora"),
+                            rs.getTimestamp("fecha_hora").toLocalDateTime(),
                             rs.getString("estado"),
                             rs.getInt("id_paciente"),
                             rs.getInt("id_medico")

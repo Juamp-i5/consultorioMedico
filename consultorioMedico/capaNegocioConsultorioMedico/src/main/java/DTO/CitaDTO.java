@@ -1,5 +1,6 @@
 package DTO;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -9,15 +10,17 @@ import java.util.Date;
 public class CitaDTO {
     private String tipo;
     private String folio;
-    private Date fechaHora;
+    private Date fecha;
+    private LocalTime hora;
     private String estado;
     private int idPaciente;
     private int idMedico;
 
-    public CitaDTO(String tipo, String folio, Date fechaHora, String estado, int idPaciente, int idMedico) {
+    public CitaDTO(String tipo, String folio, Date fecha, LocalTime hora, String estado, int idPaciente, int idMedico) {
         this.tipo = tipo;
         this.folio = folio;
-        this.fechaHora = fechaHora;
+        this.fecha = fecha;
+        this.hora = hora;
         this.estado = estado;
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
@@ -39,12 +42,12 @@ public class CitaDTO {
         this.folio = folio;
     }
 
-    public Date getFechaHora() {
-        return fechaHora;
+    public Date getFecha() {
+        return fecha;
     }
 
-    public void setFechaHora(Date fechaHora) {
-        this.fechaHora = fechaHora;
+    public void setFechaHora(Date fecha) {
+        this.fecha = fecha;
     }
 
     public String getEstado() {
@@ -69,6 +72,14 @@ public class CitaDTO {
 
     public void setIdMedico(int idMedico) {
         this.idMedico = idMedico;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
     
 }

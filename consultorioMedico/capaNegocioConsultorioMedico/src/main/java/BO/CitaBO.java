@@ -1,53 +1,44 @@
 package BO;
 
+import DAO.CitaDAO;
 import DTO.CitaDTO;
+import entidades.Cita;
+import excepciones.PersistenciaException;
 import exception.NegocioException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Date;
+import java.time.ZoneId;
+
+import mappers.CitaMapper;
 
 /**
  *
  * @author janot
  */
 public class CitaBO {
-    
-    
-    
-    
-    
-    
-    public boolean validarDatosCita(CitaDTO citaDTO) throws NegocioException{
-        if(validarHora(citaDTO.getFechaHora().toString())){
-            System.out.println("Hora Invalida");
-        }
-        if(validarFecha(citaDTO.getFechaHora())){
-            
-        }
-        
-        return true;
-    }
-    
-    
-    //VALIDA LA FECHA
-    public boolean validarFecha(Date fecha) throws NegocioException{
-        if(fecha.before(fecha)){
-            throw new NegocioException("La fecha es invalida");
-        }
-        return true;
-    }
-    
-    //VALIDA LA HORA
-    public boolean validarHora(String hora) throws NegocioException{
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm"); 
+    public boolean agendarCita(CitaDTO citaDTO) throws NegocioException {
+        CitaDAO citaDAO = new CitaDAO();
+
+        // Obtener datos de la cita
+        int idMedico = citaDTO.getIdMedico();
+        int idPaciente = citaDTO.getIdPaciente();
+        LocalDate fecha = citaDTO.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Convertir Date a LocalDate
+        LocalTime horaCita = citaDTO.getHora();
+        String tipo = citaDTO.getTipo();
+
+        // Unir LocalDate y LocalTime en LocalDateTime
+        LocalDateTime fechaHora = LocalDateTime.of(fecha, horaCita);
+        System.out.println(fechaHora);
+        // MAPPER PARA CONVERTIRLO A Cita
+        Cita cita = CitaMapper.toEntity(citaDTO, fechaHora);
+
         try {
-            LocalTime horaCita = LocalTime.parse(hora,formatter); 
-        } catch (DateTimeParseException e) {
+            return citaDAO.agendarCita(cita);
+        } catch (PersistenciaException e) {
             e.printStackTrace();
-            throw new NegocioException("Hora no valida",e);
+            throw new NegocioException("Error al agregar cita", e);
         }
-        
-        return true;
     }
+
 }
