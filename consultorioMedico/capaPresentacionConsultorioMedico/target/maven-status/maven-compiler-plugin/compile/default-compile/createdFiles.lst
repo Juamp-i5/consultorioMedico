@@ -77,7 +77,6 @@ GUI\historialConsultasPacienteTableForm.class
 GUI\agendarCitaForm$1.class
 GUI\editarCuentaHospitalForm$7.class
 GUI\menuPacienteForm$2.class
-GUI\agendaCitasTableForm$2.class
 Excepciones\PresentacionException.class
 GUI\datosPacienteForm$3.class
 GUI\agendaCitasTableForm.class

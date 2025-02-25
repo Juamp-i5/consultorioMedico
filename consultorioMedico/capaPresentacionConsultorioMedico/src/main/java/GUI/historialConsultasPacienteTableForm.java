@@ -172,9 +172,6 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
         // TODO add your handling code here:
         PacienteDAO pacienteDAO = new PacienteDAO();
         ConsultaDAO consultaDAO = new ConsultaDAO();
-        CitaDAO citaDAO = new CitaDAO();
-        MedicoDAO medicoDAO = new MedicoDAO();
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
         DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
             if (jCheckBox1.isSelected()) { 
                 // Obtener valores necesarios para el filtro
@@ -191,14 +188,11 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
                         tableModel.setRowCount(0); // Limpiar la tabla
 
                         for (Consulta consulta : consultasFiltradas) { // Recorrer cada consulta
-                        LocalDateTime ahora = LocalDateTime.now();
 
                         // Obtener los datos para la fila
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); //formato para la fecha
-                        String fechaHora = ahora.format(formatter);
-                        String tipo = "Consulta"; // Puedes cambiar esto si hay diferentes tipos de consulta
+                        String fechaHora = consultaDAO.getFechaHora(consulta.getIdConsulta());
+                        String tipo = consultaDAO.getTipoCita(consulta.getIdConsulta());
                         String estado = consulta.getEstado();
-                        List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(utils.InicioSesion.getIdUsuario());
                         especialidad = consultaDAO.obtenerEspecialidad(consulta.getIdConsulta());
                         String nombreMedico = consultaDAO.obtenerNombreMedico(consulta.getIdConsulta());
                         String diagnostico = consulta.getDiagnostico();
@@ -290,9 +284,6 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
 
     private void cargarDatosEnTabla() {
         ConsultaDAO consultaDAO = new ConsultaDAO();
-        MedicoDAO medicoDAO = new MedicoDAO();
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        CitaDAO citaDAO = new CitaDAO();
         DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
         tableModel.setRowCount(0); // Limpiar la tabla antes de cargar datos nuevos
 
@@ -300,14 +291,11 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
             // Obtener las consultas del paciente
             List<Consulta> consultas = consultaDAO.obtenerConsultasPaciente(utils.InicioSesion.getIdUsuario());
             for (Consulta consulta : consultas) { // Recorrer cada consulta
-                LocalDateTime ahora = LocalDateTime.now();
 
                 // Obtener los datos para la fila
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); //formato para la fecha
-                String fechaHora = ahora.format(formatter);
-                String tipo = "Consulta"; // Puedes cambiar esto si hay diferentes tipos de consulta
+                String fechaHora = consultaDAO.getFechaHora(consulta.getIdConsulta());
+                String tipo = consultaDAO.getTipoCita(consulta.getIdConsulta()); // Puedes cambiar esto si hay diferentes tipos de consulta
                 String estado = consulta.getEstado();
-                List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(utils.InicioSesion.getIdUsuario());
                 String especialidad = consultaDAO.obtenerEspecialidad(consulta.getIdConsulta());
                 String nombreMedico = consultaDAO.obtenerNombreMedico(consulta.getIdConsulta());
                 

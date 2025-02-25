@@ -45,13 +45,6 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jLabel3 = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
         jButton7 = new javax.swing.JButton();
 
         jTextField2.setText("jTextField2");
@@ -79,31 +72,6 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 740, 400));
 
-        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jCheckBox1.setText("Filtrar Citas");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, -1, -1));
-
-        jLabel2.setText("Fecha");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, -1, -1));
-
-        jTextArea2.setMinimumSize(new java.awt.Dimension(13, 10));
-        jScrollPane3.setViewportView(jTextArea2);
-
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, 160, 30));
-
-        jLabel3.setText("Especialidad");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, -1, -1));
-
-        jTextArea3.setMinimumSize(new java.awt.Dimension(13, 10));
-        jScrollPane4.setViewportView(jTextArea3);
-
-        jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 120, 30));
-
         jButton7.setBackground(new java.awt.Color(153, 153, 153));
         jButton7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButton7.setText("Atras");
@@ -125,10 +93,6 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -177,17 +141,10 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton7;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
