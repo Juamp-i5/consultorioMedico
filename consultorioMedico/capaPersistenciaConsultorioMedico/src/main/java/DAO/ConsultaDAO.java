@@ -182,6 +182,45 @@ public class ConsultaDAO implements IConsultaDAO {
         return ""; // Retorna cadena vacía si no encuentra información
     }
 
+    public String getTipoCita(int idConsulta) {
+        String sql = "SELECT c.tipo FROM Cita c " +
+                     "JOIN Consulta co ON c.id_cita = co.id_cita " +
+                     "WHERE co.id_consulta = ?";
+        try (Connection conexion = Conexion.getConnection();
+             PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, idConsulta);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("tipo");
+                }
+            }
+        } catch (SQLException e) {
+        }
+        return null;
+    }
+
+    /**
+     * Obtiene la fecha y hora de la cita asociada a una consulta.
+     * @param idConsulta Identificador de la consulta.
+     * @return Fecha y hora de la cita como String, o null si no se encuentra.
+     */
+    public String getFechaHora(int idConsulta) {
+        String sql = "SELECT c.fecha_hora FROM Cita c " +
+                     "JOIN Consulta co ON c.id_cita = co.id_cita " +
+                     "WHERE co.id_consulta = ?";
+        try (Connection conexion = Conexion.getConnection();
+             PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, idConsulta);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("fecha_hora");
+                }
+            }
+        } catch (SQLException e) {
+        }
+        return null;
+    }    
+
     public List<HistorialConsultaMedico> consultasMedico(int idMedico) throws PersistenciaException {
         List<HistorialConsultaMedico> consultas = new ArrayList<>();
 
