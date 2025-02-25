@@ -4,12 +4,14 @@
  */
 package GUI;
 
+import BO.CitaBO;
 import DAO.CitaDAO;
 import DAO.MedicoDAO;
 import DAO.UsuarioDAO;
 import GUI.citasPendientesTableForm.ButtonRenderer;
 import entidades.Cita;
 import excepciones.PersistenciaException;
+import exception.NegocioException;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -150,7 +153,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
                 String especialidad = medicoDAO.obtenerEspecialidad(cita.getIdMedico());
                 String nombreMedico = usuarioDAO.obtenerNombre(cita.getIdMedico());
 
-                boolean esCancelable = cita.getFechaHora().isAfter(LocalDateTime.now().plusHours(24));
+                boolean esCancelable = cita.getFechaHora().isAfter(LocalDateTime.now().plusHours(24)) && !"Cancelada".equals(cita.getEstado());
                 
                 String texto = "";
                 if (esCancelable) {
@@ -185,7 +188,33 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
     }
 
     private void cancelarCita(int idCita) {
-        JOptionPane.showConfirmDialog(jButton7, "boton");
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea Cancelar la cita?", "CancelarCita", 1);
+        if(respuesta == JOptionPane.YES_OPTION){
+            CitaBO citaBO = new CitaBO();
+            try {
+                if(citaBO.cancelarCita(idCita)){
+                    JOptionPane.showMessageDialog(this, "Se cancelo la cita Exitosamente");
+                    javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+                    javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
+                    menuPacienteForm datosPaciente = new menuPacienteForm(utils.InicioSesion.getIdUsuario());
+
+                    frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+                    frame.getContentPane().add(datosPaciente);
+                    frame.pack();
+                    frame.setLocationRelativeTo(null);
+                    frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
+                }
+                
+            } catch (NegocioException e) {
+                JOptionPane.showMessageDialog(this, e);
+            }
+        }
+        
     }
 
 

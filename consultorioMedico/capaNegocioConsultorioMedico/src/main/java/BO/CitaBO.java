@@ -40,5 +40,14 @@ public class CitaBO {
             throw new NegocioException("Error al agregar cita", e);
         }
     }
+    
+    public boolean cancelarCita(int idCita) throws NegocioException{
+        CitaDAO citaDAO = new CitaDAO(); 
+        try {
+            return citaDAO.cancelarCita(idCita);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al cancelar cita",e);
+        }
+    }
 
 }
