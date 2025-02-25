@@ -147,7 +147,7 @@ public class menuPacienteForm extends javax.swing.JPanel {
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
         javax.swing.JFrame frame = new javax.swing.JFrame("Historial Consultas");
-        historialConsultasPacienteTableForm historialConsultas = new historialConsultasPacienteTableForm();
+        historialConsultasPacienteTableForm historialConsultas = new historialConsultasPacienteTableForm(utils.InicioSesion.getIdUsuario());
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(historialConsultas);

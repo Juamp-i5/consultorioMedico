@@ -153,12 +153,16 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
                         String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
                         // Agregar la fila con los datos y los botones
                         tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, "Iniciar consulta", "Ver historial"});
+                        jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
+                        jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente()));
+                        jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
+                        jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm", cita.getIdPaciente()));
                     }
                     
-                    jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
-                    jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm"));
-                    jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
-                    jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasTableForm"));
+//                    jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
+//                    jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente));
+//                    jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
+//                    jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm", cita.getIdPaciente()));
                 }
 
             } catch (PersistenciaException | SQLException ex) {
@@ -222,12 +226,16 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
                 String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
                 // Agregar la fila con los datos y los botones
                 tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, "Iniciar consulta", "Ver historial"});
+                jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
+                jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente()));
+                jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
+                jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm", cita.getIdPaciente()));                
             }
 
-            jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
-            jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm"));
-            jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
-            jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasTableForm"));
+//            jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
+//            jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente()));
+//            jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
+//            jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm", cita.getIdPaciente()));
 
         } catch (PersistenciaException | SQLException ex) {
             Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -251,17 +259,19 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
 
         private JButton button;
         private String frameName;
+        private int idPaciente;
 
-        public ButtonEditor(JCheckBox checkBox, String frameName) {
+        public ButtonEditor(JCheckBox checkBox, String frameName, int idPaciente) {
             super(checkBox);
             this.frameName = frameName;
+            this.idPaciente = idPaciente;
             button = new JButton();
             button.setOpaque(true);
 
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    abrirJFrame(frameName);
+                    abrirJFrame(frameName, idPaciente);
                     fireEditingStopped();
                 }
             });
@@ -279,22 +289,22 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         }
     }
 
-    private void abrirJFrame(String panelName) {
+    private void abrirJFrame(String panelName, int idPaciente) {
         try {
             JFrame frame = new JFrame();
             JPanel panel;
 
             if (panelName.equals("iniciarConsultaForm")) {
                 panel = new iniciarConsultaForm();
-            } else if (panelName.equals("historialConsultasTableForm")) {
-                panel = new historialConsultasPacienteTableForm();
+            } else if (panelName.equals("historialConsultasPacienteTableForm")) {
+                panel = new historialConsultasPacienteTableForm(idPaciente);
             } else {
                 throw new ClassNotFoundException("Panel no encontrado");
             }
 
             // Configurar el frame y agregar el panel
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setSize(850, 700);
+            frame.setSize(850, 750);
             frame.setLocationRelativeTo(null);
             frame.add(panel);
             frame.setVisible(true);

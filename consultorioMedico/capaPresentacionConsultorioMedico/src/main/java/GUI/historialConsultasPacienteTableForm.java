@@ -28,10 +28,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
 
+    public final int idPaciente;
+
     /**
      * Creates new form crearCuentaForm
      */
-    public historialConsultasPacienteTableForm() {
+    public historialConsultasPacienteTableForm(int idPaciente) {
+        this.idPaciente = idPaciente;
         initComponents();
         cargarDatosEnTabla();
     }
@@ -177,13 +180,14 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
         PacienteDAO pacienteDAO = new PacienteDAO();
         ConsultaDAO consultaDAO = new ConsultaDAO();
         DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0);
             if (jCheckBox1.isSelected()) { 
                 // Obtener valores necesarios para el filtro
                 //String pene = jTextArea1.getText();
                 String fechaInicio = jTextArea1.getText() + " 00:00:00";
                 String fechaFin = jTextArea2.getText() + " 00:00:00";
                 String especialidad = jTextArea3.getText();
-                int idPaciente = utils.InicioSesion.getIdUsuario(); // Reemplazar con valor real
+                //int idPaciente = utils.InicioSesion.getIdUsuario(); 
                 try {
                     // Obtener consultas filtradas
                     List<Consulta> consultasFiltradas = consultaDAO.obtenerConsultasFiltradas(idPaciente, especialidad, fechaInicio, fechaFin);
@@ -293,7 +297,7 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
 
         try {
             // Obtener las consultas del paciente
-            List<Consulta> consultas = consultaDAO.obtenerConsultasPaciente(utils.InicioSesion.getIdUsuario());
+            List<Consulta> consultas = consultaDAO.obtenerConsultasPaciente(idPaciente);
             for (Consulta consulta : consultas) { // Recorrer cada consulta
 
                 // Obtener los datos para la fila
