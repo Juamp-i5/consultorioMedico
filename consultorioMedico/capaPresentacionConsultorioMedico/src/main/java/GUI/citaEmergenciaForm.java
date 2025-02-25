@@ -4,8 +4,18 @@
  */
 package GUI;
 
+import BO.CitaBO;
+import DTO.CitaEmergenciaDTO;
+import exception.NegocioException;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import utils.Info;
+import utils.InicioSesion;
 
 /**
  *
@@ -45,6 +55,7 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         jTextField2.setText("jTextField2");
 
@@ -52,8 +63,8 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        jLabel1.setText("La cita vence a las ");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 460, 510, -1));
+        jLabel1.setText("FechaHora cita: ");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 900, -1));
 
         jButton2.setBackground(new java.awt.Color(153, 153, 153));
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -97,15 +108,19 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel7.setText("Medico:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 270, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel8.setText("Folio:");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 150, -1, -1));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 190, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 0, 0));
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 220, 480, 60));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 220, 490, 60));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
+        jLabel6.setText("Vencimiento: ");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 910, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -113,7 +128,7 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 951, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,9 +137,31 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        //Generar cita
+        String especialidad = (String) jComboBox1.getSelectedItem();
+        int idPaciente = InicioSesion.getIdUsuario();
+        
+        generarCita(idPaciente, especialidad);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void generarCita(int idPaciente, String especialidad){
+        try {
+            CitaBO cita = new CitaBO();
+            CitaEmergenciaDTO info = cita.agendarCitaEmergencia(idPaciente, especialidad);
+            mostrarDatos(info.getFolio(), info.getNombreCompletoMedico(), info.getFechaHora());
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+    
+    private void mostrarDatos(String folio, String medico, LocalDateTime fechaHora){
+        jButton1.setEnabled(false);
+        jLabel1.setText(jLabel1.getText() + fechaHora);
+        jLabel6.setText(jLabel6.getText() + fechaHora.plusMinutes(10));
+        jLabel7.setText(jLabel7.getText() + " " + medico);
+        jLabel8.setText(jLabel8.getText() + " " + folio);
+    }
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         //Regresar
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -144,7 +181,11 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
+        jButton1.setEnabled(true);
+        jLabel1.setText("FechaHora cita: ");
+        jLabel6.setText("Vencimiento: ");
+        jLabel7.setText("Medico:");
+        jLabel8.setText("Folio:");
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
 
@@ -157,6 +198,7 @@ public class citaEmergenciaForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;

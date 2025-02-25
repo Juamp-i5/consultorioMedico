@@ -12,4 +12,5 @@ public class CitaMapper {
     public static Cita toEntity(CitaDTO citaDTO, LocalDateTime fechaYhora){
         return new Cita(citaDTO.getTipo(), null, fechaYhora, null, citaDTO.getIdPaciente(), citaDTO.getIdMedico());
     }
+    
 }

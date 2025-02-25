@@ -2,13 +2,17 @@ package BO;
 
 import DAO.CitaDAO;
 import DTO.CitaDTO;
+import DTO.CitaEmergenciaDTO;
 import entidades.Cita;
+import entidades.Medico;
 import excepciones.PersistenciaException;
 import exception.NegocioException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import mappers.CitaMapper;
 
@@ -17,8 +21,10 @@ import mappers.CitaMapper;
  * @author janot
  */
 public class CitaBO {
+
+    CitaDAO citaDAO = new CitaDAO();
+
     public boolean agendarCita(CitaDTO citaDTO) throws NegocioException {
-        CitaDAO citaDAO = new CitaDAO();
 
         // Obtener datos de la cita
         int idMedico = citaDTO.getIdMedico();
@@ -50,4 +56,29 @@ public class CitaBO {
         }
     }
 
+    public CitaEmergenciaDTO agendarCitaEmergencia(int idPaciente, String especialidad) throws NegocioException {
+        try {
+            int idCita = citaDAO.insertarCitaEmergencia(idPaciente, especialidad);
+            Cita cita = citaDAO.obtenerCita(idCita);
+            Medico medico = new MedicoBO().consultarMedico(cita.getIdMedico());
+            
+            return new CitaEmergenciaDTO(
+                    cita.getFechaHora(),
+                    medico.getNombre() + " " + medico.getApellidoPaterno() + " " + medico.getApellidoMaterno(), 
+                    cita.getFolio()
+            );
+            
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al agendarCitaEmergenecia: " + ex.getMessage());
+        }
+
+    }
+    
+    public Cita consultarCita(int idCita) throws NegocioException {
+        try {
+            return citaDAO.obtenerCita(idCita);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al consultarCita: " + e.getMessage());
+        }
+    }
 }

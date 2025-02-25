@@ -1,8 +1,6 @@
 package DAO;
 
 import entidades.Cita;
-import entidades.Medico;
-import entidades.Paciente;
 import excepciones.PersistenciaException;
 import java.util.List;
 
@@ -39,5 +37,8 @@ public interface ICita {
      * @throws PersistenciaException Si no se logra obtener el listado
      */
     public List<Cita> obtenerCitasActivasPaciente(int idPaciente) throws PersistenciaException;
-     
+    
+    public int insertarCitaEmergencia(int idPaciente, String especialidad) throws PersistenciaException;
+    
+    public Cita obtenerCita(int idCita) throws PersistenciaException;
 }

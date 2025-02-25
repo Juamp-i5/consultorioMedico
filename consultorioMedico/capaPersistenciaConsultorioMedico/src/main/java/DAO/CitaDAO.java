@@ -8,9 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import static java.sql.Types.INTEGER;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,39 +18,42 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
  * @author janot
  */
-public class CitaDAO implements ICita{
+public class CitaDAO implements ICita {
+
     private static final Logger logger = Logger.getLogger(CitaDAO.class.getName());
-    
+
     /**
      * Agrega una cita nueva a la base de datos
-     * 
-     * @param cita El objeto cita del cual sacaremos los valores de sus atributos
+     *
+     * @param cita El objeto cita del cual sacaremos los valores de sus
+     * atributos
      * @param idUsuarioPaciente El id del paciente que agenda la cita
      * @param idUsuarioMedico El id del medico el cual atendera la cita
-     * 
+     *
      * @return True si se logra agregar la cita y False en caso contrario
-     * @throws PersistenciaException Si hay algun error al momento de agregar 
-     * la cita
+     * @throws PersistenciaException Si hay algun error al momento de agregar la
+     * cita
      */
     @Override
     public boolean agendarCita(Cita cita) throws PersistenciaException {
         Timestamp timestamp = Timestamp.valueOf(cita.getFechaHora());
         String consultaInsertarCita = "{CALL InsertarCita(?,?,?,?,?)}";
         //CONECTAR CON LA BASE DE DATOS
-        try(Connection conexion = Conexion.getConnection()) {
+        try (Connection conexion = Conexion.getConnection()) {
             //EJECUTAR EL PROCEDIMIENTO ALMACENADO
-            try(CallableStatement cs = conexion.prepareCall(consultaInsertarCita)) {
+            try (CallableStatement cs = conexion.prepareCall(consultaInsertarCita)) {
                 cs.setInt(1, cita.getIdPaciente());
-                cs.setInt(2,cita.getIdMedico());
-                cs.setTimestamp(3,timestamp);
-                cs.setString(4,cita.getTipo());
-                cs.registerOutParameter(5, Types.BOOLEAN); 
+                cs.setInt(2, cita.getIdMedico());
+                cs.setTimestamp(3, timestamp);
+                cs.setString(4, cita.getTipo());
+                cs.registerOutParameter(5, Types.BOOLEAN);
                 //EJECUTO EL PROCEDIMIENTO ALMACENADO
                 cs.execute();
                 //GUARDO LA SALIDA
@@ -61,53 +64,49 @@ public class CitaDAO implements ICita{
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                throw new PersistenciaException("Error al ejecutar la consultaSQL",e);
+                throw new PersistenciaException("Error al ejecutar la consultaSQL", e);
             }
-            
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new PersistenciaException("Error al conectarse con la bd", e);
         }
-        
+
         return true;
     }
 
-
-
     /**
      * Cancela una cita, cambiando su estado a cancelado en la bd
-     * 
+     *
      * @param idCita de la cita que se desea eliminar
      * @return True si se logra hacer la cancelacion y False en caso contrario
-     * @throws PersistenciaException Si hay algun error al momento de cancelar 
+     * @throws PersistenciaException Si hay algun error al momento de cancelar
      * la cita
      */
     @Override
     public boolean cancelarCita(int idCita) throws PersistenciaException {
         //1. CREAR LA CONSULTA SQL PARA MODIFICAR EL ESTADO DE LA CONSULTA A CANCELADA
         String consultaSQL = "UPDATE consultas_medicas.cita SET estado = 'Cancelada' WHERE id_cita = ?";
-        
+
         //2. CONECTARE A LA BASE DE DATOS
-        try (Connection conexion = Conexion.getConnection()){
+        try (Connection conexion = Conexion.getConnection()) {
             //3. EJECUTAR LA CONSULTA
-            try (PreparedStatement ps = conexion.prepareStatement(consultaSQL)){
+            try (PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
                 ps.setInt(1, idCita);
-                
+
                 int filasAfectadas = ps.executeUpdate();
-                if(filasAfectadas > 0){
+                if (filasAfectadas > 0) {
                     logger.info("Se Cancelo la cita");
                     return true;
-                }
-                else{
+                } else {
                     logger.severe("No se pudo cancelar la cita");
                     return false;
                 }
-                
+
             } catch (SQLException e) {
                 throw new PersistenciaException("Error al cancelar la cita", e);
             }
-            
+
         } catch (SQLException e) {
             throw new PersistenciaException("Error al conectar a la BD", e);
         }
@@ -115,51 +114,52 @@ public class CitaDAO implements ICita{
 
     /**
      * Obtiene todas las citas que estan activas del paciente que tiene ese id
-     * 
-     * @param idPaciente Id del paciente del que se quiere saber sus citas disponibles
+     *
+     * @param idPaciente Id del paciente del que se quiere saber sus citas
+     * disponibles
      * @return Una lista con todas las citas activas del paciente
      * @throws PersistenciaException Si no se logra obtener el listado
      */
     @Override
     public List<Cita> obtenerCitasActivasPaciente(int idPaciente) throws PersistenciaException {
         List<Cita> listaCitasActivas = new LinkedList<>(); //Lista en la que se guardaran todas las citas disponibles
-        
+
         //1. DEFINIR LA CONSULTA SQL PARA OBTENER TODA LA TABLA CON LAS CITAS
         String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_paciente= ?";
-        
+
         //2. HACER LA CONEXION CON LA BASE DE DATOS
-        try (Connection conexion = Conexion.getConnection()){
-            
+        try (Connection conexion = Conexion.getConnection()) {
+
             //3. EJECUTAR LA CONSULTA SQL
-            try(PreparedStatement ps = conexion.prepareStatement(consultaSQL)){
+            try (PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
                 ps.setInt(1, idPaciente);//SE LLENA EL PARAMETRO DE LA CONSULTA CON EL ID DEL PACIENTE
                 ResultSet rs = ps.executeQuery(); //EJECUTA LA CONSULTA Y OBTIENE EL RESULTADO DE LA CONSULTA
-                
-                while(rs.next()){
+
+                while (rs.next()) {
                     Cita cita = new Cita(
                             rs.getInt("id_cita"),
-                              rs.getString("tipo"),
-                             rs.getString("folio"),
-                          rs.getTimestamp("fecha_hora").toLocalDateTime(), 
+                            rs.getString("tipo"),
+                            rs.getString("folio"),
+                            rs.getTimestamp("fecha_hora").toLocalDateTime(),
                             rs.getString("estado"),
-                         rs.getInt("id_paciente"),
-                           rs.getInt("id_medico"));
-                    
+                            rs.getInt("id_paciente"),
+                            rs.getInt("id_medico"));
+
                     listaCitasActivas.add(cita);
                 }
-                
+
                 return listaCitasActivas;
-                
-            }catch (SQLException e) {
+
+            } catch (SQLException e) {
                 throw new PersistenciaException("Error al consultar las citas", e);
-            }   
-            
+            }
+
         } catch (SQLException e) {
             throw new PersistenciaException("Error al conectar a la BD", e);
         }
-        
+
     }
-    
+
     public List<Cita> obtenerCitasActivasMedico(int idMedico) throws PersistenciaException {
         List<Cita> listaCitasActivas = new LinkedList<>();
         String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? ";
@@ -167,8 +167,8 @@ public class CitaDAO implements ICita{
         try (Connection conexion = Conexion.getConnection()) {
 
             try (PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
-                ps.setInt(1, idMedico); 
-                ResultSet rs = ps.executeQuery(); 
+                ps.setInt(1, idMedico);
+                ResultSet rs = ps.executeQuery();
 
                 while (rs.next()) {
                     Cita cita = new Cita(
@@ -194,16 +194,16 @@ public class CitaDAO implements ICita{
             throw new PersistenciaException("Error al conectar a la base de datos", e);
         }
     }
-    
-        public List<Cita> obtenerCitasPendientesMedico(int idMedico) throws PersistenciaException {
+
+    public List<Cita> obtenerCitasPendientesMedico(int idMedico) throws PersistenciaException {
         List<Cita> listaCitasActivas = new LinkedList<>();
         String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND estado = 'Programado'";
 
         try (Connection conexion = Conexion.getConnection()) {
 
             try (PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
-                ps.setInt(1, idMedico); 
-                ResultSet rs = ps.executeQuery(); 
+                ps.setInt(1, idMedico);
+                ResultSet rs = ps.executeQuery();
 
                 while (rs.next()) {
                     Cita cita = new Cita(
@@ -229,12 +229,11 @@ public class CitaDAO implements ICita{
             throw new PersistenciaException("Error al conectar a la base de datos", e);
         }
     }
-        
-        
+
     public List<Cita> obtenerCitasFiltradas(int idMedico, String fechaStr) throws PersistenciaException {
         List<Cita> citas = new ArrayList<>();
         String sql = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND fecha_hora BETWEEN ? AND ?";
-        
+
         //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDate fecha;
         try {
@@ -242,12 +241,11 @@ public class CitaDAO implements ICita{
         } catch (Exception e) {
             throw new PersistenciaException("Error al convertir la fecha", e);
         }
-        
+
         LocalDateTime inicioDia = fecha.atStartOfDay();
         LocalDateTime finDia = fecha.atTime(LocalTime.MAX);
-        
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idMedico);
             ps.setTimestamp(2, Timestamp.valueOf(inicioDia));
             ps.setTimestamp(3, Timestamp.valueOf(finDia));
@@ -269,6 +267,49 @@ public class CitaDAO implements ICita{
         }
         return citas;
     }
-    
-}
 
+    @Override
+    public int insertarCitaEmergencia(int idPaciente, String especialidad) throws PersistenciaException {
+        String procedure = "{CALL InsertarCitaEmergencia(?, ?, ?)}";
+
+        try (Connection conexion = Conexion.getConnection(); CallableStatement cs = conexion.prepareCall(procedure)) {
+            cs.setInt(1, idPaciente);
+            cs.setString(2, especialidad);
+            cs.registerOutParameter(3, INTEGER);
+
+            cs.execute();
+
+            return cs.getInt(3);
+
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al insertarCitaEmergencia: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Cita obtenerCita(int idCita) throws PersistenciaException {
+        String query = "SELECT id_cita, id_paciente, id_medico, tipo, folio, fecha_hora, estado FROM Cita WHERE id_cita = ?";
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)) {
+            ps.setInt(1, idCita);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Cita(
+                            idCita,
+                            rs.getString("tipo"),
+                            rs.getString("folio"),
+                            rs.getTimestamp("fecha_hora").toLocalDateTime(),
+                            rs.getString("estado"),
+                            rs.getInt("id_paciente"),
+                            rs.getInt("id_medico")
+                    );
+                } else {
+                    throw new PersistenciaException("No existe la cita");
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al consultarCita: " + e.getMessage());
+        }
+
+    }
+}

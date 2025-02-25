@@ -113,8 +113,6 @@ END //
 
 DELIMITER ;
 
-DELIMITER //
-
 
 
 DELIMITER //
@@ -305,8 +303,127 @@ END //
 
 DELIMITER ;
 
-INSERT INTO Cita (id_paciente, id_medico, tipo, folio, fecha_hora, estado)
-VALUES 
-    (2, 10, 'Consulta General', 'A1234567', '2025-02-25 09:00:00', 'Programado'),
-    (2, 10, 'Revisión Cardiológica', 'B7654321', '2025-02-26 10:30:00', 'Programado'),
-    (2, 10, 'Consulta Dermatológica', 'C1122334', '2025-02-27 11:00:00', 'No atendida');
+
+    
+DELIMITER //
+
+CREATE PROCEDURE AgendarCitaEmergencia(
+    IN especialidad_param VARCHAR(100),
+    IN id_paciente_param INT,
+    OUT folio_resultado VARCHAR(8),
+    OUT medico_nombre VARCHAR(255)
+)
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE doctor_id INT;
+    DECLARE min_datetime DATETIME;
+    DECLARE current_datetime DATETIME;
+    DECLARE candidate_datetime DATETIME;
+    DECLARE best_doctor INT;
+    DECLARE best_time DATETIME;
+    DECLARE new_folio VARCHAR(8);
+    
+    DECLARE cur_doctors CURSOR FOR 
+        SELECT M.id_medico 
+        FROM Medico M 
+        WHERE M.especialidad = especialidad_param 
+        AND M.estado = 'Activo';
+        
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    SET current_datetime = NOW();
+    SET best_time = NULL;
+    SET best_doctor = NULL;
+
+    -- Buscar el mejor horario entre todos los médicos
+    OPEN cur_doctors;
+    
+    read_loop: LOOP
+        FETCH cur_doctors INTO doctor_id;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        
+        -- Encontrar el próximo horario disponible para este médico
+        SELECT MIN(hora_disponible) INTO candidate_datetime
+        FROM (
+            -- Horarios futuros del médico
+            SELECT 
+                CASE 
+                    WHEN next_date > CURRENT_DATE() 
+                        THEN CONCAT(next_date, ' ', H.hora_inicio)
+                    WHEN next_date = CURRENT_DATE() AND H.hora_inicio > CURRENT_TIME 
+                        THEN CONCAT(next_date, ' ', H.hora_inicio)
+                    ELSE CONCAT(next_date, ' ', H.hora_inicio)
+                END AS hora_disponible
+            FROM (
+                -- Calcular próxima fecha para cada día de atención
+                SELECT 
+                    H.id_medico,
+                    H.dia_semana,
+                    H.hora_inicio,
+                    H.hora_fin,
+                    CASE DAYOFWEEK(current_datetime)
+                        WHEN 1 THEN 'Domingo'
+                        WHEN 2 THEN 'Lunes' 
+                        WHEN 3 THEN 'Martes'
+                        WHEN 4 THEN 'Miércoles'
+                        WHEN 5 THEN 'Jueves'
+                        WHEN 6 THEN 'Viernes'
+                        WHEN 7 THEN 'Sábado'
+                    END AS hoy,
+                    CASE 
+                        WHEN FIELD(H.dia_semana, 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado') 
+                            >= DAYOFWEEK(current_datetime)
+                        THEN current_datetime + INTERVAL (FIELD(H.dia_semana, 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado') 
+                            - DAYOFWEEK(current_datetime)) DAY
+                        ELSE current_datetime + INTERVAL (7 - DAYOFWEEK(current_datetime) + 
+                            FIELD(H.dia_semana, 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado')) DAY
+                    END AS next_date
+                FROM Horario_Atencion H
+                WHERE H.id_medico = doctor_id
+            ) AS proximas_fechas
+            WHERE HOUR(hora_inicio) * 60 + MINUTE(hora_inicio) <= HOUR(hora_fin) * 60 + MINUTE(hora_fin)
+        ) AS horarios_posibles
+        WHERE hora_disponible >= current_datetime
+        AND VerificarCitaConflicto(doctor_id, hora_disponible) = TRUE
+        LIMIT 1;
+        
+        -- Comparar con el mejor tiempo actual
+        IF candidate_datetime IS NOT NULL THEN
+            IF best_time IS NULL OR candidate_datetime < best_time THEN
+                SET best_time = candidate_datetime;
+                SET best_doctor = doctor_id;
+            END IF;
+        END IF;
+    END LOOP;
+    
+    CLOSE cur_doctors;
+
+    -- Verificar que se encontró un médico disponible
+    IF best_doctor IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No hay médicos disponibles para la especialidad solicitada';
+    END IF;
+
+    -- Generar folio único
+    REPEAT
+        SET new_folio = LPAD(FLOOR(RAND() * 100000000), 8, '0');
+    UNTIL NOT EXISTS(SELECT 1 FROM Cita WHERE folio = new_folio) END REPEAT;
+
+    -- Insertar la cita
+    INSERT INTO Cita (id_paciente, id_medico, tipo, folio, fecha_hora, estado)
+    VALUES (id_paciente_param, best_doctor, 'Emergencia', new_folio, best_time, 'Programado');
+
+    -- Obtener nombre del médico
+    SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) 
+    INTO medico_nombre
+    FROM Usuario 
+    WHERE id_usuario = best_doctor;
+
+    SET folio_resultado = new_folio;
+END //
+
+DELIMITER ;    
+
+CALL AgendarCitaEmergencia('Pediatría', 1, @folio, @medico);

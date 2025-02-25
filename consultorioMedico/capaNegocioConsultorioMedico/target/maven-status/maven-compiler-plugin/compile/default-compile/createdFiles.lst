@@ -5,6 +5,7 @@ utils\Password.class
 mappers\ConsultaMapper.class
 pruebas\CapaNegocioConsultorioMedico.class
 exception\NegocioException.class
+DTO\CitaEmergenciaDTO.class
 BO\ConsultaBO.class
 DTO\HistorialConsultaDTO.class
 BO\PacienteBO.class
