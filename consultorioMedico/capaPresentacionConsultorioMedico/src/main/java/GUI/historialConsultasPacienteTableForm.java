@@ -107,6 +107,8 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
         jLabel3.setText("Fecha Inicio");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, -1, -1));
 
+        jTextArea1.setForeground(new java.awt.Color(153, 153, 153));
+        jTextArea1.setText("YYYY-MM-DD");
         jTextArea1.setMinimumSize(new java.awt.Dimension(13, 10));
         jTextArea1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -125,6 +127,8 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 110, 30));
 
+        jTextArea2.setForeground(new java.awt.Color(153, 153, 153));
+        jTextArea2.setText("YYYY-MM-DD");
         jTextArea2.setMinimumSize(new java.awt.Dimension(13, 10));
         jTextArea2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
