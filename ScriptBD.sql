@@ -246,4 +246,36 @@ END //
 
 DELIMITER ;
 
+/*TRIGGER DE CITA PROGRAMADA*/
+DELIMITER //
+CREATE TRIGGER triggerAuditoriaCitaProgramada
+AFTER INSERT ON cita FOR EACH ROW
+BEGIN
+	INSERT INTO auditoria (tipo_operacion, id_cita, fecha_hora, detalles) 
+    VALUES ("Se agendo una Cita", NEW.id_cita,NOW(),"Se ha registrado una cita");
+END //
+DELIMITER ;
+
+/*TRIGGER DE CITA CANCELADA*/
+DELIMITER //
+CREATE TRIGGER triggerAuditoriaConsultaCancelada
+AFTER UPDATE ON cita FOR EACH ROW
+BEGIN
+	IF NEW.estado = "Cancelada" THEN
+		INSERT INTO auditoria (tipo_operacion, id_cita, fecha_hora, detalles) 
+		VALUES ("Se cancelo una cita", OLD.id_cita,NOW(),"Se ha cancelado una cita");
+	END IF;
+END //
+DELIMITER ;
+
+/*TRIGGER DE CONSULTA REALIZADAS*/
+DELIMITER //
+CREATE TRIGGER triggerAuditoriaConsultaRealizada
+AFTER INSERT ON consulta FOR EACH ROW
+BEGIN
+		INSERT INTO auditoria (tipo_operacion, id_cita, fecha_hora, detalles) 
+		VALUES ("Se atendio una cita", NEW.id_cita,NOW(),"La consulta se ha atendido");
+END //
+DELIMITER ;
+
 
