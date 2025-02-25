@@ -11,6 +11,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -192,7 +197,7 @@ public class CitaDAO implements ICita{
     
         public List<Cita> obtenerCitasPendientesMedico(int idMedico) throws PersistenciaException {
         List<Cita> listaCitasActivas = new LinkedList<>();
-        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND estado = 'No atendida'";
+        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND estado = 'Programado'";
 
         try (Connection conexion = Conexion.getConnection()) {
 
@@ -223,6 +228,46 @@ public class CitaDAO implements ICita{
         } catch (SQLException e) {
             throw new PersistenciaException("Error al conectar a la base de datos", e);
         }
+    }
+        
+        
+    public List<Cita> obtenerCitasFiltradas(int idMedico, String fechaStr) throws PersistenciaException {
+        List<Cita> citas = new ArrayList<>();
+        String sql = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND fecha_hora BETWEEN ? AND ?";
+        
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDate fecha;
+        try {
+            fecha = LocalDate.parse(fechaStr.trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al convertir la fecha", e);
+        }
+        
+        LocalDateTime inicioDia = fecha.atStartOfDay();
+        LocalDateTime finDia = fecha.atTime(LocalTime.MAX);
+        
+        try (Connection conexion = Conexion.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idMedico);
+            ps.setTimestamp(2, Timestamp.valueOf(inicioDia));
+            ps.setTimestamp(3, Timestamp.valueOf(finDia));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita(
+                            rs.getInt("id_cita"),
+                            rs.getString("tipo"),
+                            rs.getString("folio"),
+                            rs.getTimestamp("fecha_hora").toLocalDateTime(),
+                            rs.getString("estado"),
+                            rs.getInt("id_paciente"),
+                            rs.getInt("id_medico"));
+                    citas.add(cita);
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al obtener citas filtradas", e);
+        }
+        return citas;
     }
     
 }

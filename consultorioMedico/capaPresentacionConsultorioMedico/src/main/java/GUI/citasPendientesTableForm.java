@@ -94,7 +94,17 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         jLabel2.setText("Fecha");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, -1, -1));
 
+        jTextArea2.setForeground(new java.awt.Color(153, 153, 153));
+        jTextArea2.setText("YYYY-MM-DD");
         jTextArea2.setMinimumSize(new java.awt.Dimension(13, 10));
+        jTextArea2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextArea2FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextArea2FocusLost(evt);
+            }
+        });
         jScrollPane3.setViewportView(jTextArea2);
 
         jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 110, 30));
@@ -122,7 +132,42 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        CitaDAO citaDAO = new CitaDAO();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        if (jCheckBox1.isSelected()) { 
+            String fechaFiltro = jTextArea2.getText();
+            int idMedico = utils.InicioSesion.getIdUsuario();
+            tableModel.setRowCount(0); // Limpia la tabla antes de cargar datos nuevos      
 
+            try {
+                // Obtener citas pendientes del médico actual
+                List<Cita> citasFiltradas = citaDAO.obtenerCitasFiltradas(idMedico, fechaFiltro);
+                
+                if (!citasFiltradas.isEmpty()) {
+                    tableModel.setRowCount(0);
+                    
+                    for(Cita cita: citasFiltradas){
+                        String fechaHora = cita.getFechaHora().toString();
+                        String tipoCita = cita.getTipo();
+                        String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
+                        // Agregar la fila con los datos y los botones
+                        tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, "Iniciar consulta", "Ver historial"});
+                    }
+                    
+                    jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
+                    jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm"));
+                    jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
+                    jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasTableForm"));
+                }
+
+            } catch (PersistenciaException | SQLException ex) {
+                Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
+            }    
+            }else{
+                System.out.println("Filtro desactivado");
+                cargarDatosEnTabla();
+            }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -142,6 +187,22 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
             frameActual.dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextArea2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusGained
+        // TODO add your handling code here:
+        if (jTextArea2.getText().trim().isEmpty()) {
+        jTextArea2.setText("YYYY-MM-DD");
+        jTextArea2.setForeground(new Color(153, 153, 153));
+        }
+    }//GEN-LAST:event_jTextArea2FocusGained
+
+    private void jTextArea2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusLost
+        // TODO add your handling code here:
+        if (jTextArea2.getText().trim().isEmpty()) {
+        jTextArea2.setText("YYYY-MM-DD");
+        jTextArea2.setForeground(new Color(153, 153, 153));
+        }
+    }//GEN-LAST:event_jTextArea2FocusLost
     private void cargarDatosEnTabla() {
         // Instanciamos los DAOs para interactuar con las tablas en la base de datos
         CitaDAO citaDAO = new CitaDAO();
@@ -159,7 +220,6 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
                 String fechaHora = cita.getFechaHora().toString();
                 String tipoCita = cita.getTipo();
                 String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
-
                 // Agregar la fila con los datos y los botones
                 tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, "Iniciar consulta", "Ver historial"});
             }
