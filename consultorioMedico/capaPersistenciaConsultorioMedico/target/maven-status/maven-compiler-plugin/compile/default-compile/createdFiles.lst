@@ -1,8 +1,8 @@
 entidades\Paciente.class
 utils\Password.class
-DAO\IConsulta.class
 DAO\CitaDAO.class
 DAO\UsuarioDAO.class
+entidades\HistorialConsultaMedico.class
 entidades\DireccionPaciente.class
 excepciones\PersistenciaException.class
 DAO\MedicoDAO.class

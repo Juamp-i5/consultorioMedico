@@ -13,6 +13,7 @@ package entidades;
  */
 public class Consulta {
 
+    private Cita cita;
     /**
      * Identificador único de la consulta.
      */
@@ -67,6 +68,32 @@ public class Consulta {
         this.estado = estado;
         this.idCita = idCita;
     }
+
+    public Consulta(Cita cita, int idConsulta, String diagnostico, String tratamiento, String notasMedicas, String estado) {
+        this.cita = cita;
+        this.idConsulta = idConsulta;
+        this.diagnostico = diagnostico;
+        this.tratamiento = tratamiento;
+        this.notasMedicas = notasMedicas;
+        this.estado = estado;
+    }
+
+    public Consulta(Cita cita, String diagnostico, String tratamiento, String notasMedicas, String estado) {
+        this.cita = cita;
+        this.diagnostico = diagnostico;
+        this.tratamiento = tratamiento;
+        this.notasMedicas = notasMedicas;
+        this.estado = estado;
+    }
+
+    public Cita getCita() {
+        return cita;
+    }
+
+    public void setCita(Cita cita) {
+        this.cita = cita;
+    }
+    
 
     /**
      * Constructor sin ID de consulta.

@@ -19,6 +19,7 @@ GUI\menuPacienteForm$6.class
 GUI\citasPendientesTableForm$ButtonEditor$1.class
 GUI\historialConsultasPacienteTableForm$2.class
 GUI\datosConsultaForm$2.class
+GUI\historialConsultasMedicoTableForm$3.class
 GUI\agendarCitaForm$5.class
 GUI\editarCuentaHospitalForm$4.class
 GUI\datosPacienteForm$1.class
@@ -39,6 +40,7 @@ GUI\editarCuentaHospitalForm$10.class
 GUI\editarCuentaHospitalForm$5.class
 pruebas\CapaPresentacionConsultorioMedico.class
 GUI\editarCuentaHospitalForm.class
+GUI\historialConsultasMedicoTableForm$4.class
 utils\Info.class
 GUI\datosPacienteForm$5.class
 GUI\inicioSesionForm.class
@@ -51,6 +53,7 @@ GUI\editarCuentaHospitalForm$8.class
 GUI\datosPacienteForm$9.class
 GUI\editarCuentaHospitalForm$3.class
 GUI\menuMedicoForm.class
+GUI\historialConsultasMedicoTableForm$5.class
 GUI\datosPacienteForm$2.class
 GUI\historialConsultasPacienteTableForm$3.class
 GUI\citasPendientesTableForm$2.class

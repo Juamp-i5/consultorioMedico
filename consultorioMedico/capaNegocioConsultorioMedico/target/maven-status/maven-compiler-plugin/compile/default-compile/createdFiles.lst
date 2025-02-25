@@ -2,8 +2,11 @@ BO\CitaBO.class
 DTO\UsuarioNuevoDTO.class
 mappers\CitaMapper.class
 utils\Password.class
+mappers\ConsultaMapper.class
 pruebas\CapaNegocioConsultorioMedico.class
 exception\NegocioException.class
+BO\ConsultaBO.class
+DTO\HistorialConsultaDTO.class
 BO\PacienteBO.class
 DTO\MedicoNuevoDTO.class
 DTO\MedicoInicioSesionDTO.class

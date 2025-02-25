@@ -221,8 +221,8 @@ public class menuPacienteForm extends javax.swing.JPanel {
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
         //InicioSesion.resetIdUsuario();
-        javax.swing.JFrame frame = new javax.swing.JFrame("Agenda Citas");
-        agendaCitasTableForm agendaCitas = new agendaCitasTableForm();
+        javax.swing.JFrame frame = new javax.swing.JFrame("Cita emergencia");
+        citaEmergenciaForm agendaCitas = new citaEmergenciaForm();
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(agendaCitas);

@@ -37,12 +37,15 @@ public class PacienteDAO implements IPacienteDAO {
                 psUsuario.setString(3, paciente.getApellidoMaterno());
                 psUsuario.setString(4, paciente.getContrasenia());
 
+                //Comprobamos si se inserto el usuario
                 int affectedRowsUsuario = psUsuario.executeUpdate();
                 if (affectedRowsUsuario == 0) {
                     throw new SQLException("No se pudo insertar el usuario");
                 }
 
+                //Guardamos el idUsuario generado para luego insertar el paciente y la direccion
                 ResultSet generatedKeys = psUsuario.getGeneratedKeys();
+
                 if (generatedKeys.next()) {
                     int idUsuario = generatedKeys.getInt(1);
 
@@ -52,6 +55,7 @@ public class PacienteDAO implements IPacienteDAO {
                         psPaciente.setString(3, paciente.getTelefono());
                         psPaciente.setString(4, paciente.getCorreoElectronico());
 
+                        //Comprobamos si se inserto el paciente
                         int affectedRowsPaciente = psPaciente.executeUpdate();
                         if (affectedRowsPaciente == 0) {
                             throw new SQLException("No se pudo insertar el paciente");
@@ -64,12 +68,15 @@ public class PacienteDAO implements IPacienteDAO {
                             psDireccion.setString(4, paciente.getDireccion().getColonia());
                             psDireccion.setString(5, paciente.getDireccion().getCodigoPostal());
 
+                            //Comprobamos si se inserto la direccion del paciente
                             int affectedRowsDireccion = psDireccion.executeUpdate();
                             if (affectedRowsDireccion == 0) {
                                 throw new SQLException("No se pudo insertar la dirección del paciente");
                             }
                         }
-                        conexion.commit(); // Confirmar transacción si todo está bien
+
+                        // Confirmar transacción si todo está bien
+                        conexion.commit();
                         return true;
 
                     }
@@ -78,10 +85,12 @@ public class PacienteDAO implements IPacienteDAO {
                     throw new PersistenciaException("No se pudo obtener el ID del usuario");
                 }
             } catch (SQLException e) {
-                conexion.rollback(); // Revertir transacción en caso de error osea que se deshace de todos los cambios realizados en los datos
+                // Revertir transacción en caso de error osea que se deshace de todos los cambios realizados en los datos
+                conexion.rollback();
                 throw new PersistenciaException("Error al agregarPaciente: " + e.getMessage());
             } finally {
-                conexion.setAutoCommit(true); // Restaurar el autoCommit por seguridad(dejar todo en orden para que no haya problemas despues, que todo se guarde automaticamente como debe de ser)
+                // Restaurar el autoCommit por seguridad(dejar todo en orden para que no haya problemas despues, que todo se guarde automaticamente como debe de ser)
+                conexion.setAutoCommit(true);
             }
 
         } catch (SQLException e) {
@@ -89,27 +98,26 @@ public class PacienteDAO implements IPacienteDAO {
         }
 
     }
-    
+
     @Override
-    public int validarInicioSesion(Paciente paciente) throws PersistenciaException{
+    public int validarInicioSesion(Paciente paciente) throws PersistenciaException {
         if (!existeCorreo(paciente.getCorreoElectronico())) {
             throw new PersistenciaException("El correo no existe");
         }
-        
+
         String query = "Select id_usuario, contrasenia FROM VistaInicioSesion WHERE correo = ?";
-        
-        try (Connection conexion = Conexion.getConnection();
-                PreparedStatement ps = conexion.prepareStatement(query)){
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(query)) {
             ps.setString(1, paciente.getCorreoElectronico());
-            
-            try (ResultSet rs = ps.executeQuery()){
+
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     if (Password.verifyPassword(paciente.getContrasenia(), rs.getString("contrasenia"))) {
                         return rs.getInt("id_usuario");
                     } else {
                         throw new PersistenciaException("Contraseña incorrecta");
                     }
-                } else{
+                } else {
                     throw new PersistenciaException("El correo no existe");
                 }
             }
@@ -117,7 +125,7 @@ public class PacienteDAO implements IPacienteDAO {
             throw new PersistenciaException("Error al validar inicio de sesion");
         }
     }
-    
+
     @Override
     public Paciente consultarPaciente(int id) throws PersistenciaException {
         if (!existePaciente(id)) {
@@ -180,8 +188,9 @@ public class PacienteDAO implements IPacienteDAO {
 //        }
 //    }
 //
+
     public boolean actualizarPaciente(Paciente paciente) throws PersistenciaException {
-        
+
         if (!existePaciente(paciente.getIdUsuario())) {
             throw new PersistenciaException("No existe el paciente con el id #" + paciente.getIdUsuario());
         }
@@ -203,55 +212,51 @@ public class PacienteDAO implements IPacienteDAO {
                 if (affectedRowsUsuario == 0) {
                     return false;
                 }
-            }
-            catch(SQLException e){
+            } catch (SQLException e) {
                 conexion.rollback(); // Revertir transacción en caso de error
                 throw new PersistenciaException("Error al actualizar Usuario", e);
             }
-            
+
             //ACTUALIZAR PACIENTE
             try (PreparedStatement psPaciente = conexion.prepareStatement(queryPaciente)) {
                 psPaciente.setObject(1, paciente.getFechaNacimiento());
                 psPaciente.setString(2, paciente.getTelefono());
                 psPaciente.setString(3, paciente.getCorreoElectronico());
-                psPaciente.setInt(4,paciente.getIdUsuario());
+                psPaciente.setInt(4, paciente.getIdUsuario());
                 int affectedRowsPaciente = psPaciente.executeUpdate();
                 if (affectedRowsPaciente == 0) {
                     return false;
                 }
-            }
-            catch(SQLException e){
+            } catch (SQLException e) {
                 conexion.rollback(); // Revertir transacción en caso de error
                 throw new PersistenciaException("Error al actualizar Paciente", e);
             }
-            
+
             //ACTUALIZAR DIRECCION
-            try(PreparedStatement ps = conexion.prepareStatement(queryDireccion)){
-                ps.setString(1,paciente.getDireccion().getCalle());
-                ps.setString(2,paciente.getDireccion().getNumero());
+            try (PreparedStatement ps = conexion.prepareStatement(queryDireccion)) {
+                ps.setString(1, paciente.getDireccion().getCalle());
+                ps.setString(2, paciente.getDireccion().getNumero());
                 ps.setString(3, paciente.getDireccion().getColonia());
-                ps.setString(4,paciente.getDireccion().getCodigoPostal());
-                ps.setInt(5,paciente.getIdUsuario());
-                
+                ps.setString(4, paciente.getDireccion().getCodigoPostal());
+                ps.setInt(5, paciente.getIdUsuario());
+
                 int affectedRowsDireccion = ps.executeUpdate();
                 if (affectedRowsDireccion == 0) {
                     return false;
-                }
-                else{
+                } else {
                     conexion.commit(); // guardar los cambios
                 }
             } catch (SQLException e) {
                 conexion.rollback(); // Revertir transacción en caso de error
                 throw new PersistenciaException("Error al actualizar direccion", e);
             }
-            
+
         } catch (SQLException e) {
             throw new PersistenciaException("Error al actualizarPaciente: " + e.getMessage());
         }
-        
+
         return true;
     }
-
 
     @Override
     public boolean existePaciente(int id) throws PersistenciaException {

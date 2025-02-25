@@ -4,6 +4,19 @@
  */
 package GUI;
 
+import BO.ConsultaBO;
+import DTO.HistorialConsultaDTO;
+import com.toedter.calendar.JDateChooser;
+import exception.NegocioException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import utils.InicioSesion;
+
 /**
  *
  * @author Admin
@@ -13,8 +26,58 @@ public class historialConsultasMedicoTableForm extends javax.swing.JPanel {
     /**
      * Creates new form crearCuentaForm
      */
+    List<HistorialConsultaDTO> consultas;
+    List<HistorialConsultaDTO> consultasFiltradas;
+
     public historialConsultasMedicoTableForm() {
         initComponents();
+        checkBox(false);
+        ConsultaBO consultaBO = new ConsultaBO();
+        try {
+            consultas = consultaBO.getHistorialConsultas(InicioSesion.getIdUsuario());
+            addRegistrosTabla(consultas);
+
+        } catch (NegocioException ex) {
+            JOptionPane panel = new JOptionPane(ex);
+        }
+    }
+
+    private void checkBox(boolean estado) {
+        jTextField1.setEnabled(estado);
+        jTextField1.setText("");
+
+        jDateChooser1.setEnabled(estado);
+        jDateChooser1.setDate(null);
+
+        jDateChooser2.setEnabled(estado);
+        jDateChooser2.setDate(null);
+
+        jButton1.setEnabled(estado);
+
+        consultasFiltradas = new ArrayList<>();
+        addRegistrosTabla(consultas);
+    }
+
+    private void addRegistrosTabla(List<HistorialConsultaDTO> consultas) {
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+
+        if (consultas == null) {
+            consultas = new ArrayList<>();
+        }
+
+        for (HistorialConsultaDTO consulta : consultas) {
+            String nombreCompleto = consulta.getNombrePaciente() + " " + consulta.getApellidoPaternoPaciente() + " " + consulta.getApellidoMaternoPaciente();
+            Object[] fila = {
+                consulta.getFechaHora(),
+                consulta.getTipoConsulta(),
+                consulta.getEstadoConsulta(),
+                nombreCompleto,
+                consulta.getDiagnostico(),
+                consulta.getTratamiento()
+            };
+            modelo.addRow(fila);
+        }
     }
 
     /**
@@ -33,14 +96,13 @@ public class historialConsultasMedicoTableForm extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
         jButton7 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jTextField1 = new javax.swing.JTextField();
 
         jTextField2.setText("jTextField2");
 
@@ -48,24 +110,32 @@ public class historialConsultasMedicoTableForm extends javax.swing.JPanel {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        jLabel1.setText("Citas Pendientes");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, -1, -1));
+        jLabel1.setText("Historial consultas");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, -1));
 
         jTable1.setBackground(new java.awt.Color(153, 153, 153));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Fecha_Hora", "Tipo", "Estado", "Especialidad", "Medico", "Diagnostico", "Tratamiento"
+                "Fecha_Hora", "Tipo", "Estado", "Paciente", "Diagnostico", "Tratamiento"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 830, 410));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 830, 410));
 
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox1.setText("Filtrar Citas");
@@ -74,28 +144,13 @@ public class historialConsultasMedicoTableForm extends javax.swing.JPanel {
                 jCheckBox1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, -1, -1));
+        jPanel1.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, -1, -1));
 
-        jLabel2.setText("Fecha Fin");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, -1, -1));
-
-        jTextArea2.setMinimumSize(new java.awt.Dimension(13, 10));
-        jScrollPane3.setViewportView(jTextArea2);
-
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 100, 110, 30));
+        jLabel2.setText("Paciente");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 100, -1, -1));
 
         jLabel3.setText("Fecha Inicio");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, -1, -1));
-
-        jTextArea3.setMinimumSize(new java.awt.Dimension(13, 10));
-        jScrollPane4.setViewportView(jTextArea3);
-
-        jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 110, 30));
-
-        jTextArea4.setMinimumSize(new java.awt.Dimension(13, 10));
-        jScrollPane5.setViewportView(jTextArea4);
-
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 110, 30));
 
         jButton7.setBackground(new java.awt.Color(153, 153, 153));
         jButton7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -106,6 +161,26 @@ public class historialConsultasMedicoTableForm extends javax.swing.JPanel {
             }
         });
         jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 54));
+
+        jLabel4.setText("Fecha Fin");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, -1, -1));
+
+        jButton1.setText("Filtar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 130, -1, -1));
+        jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 110, 30));
+        jPanel1.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 110, 30));
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 130, 110, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -120,7 +195,12 @@ public class historialConsultasMedicoTableForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
+        if (jCheckBox1.isSelected()) {
+            checkBox(true);
+        } else {
+            checkBox(false);
+        }
+
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -140,22 +220,55 @@ public class historialConsultasMedicoTableForm extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        //Filtrar consultas
+        String nombrePaciente = jTextField1.getText();
+        Date fechaInicioDate = jDateChooser2.getDate();
+        Date fechaFinDate = jDateChooser1.getDate();
+
+        LocalDate fechaInicio = (fechaInicioDate != null) ? fechaInicioDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+        LocalDate fechaFin = (fechaFinDate != null) ? fechaFinDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+
+        consultasFiltradas = new ArrayList<>();
+
+        for (HistorialConsultaDTO consulta : consultas) {
+            boolean coincideNombre = nombrePaciente.isEmpty()
+                    || consulta.getNombrePaciente().toLowerCase().contains(nombrePaciente);
+
+            LocalDate fechaConsulta = consulta.getFechaHora().toLocalDate();
+
+            boolean coincideFecha = (fechaInicio == null || !fechaConsulta.isBefore(fechaInicio))
+                    && (fechaFin == null || !fechaConsulta.isAfter(fechaFin));
+
+            if (coincideNombre && coincideFecha) {
+                consultasFiltradas.add(consulta);
+            }
+        }
+
+        addRegistrosTabla(consultasFiltradas);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton7;
     private javax.swing.JCheckBox jCheckBox1;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

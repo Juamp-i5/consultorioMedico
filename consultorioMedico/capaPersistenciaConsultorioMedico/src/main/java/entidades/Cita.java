@@ -5,6 +5,7 @@
 package entidades;
 
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 /**
@@ -51,6 +52,10 @@ public class Cita {
      */
     private int idMedico;
 
+    private Paciente paciente;
+
+    private Medico medico;
+
     /**
      * Constructor por defecto.
      */
@@ -76,6 +81,29 @@ public class Cita {
         this.estado = estado;
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
+    }
+
+    public Cita(int idCita, String tipo, String folio, LocalDateTime fechaHora, String estado, int idPaciente, int idMedico, Paciente paciente, Medico medico) {
+        this.idCita = idCita;
+        this.tipo = tipo;
+        this.folio = folio;
+        this.fechaHora = fechaHora;
+        this.estado = estado;
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.paciente = paciente;
+        this.medico = medico;
+    }
+
+    public Cita(String tipo, String folio, LocalDateTime fechaHora, String estado, int idPaciente, int idMedico, Paciente paciente, Medico medico) {
+        this.tipo = tipo;
+        this.folio = folio;
+        this.fechaHora = fechaHora;
+        this.estado = estado;
+        this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
+        this.paciente = paciente;
+        this.medico = medico;
     }
 
     /**
@@ -221,6 +249,22 @@ public class Cita {
      */
     public void setIdMedico(int idMedico) {
         this.idMedico = idMedico;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
+    public Medico getMedico() {
+        return medico;
+    }
+
+    public void setMedico(Medico medico) {
+        this.medico = medico;
     }
 
     /**

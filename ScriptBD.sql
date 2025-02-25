@@ -279,3 +279,34 @@ END //
 DELIMITER ;
 
 
+
+DELIMITER //
+
+CREATE PROCEDURE ObtenerConsultasMedico(IN p_id_medico INT)
+BEGIN
+    SELECT 
+        C.id_cita,
+        C.fecha_hora,
+        C.tipo,
+        P.id_paciente,
+        U.nombre AS nombre_paciente,
+        U.apellido_paterno,
+        U.apellido_materno,
+        CO.diagnostico,
+        CO.tratamiento,
+        CO.estado
+    FROM Cita C
+    JOIN Paciente P ON C.id_paciente = P.id_paciente
+    JOIN Usuario U ON P.id_paciente = U.id_usuario
+    LEFT JOIN Consulta CO ON C.id_cita = CO.id_cita
+    WHERE C.id_medico = p_id_medico
+    ORDER BY C.fecha_hora DESC;
+END //
+
+DELIMITER ;
+
+INSERT INTO Cita (id_paciente, id_medico, tipo, folio, fecha_hora, estado)
+VALUES 
+    (2, 10, 'Consulta General', 'A1234567', '2025-02-25 09:00:00', 'Programado'),
+    (2, 10, 'Revisión Cardiológica', 'B7654321', '2025-02-26 10:30:00', 'Programado'),
+    (2, 10, 'Consulta Dermatológica', 'C1122334', '2025-02-27 11:00:00', 'No atendida');

@@ -1,12 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
+import DAO.IConsultaDAO;
 import conexion.Conexion;
+import entidades.Cita;
 import entidades.Consulta;
+import entidades.HistorialConsultaMedico;
+import entidades.Paciente;
 import excepciones.PersistenciaException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,19 +19,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class ConsultaDAO {
-    
+public class ConsultaDAO implements IConsultaDAO {
+
     private static final Logger logger = Logger.getLogger(ConsultaDAO.class.getName());
-    
+
     public String getEstado(int idConsulta) throws PersistenciaException {
         String estado = null;
         String sql = "SELECT estado FROM consulta WHERE id = ?";
-        
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idConsulta);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 estado = rs.getString("estado");
             }
@@ -40,16 +40,15 @@ public class ConsultaDAO {
         }
         return estado;
     }
-    
+
     public String getDiagnostico(int idConsulta) throws PersistenciaException {
         String diagnostico = null;
         String sql = "SELECT diagnostico FROM consulta WHERE id = ?";
-        
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idConsulta);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 diagnostico = rs.getString("diagnostico");
             }
@@ -59,16 +58,15 @@ public class ConsultaDAO {
         }
         return diagnostico;
     }
-    
+
     public String getTratamiento(int idConsulta) throws PersistenciaException {
         String tratamiento = null;
         String sql = "SELECT tratamiento FROM consulta WHERE id = ?";
-        
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idConsulta);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 tratamiento = rs.getString("tratamiento");
             }
@@ -78,13 +76,12 @@ public class ConsultaDAO {
         }
         return tratamiento;
     }
-    
+
     public List<Consulta> obtenerConsultasPaciente(int idPaciente) throws PersistenciaException {
         List<Consulta> consultas = new ArrayList<>();
-        String sql = "SELECT * FROM consulta as con join cita as cit on con.id_cita = cit.id_cita where id_paciente = ?;";  
+        String sql = "SELECT * FROM consulta as con join cita as cit on con.id_cita = cit.id_cita where id_paciente = ?;";
 
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idPaciente);
             ResultSet rs = ps.executeQuery();
 
@@ -102,7 +99,6 @@ public class ConsultaDAO {
         }
         return consultas;
     }
-    
 
     public List<Consulta> obtenerConsultasFiltradas(int idPaciente, String especialidad, String fechaInicioStr, String fechaFinStr) throws PersistenciaException {
         List<Consulta> consultas = new ArrayList<>();
@@ -120,8 +116,7 @@ public class ConsultaDAO {
             throw new PersistenciaException("Error al convertir las fechas", e);
         }
 
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setInt(1, idPaciente);
             ps.setString(2, especialidad);
@@ -144,16 +139,15 @@ public class ConsultaDAO {
         }
         return consultas;
     }
-    
-    public String obtenerEspecialidad(int idConsulta) throws PersistenciaException {
-        String sql = "SELECT m.especialidad " +
-                     "FROM consulta con " +
-                     "JOIN cita cit ON con.id_cita = cit.id_cita " +
-                     "JOIN medico m ON cit.id_medico = m.id_medico " +
-                     "WHERE con.id_consulta = ?";
 
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+    public String obtenerEspecialidad(int idConsulta) throws PersistenciaException {
+        String sql = "SELECT m.especialidad "
+                + "FROM consulta con "
+                + "JOIN cita cit ON con.id_cita = cit.id_cita "
+                + "JOIN medico m ON cit.id_medico = m.id_medico "
+                + "WHERE con.id_consulta = ?";
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setInt(1, idConsulta);
 
@@ -168,12 +162,11 @@ public class ConsultaDAO {
         }
         return ""; // Retorna cadena vacía si no encuentra información
     }
-    
+
     public String obtenerNombreMedico(int idConsulta) throws PersistenciaException {
         String sql = "SELECT u.nombre  FROM usuario as u JOIN medico as m ON m.id_medico = u.id_usuario JOIN cita cit ON cit.id_medico = m.id_medico  JOIN consulta con ON con.id_cita = cit.id_cita WHERE con.id_consulta = ?";
 
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setInt(1, idConsulta);
 
@@ -187,6 +180,36 @@ public class ConsultaDAO {
             throw new PersistenciaException("Error al obtener el nombre del médico de la consulta", e);
         }
         return ""; // Retorna cadena vacía si no encuentra información
-    }    
-}
+    }
 
+    public List<HistorialConsultaMedico> consultasMedico(int idMedico) throws PersistenciaException {
+        List<HistorialConsultaMedico> consultas = new ArrayList<>();
+
+        String query = "{CALL ObtenerConsultasMEdico(?)}";
+
+        try (Connection conexion = Conexion.getConnection(); CallableStatement stmt = conexion.prepareCall(query)) {
+
+            stmt.setInt(1, idMedico);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                HistorialConsultaMedico consulta = new HistorialConsultaMedico(
+                        rs.getTimestamp("fecha_hora").toLocalDateTime(),
+                        rs.getString("tipo"),
+                        rs.getString("estado"),
+                        rs.getString("nombre_paciente"),
+                        rs.getString("apellido_paterno"),
+                        rs.getString("apellido_materno"),
+                        rs.getString("diagnostico"),
+                        rs.getString("tratamiento"),
+                        rs.getInt("id_paciente")
+                );
+                consultas.add(consulta);
+            }
+
+            return consultas;
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al obtener las consultas del medico: " + e.getMessage());
+        }
+    }
+}

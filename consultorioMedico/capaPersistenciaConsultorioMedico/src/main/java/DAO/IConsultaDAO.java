@@ -4,10 +4,14 @@
  */
 package DAO;
 
+import entidades.HistorialConsultaMedico;
+import excepciones.PersistenciaException;
+import java.util.List;
+
 /**
  *
  * @author Admin
  */
 public interface IConsultaDAO {
-    
+    public List<HistorialConsultaMedico> consultasMedico(int idMedico) throws PersistenciaException;
 }
