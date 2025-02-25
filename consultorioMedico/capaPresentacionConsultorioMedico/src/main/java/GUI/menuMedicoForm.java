@@ -129,7 +129,7 @@ public class menuMedicoForm extends javax.swing.JPanel {
                 if (respuesta == JOptionPane.YES_OPTION) {
                     boolean baja = medico.darBaja(InicioSesion.getIdUsuario());
                     if (baja) {
-                        JOptionPane panel2 = new JOptionPane("Dado de baja, redireccionando a inicio sesion");
+                        JOptionPane.showMessageDialog(null, "Dado de baja, redireccionando a inicio sesion");
                         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
                         InicioSesion.resetIdUsuario();
