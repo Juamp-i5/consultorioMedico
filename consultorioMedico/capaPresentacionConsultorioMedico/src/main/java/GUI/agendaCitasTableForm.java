@@ -7,21 +7,35 @@ package GUI;
 import DAO.CitaDAO;
 import DAO.MedicoDAO;
 import DAO.UsuarioDAO;
+import GUI.citasPendientesTableForm.ButtonRenderer;
 import entidades.Cita;
 import excepciones.PersistenciaException;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 /**
  *
  * @author Admin
  */
 public class agendaCitasTableForm extends javax.swing.JPanel {
+
     int idUsuario;
+
     /**
      * Creates new form crearCuentaForm
      */
@@ -59,15 +73,23 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
         jTable1.setBackground(new java.awt.Color(153, 153, 153));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Fecha_Hora", "Especialidad", "Medico", "      "
+                "id_cita", "Fecha_Hora", "Especialidad", "Medico", "      "
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 740, 400));
@@ -110,7 +132,8 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
             frameActual.dispose();
         }
     }//GEN-LAST:event_jButton7ActionPerformed
-        private void cargarDatosEnTabla() {
+
+    private void cargarDatosEnTabla() {
         //Instaciamos los DAOS para interactuar con las tablas en la base de datos
         CitaDAO citaDAO = new CitaDAO();
         MedicoDAO medicoDAO = new MedicoDAO();
@@ -127,17 +150,44 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
                 String especialidad = medicoDAO.obtenerEspecialidad(cita.getIdMedico());
                 String nombreMedico = usuarioDAO.obtenerNombre(cita.getIdMedico());
 
-                // Agregamos una fila con los datos obtenidos aqui arribita y SE AGREGA PASADO DE LANZA
-                tableModel.addRow(new Object[]{fechaHora, especialidad, nombreMedico, "Cancelar Cita"});
+                boolean esCancelable = cita.getFechaHora().isAfter(LocalDateTime.now().plusHours(24));
                 
+                String texto = "";
+                if (esCancelable) {
+                    texto = "Cancelar cita";
+                }
+
+                tableModel.addRow(new Object[]{cita.getIdCita(), fechaHora, especialidad, nombreMedico, texto});
             }
-           
-                
+
+            // Detectar clic en las celdas de la tabla
+            jTable1.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    int row = jTable1.rowAtPoint(e.getPoint());
+                    int column = jTable1.columnAtPoint(e.getPoint());
+
+                    if (column == 4) {
+                        boolean esCancelable = jTable1.getValueAt(row, column).equals("Cancelar cita");
+
+                        if (esCancelable) {
+                            int idCita = (int) jTable1.getValueAt(row, 0);
+                            cancelarCita(idCita);
+                        }
+                    }
+                }
+            });
+
         } catch (PersistenciaException e) {
         } catch (SQLException ex) {
             Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    private void cancelarCita(int idCita) {
+        JOptionPane.showConfirmDialog(jButton7, "boton");
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton7;
@@ -147,4 +197,5 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
 }

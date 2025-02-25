@@ -47,6 +47,7 @@ GUI\inicioSesionForm.class
 GUI\menuPacienteForm$4.class
 GUI\citasPendientesTableForm$1.class
 GUI\datosConsultaForm$6.class
+GUI\agendaCitasTableForm$3.class
 GUI\citasPendientesTableForm$ButtonEditor.class
 GUI\historialConsultasPacienteTableForm$1.class
 GUI\editarCuentaHospitalForm$8.class
@@ -80,6 +81,7 @@ GUI\historialConsultasPacienteTableForm.class
 GUI\agendarCitaForm$1.class
 GUI\editarCuentaHospitalForm$7.class
 GUI\menuPacienteForm$2.class
+GUI\agendaCitasTableForm$2.class
 Excepciones\PresentacionException.class
 GUI\datosPacienteForm$3.class
 GUI\agendaCitasTableForm.class

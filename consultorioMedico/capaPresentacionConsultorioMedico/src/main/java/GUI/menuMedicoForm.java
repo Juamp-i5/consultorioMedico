@@ -122,7 +122,8 @@ public class menuMedicoForm extends javax.swing.JPanel {
             MedicoBO medico = new MedicoBO();
 
             if (medico.citasPendientes(InicioSesion.getIdUsuario())) {
-                JOptionPane panel = new JOptionPane("Tiene citas pendientes, no puede darse de baja");
+                JOptionPane.showMessageDialog(null, "Tiene citas pendientes, no puede darse de baja");
+
             } else {
                 int respuesta = JOptionPane.showConfirmDialog(null, "¿Deseas continuar?", "Confirmación", JOptionPane.YES_NO_OPTION);
                 if (respuesta == JOptionPane.YES_OPTION) {
@@ -145,12 +146,12 @@ public class menuMedicoForm extends javax.swing.JPanel {
                             frameActual.dispose();
                         }
                     } else {
-                        JOptionPane panel3 = new JOptionPane("No se pudo dar de baja");
+                        JOptionPane.showMessageDialog(null, "No se pudo dar de baja", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
         } catch (NegocioException ex) {
-            JOptionPane panel = new JOptionPane("Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -179,7 +180,7 @@ public class menuMedicoForm extends javax.swing.JPanel {
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
         javax.swing.JFrame frame = new javax.swing.JFrame("Menu medico");
-        historialConsultasMedicoTableForm agendaCitas = new historialConsultasMedicoTableForm   ();
+        historialConsultasMedicoTableForm agendaCitas = new historialConsultasMedicoTableForm();
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(agendaCitas);
