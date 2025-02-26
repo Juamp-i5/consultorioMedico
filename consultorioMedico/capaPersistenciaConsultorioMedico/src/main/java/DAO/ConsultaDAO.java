@@ -24,6 +24,13 @@ public class ConsultaDAO implements IConsultaDAO {
 
     private static final Logger logger = Logger.getLogger(ConsultaDAO.class.getName());
 
+    /**
+     * Obtiene el estado de una consulta específica a partir de su ID.
+     *
+     * @param idConsulta El identificador único de la consulta.
+     * @return El estado de la consulta como una cadena de texto. Retorna {@code null} si no se encuentra la consulta.
+     * @throws PersistenciaException Si ocurre un error al conectarse a la base de datos o ejecutar la consulta.
+     */
     public String getEstado(int idConsulta) throws PersistenciaException {
         String estado = null;
         String sql = "SELECT estado FROM consulta WHERE id = ?";
@@ -42,6 +49,13 @@ public class ConsultaDAO implements IConsultaDAO {
         return estado;
     }
 
+     /**
+     * Obtiene el diagnóstico de una consulta específica a partir de su ID.
+     *
+     * @param idConsulta El identificador único de la consulta.
+     * @return El diagnóstico de la consulta como una cadena de texto. Retorna {@code null} si no se encuentra la consulta.
+     * @throws PersistenciaException Si ocurre un error al conectarse a la base de datos o ejecutar la consulta.
+     */
     public String getDiagnostico(int idConsulta) throws PersistenciaException {
         String diagnostico = null;
         String sql = "SELECT diagnostico FROM consulta WHERE id = ?";
@@ -60,6 +74,13 @@ public class ConsultaDAO implements IConsultaDAO {
         return diagnostico;
     }
 
+    /**
+     * Obtiene el tratamiento de una consulta específica a partir de su ID.
+     *
+     * @param idConsulta El identificador único de la consulta.
+     * @return El tratamiento de la consulta como una cadena de texto. Retorna {@code null} si no se encuentra la consulta.
+     * @throws PersistenciaException Si ocurre un error al conectarse a la base de datos o ejecutar la consulta.
+     */
     public String getTratamiento(int idConsulta) throws PersistenciaException {
         String tratamiento = null;
         String sql = "SELECT tratamiento FROM consulta WHERE id = ?";
@@ -78,6 +99,14 @@ public class ConsultaDAO implements IConsultaDAO {
         return tratamiento;
     }
 
+    /**
+     * Obtiene la lista de consultas atendidas de un paciente específico a partir de su ID.
+     *
+     * @param idPaciente El identificador único del paciente.
+     * @return Una lista de objetos {@link Consulta} que representan las consultas atendidas del paciente.
+     *         Si el paciente no tiene consultas atendidas, se retorna una lista vacía.
+     * @throws PersistenciaException Si ocurre un error al conectarse a la base de datos o ejecutar la consulta.
+     */
     public List<Consulta> obtenerConsultasPaciente(int idPaciente) throws PersistenciaException {
         List<Consulta> consultas = new ArrayList<>();
         String sql = "SELECT * FROM consulta as con join cita as cit on con.id_cita = cit.id_cita where id_paciente = ? and con.estado = \"Atendida\";";
@@ -101,6 +130,17 @@ public class ConsultaDAO implements IConsultaDAO {
         return consultas;
     }
 
+    /**
+     * Obtiene una lista de consultas atendidas de un paciente filtradas por especialidad y un rango de fechas.
+     *
+     * @param idPaciente     El identificador único del paciente.
+     * @param especialidad   La especialidad médica de la consulta.
+     * @param fechaInicioStr La fecha de inicio del rango en formato "yyyy-MM-dd HH:mm:ss".
+     * @param fechaFinStr    La fecha de fin del rango en formato "yyyy-MM-dd HH:mm:ss".
+     * @return Una lista de objetos {@link Consulta} que cumplen con los filtros especificados.
+     *         Si no hay consultas que coincidan, se retorna una lista vacía.
+     * @throws PersistenciaException Si ocurre un error al convertir las fechas, conectarse a la base de datos o ejecutar la consulta.
+     */
     public List<Consulta> obtenerConsultasFiltradas(int idPaciente, String especialidad, String fechaInicioStr, String fechaFinStr) throws PersistenciaException {
         List<Consulta> consultas = new ArrayList<>();
         String sql = "SELECT * FROM consulta as con  join cita as cit on con.id_cita = cit.id_cita  join medico as m on m.id_medico = cit.id_medico where id_paciente = ? and con.estado = \"Atendida\"  and especialidad = ? and fecha_hora between ? and ? ";
@@ -163,7 +203,15 @@ public class ConsultaDAO implements IConsultaDAO {
         }
         return ""; // Retorna cadena vacía si no encuentra información
     }
-
+    
+    /**
+     * Obtiene la especialidad médica asociada a una consulta específica.
+     *
+     * @param idConsulta El identificador único de la consulta.
+     * @return La especialidad del médico que atendió la consulta.
+     *         Si no se encuentra información, retorna una cadena vacía.
+     * @throws PersistenciaException Si ocurre un error al conectarse a la base de datos o ejecutar la consulta.
+     */
     public String obtenerNombreMedico(int idConsulta) throws PersistenciaException {
         String sql = "SELECT u.nombre  FROM usuario as u JOIN medico as m ON m.id_medico = u.id_usuario JOIN cita cit ON cit.id_medico = m.id_medico  JOIN consulta con ON con.id_cita = cit.id_cita WHERE con.id_consulta = ?";
 
@@ -183,6 +231,12 @@ public class ConsultaDAO implements IConsultaDAO {
         return ""; // Retorna cadena vacía si no encuentra información
     }
 
+    /**
+     * Obtiene el tipo de cita asociada a una consulta específica.
+     *
+     * @param idConsulta El identificador único de la consulta.
+     * @return El tipo de cita correspondiente a la consulta. Si no se encuentra información, retorna {@code null}.
+     */
     public String getTipoCita(int idConsulta) {
         String sql = "SELECT c.tipo FROM Cita c "
                 + "JOIN Consulta co ON c.id_cita = co.id_cita "
@@ -221,6 +275,13 @@ public class ConsultaDAO implements IConsultaDAO {
         return null;
     }
 
+    /**
+     * Obtiene una lista del historial de consultas realizadas por un médico específico.
+     *
+     * @param idMedico El identificador único del médico.
+     * @return Una lista de objetos {@code HistorialConsultaMedico} con la información de las consultas realizadas por el médico.
+     * @throws PersistenciaException Si ocurre un error al obtener las consultas del médico.
+     */
     public List<HistorialConsultaMedico> consultasMedico(int idMedico) throws PersistenciaException {
         List<HistorialConsultaMedico> consultas = new ArrayList<>();
 
@@ -252,6 +313,18 @@ public class ConsultaDAO implements IConsultaDAO {
         }
     }
 
+    /**
+     * Atiende una cita médica y crea una nueva consulta en la base de datos.
+     * Este método llama a un procedimiento almacenado que registra el diagnóstico, tratamiento
+     * y notas médicas de la consulta, y devuelve el identificador de la nueva consulta creada.
+     *
+     * @param idCita       El identificador único de la cita a atender.
+     * @param diagnostico  El diagnóstico médico de la consulta.
+     * @param tratamiento  El tratamiento prescrito al paciente.
+     * @param notasMedicas Notas adicionales del médico sobre la consulta.
+     * @return El identificador único de la consulta creada. Retorna -1 en caso de error.
+     * @throws PersistenciaException Si ocurre un error al procesar la consulta en la base de datos.
+     */
     public int atenderCitaYCrearConsulta(int idCita, String diagnostico, String tratamiento, String notasMedicas)
             throws PersistenciaException {
         int idConsulta = -1; // Valor por defecto en caso de error

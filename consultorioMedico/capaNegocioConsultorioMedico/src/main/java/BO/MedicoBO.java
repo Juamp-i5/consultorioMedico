@@ -25,7 +25,12 @@ import utils.Password;
 public class MedicoBO {
 
     IMedicoDAO medicoDAO = new MedicoDAO();
-
+    /**
+     * Agrega un nuevo paciente al sistema.
+     * @param pacienteNuevoDTO Datos del paciente a registrar.
+     * @return true si se agregó correctamente, false en caso contrario.
+     * @throws NegocioException Si ocurre un error durante el proceso.
+     */
     public boolean agregarMedico(MedicoNuevoDTO medicoNuevoDTO) throws NegocioException {
         if (medicoNuevoDTO == null) {
             return false;
@@ -77,7 +82,12 @@ public class MedicoBO {
         }
     }
     
-    
+        /**
+     * Valida las credenciales de inicio de sesión de un paciente.
+     * @param pacienteInicioSesion Datos del paciente.
+     * @return ID del usuario si las credenciales son correctas.
+     * @throws NegocioException Si las credenciales son incorrectas o hay un error.
+     */
     public int iniciarSesion(MedicoInicioSesionDTO medico) throws NegocioException {
         if (medico == null) {
             throw new NegocioException("medico es null");

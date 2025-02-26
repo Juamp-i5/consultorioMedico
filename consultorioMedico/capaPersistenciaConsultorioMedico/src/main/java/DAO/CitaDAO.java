@@ -178,6 +178,13 @@ public class CitaDAO implements ICita {
 
     }
 
+    /**
+     * Obtiene todas las citas que estan activas del paciente que tiene ese id
+     * 
+     * @param idPaciente Id del paciente del que se quiere saber sus citas disponibles
+     * @return Una lista con todas las citas activas del paciente
+     * @throws PersistenciaException Si no se logra obtener el listado
+     */
     public List<Cita> obtenerCitasActivasMedico(int idMedico) throws PersistenciaException {
         List<Cita> listaCitasActivas = new LinkedList<>();
         String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND estado = 'Programado' ORDER BY fecha_hora";
@@ -231,6 +238,12 @@ public class CitaDAO implements ICita {
         }
     }
 
+    /**
+     * Obtiene la citas pendientes del medico
+     * @param idMedico id del medico que se desea obtener las citas pendientes
+     * @return Una lista con todas las citas pendientes de los medicos
+     * @throws PersistenciaException Cuando hay error al consultar las citas pendientes
+     */
     public List<Cita> obtenerCitasPendientesMedico(int idMedico) throws PersistenciaException {
         List<Cita> listaCitasActivas = new LinkedList<>();
         String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND estado = 'Programado' ORDER BY fecha_hora";
@@ -284,6 +297,13 @@ public class CitaDAO implements ICita {
         }
     }
 
+    /**
+     * Obtiene las citas filtrandolas por fecha
+     * @param idMedico El id del medico del que se desea obtener las citas
+     * @param fechaStr La fecha especifica de las citas
+     * @return Lista con las citas filtradas por fecha y id del medico
+     * @throws PersistenciaException 
+     */
     public List<Cita> obtenerCitasFiltradas(int idMedico, String fechaStr) throws PersistenciaException {
         List<Cita> citas = new ArrayList<>();
         String sql = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND fecha_hora BETWEEN ? AND ?";
@@ -322,6 +342,13 @@ public class CitaDAO implements ICita {
         return citas;
     }
 
+    /**
+     * Inserta una cita de emergencia en la bd
+     * @param idPaciente El id del paciente que quiere hacer una cita de mergencia
+     * @param especialidad La especialidad del medico, de la cita que se quire hacer
+     * @return Folio de la cita
+     * @throws PersistenciaException Si no se logra insertar en la bd
+     */
     @Override
     public int insertarCitaEmergencia(int idPaciente, String especialidad) throws PersistenciaException {
         String procedure = "{CALL InsertarCitaEmergencia(?, ?, ?)}";
@@ -340,6 +367,12 @@ public class CitaDAO implements ICita {
         }
     }
 
+    /**
+     * Obtiene la cita por el id
+     * @param idCita El id de la cita que se desea obtener
+     * @return La cita
+     * @throws PersistenciaException Si no se logra obtener la cita
+     */
     @Override
     public Cita obtenerCita(int idCita) throws PersistenciaException {
         String query = "SELECT id_cita, id_paciente, id_medico, tipo, folio, fecha_hora, estado FROM Cita WHERE id_cita = ?";
@@ -367,6 +400,12 @@ public class CitaDAO implements ICita {
 
     }
 
+    /**
+     * Obtiene todas las citas programadas por un paciente
+     * @param idPaciente id del paciente del cual se desea obtenr las citas programadas
+     * @return Lista con las citas programadas del paciente
+     * @throws PersistenciaException Si no se logra obtnener las citas programdas
+     */
     public List<Cita> obtenerCitasProgramadasPaciente(int idPaciente) throws PersistenciaException {
         List<Cita> listaCitasProgramadas = new LinkedList<>();
         String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_paciente = ? AND estado = 'Programado'";
@@ -392,6 +431,11 @@ public class CitaDAO implements ICita {
         }
     }
 
+    /**
+     * Actualiza el estado de la cita a no asistido
+     * @param idCita Id de la cita de la que sdesea actualziar el estado
+     * @throws PersistenciaException Si no se logra actualizar el estado
+     */
     @Override
     public void actualizarEstadoCitaNoAsistido(int idCita) throws PersistenciaException {
         String consultaSQL = "UPDATE consultas_medicas.cita SET estado = 'No Asistió' WHERE id_cita = ?";

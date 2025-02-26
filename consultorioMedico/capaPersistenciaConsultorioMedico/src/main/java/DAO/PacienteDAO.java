@@ -20,7 +20,15 @@ import utils.Password;
  * @author Jp
  */
 public class PacienteDAO implements IPacienteDAO {
-
+    /**
+     * Agrega un nuevo paciente al sistema.
+     *
+     * @param paciente El objeto {@link Paciente} que contiene los datos del
+     * paciente a agregar.
+     * @return {@code true} si el paciente se agregó exitosamente, {@code false}
+     * si hubo un error.
+     * @throws PersistenciaException Si ocurre un error al agregar el paciente.
+     */
     @Override
     public boolean agregarPaciente(Paciente paciente) throws PersistenciaException {
         String queryUsuario = "INSERT INTO consultas_medicas.usuario (nombre, apellido_paterno, apellido_materno, contrasenia) VALUES (?, ?, ?, ?);";
@@ -99,6 +107,16 @@ public class PacienteDAO implements IPacienteDAO {
 
     }
 
+    /**
+     * Valida el inicio de sesión de un paciente en el sistema.
+     *
+     * @param paciente El objeto {@link Paciente} con las credenciales a
+     * validar.
+     * @return El ID del paciente si las credenciales son correctas, o un valor
+     * negativo si no son válidas.
+     * @throws PersistenciaException Si ocurre un error al validar las
+     * credenciales.
+     */
     @Override
     public int validarInicioSesion(Paciente paciente) throws PersistenciaException {
         if (!existeCorreo(paciente.getCorreoElectronico())) {
@@ -125,7 +143,14 @@ public class PacienteDAO implements IPacienteDAO {
             throw new PersistenciaException("Error al validar inicio de sesion");
         }
     }
-
+    /**
+     * Consulta los datos de un paciente dado su ID.
+     *
+     * @param id El ID del paciente que se desea consultar.
+     * @return Un objeto {@link Paciente} con los datos del paciente.
+     * @throws PersistenciaException Si no se encuentra el paciente con el ID
+     * proporcionado o si ocurre un error en la consulta.
+     */
     @Override
     public Paciente consultarPaciente(int id) throws PersistenciaException {
         if (!existePaciente(id)) {
@@ -189,6 +214,16 @@ public class PacienteDAO implements IPacienteDAO {
 //    }
 //
 
+    /**
+     * Actualiza los datos de un paciente en el sistema.
+     *
+     * @param paciente El objeto {@link Paciente} con los nuevos datos que se
+     * desean actualizar.
+     * @return {@code true} si la actualización fue exitosa, {@code false} si
+     * hubo un error.
+     * @throws PersistenciaException Si ocurre un error al actualizar los datos
+     * del paciente.
+     */
     public boolean actualizarPaciente(Paciente paciente) throws PersistenciaException {
 
         if (!existePaciente(paciente.getIdUsuario())) {
@@ -258,6 +293,14 @@ public class PacienteDAO implements IPacienteDAO {
         return true;
     }
 
+    /**
+     * Verifica si existe un paciente dado su ID.
+     *
+     * @param id El ID del paciente que se desea verificar.
+     * @return {@code true} si el paciente existe, {@code false} si no existe.
+     * @throws PersistenciaException Si ocurre un error al verificar la
+     * existencia del paciente.
+     */
     @Override
     public boolean existePaciente(int id) throws PersistenciaException {
         String query = "SELECT COUNT(*) AS total FROM consultas_medicas.paciente WHERE id_paciente = ?;";
@@ -276,6 +319,15 @@ public class PacienteDAO implements IPacienteDAO {
         return false;
     }
 
+    /**
+     * Verifica si existe un paciente con el correo electrónico dado.
+     *
+     * @param correo El correo electrónico del paciente que se desea verificar.
+     * @return {@code true} si existe un paciente con ese correo, {@code false}
+     * si no.
+     * @throws PersistenciaException Si ocurre un error al verificar la
+     * existencia del correo.
+     */
     @Override
     public boolean existeCorreo(String correo) throws PersistenciaException {
         String query = "SELECT COUNT(*) FROM paciente WHERE correo_electronico = ?";
@@ -295,6 +347,15 @@ public class PacienteDAO implements IPacienteDAO {
         return false;
     }
 
+    /**
+     * Verifica si existe un paciente con el número de celular dado.
+     *
+     * @param celular El número de celular del paciente que se desea verificar.
+     * @return {@code true} si existe un paciente con ese número de celular,
+     * {@code false} si no.
+     * @throws PersistenciaException Si ocurre un error al verificar la
+     * existencia del celular.
+     */
     @Override
     public boolean existeCelular(String celular) throws PersistenciaException {
         String query = "SELECT COUNT(*) FROM paciente WHERE telefono = ?";

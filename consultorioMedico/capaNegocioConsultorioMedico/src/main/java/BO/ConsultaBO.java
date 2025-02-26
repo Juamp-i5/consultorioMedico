@@ -23,6 +23,13 @@ public class ConsultaBO {
     public ConsultaDAO consultaDAO = new ConsultaDAO();
     public MedicoDAO medicoDAO = new MedicoDAO();
 
+    /**
+    * Obtiene el historial de consultas de un médico específico.
+    *
+    * @param idMedico El ID del médico cuyo historial de consultas se desea obtener.
+    * @return Una lista de objetos HistorialConsultaDTO con la información del historial de consultas.
+    * @throws NegocioException Si el médico no existe o si ocurre un error en la capa de persistencia.
+    */
     public List<HistorialConsultaDTO> getHistorialConsultas(int idMedico) throws NegocioException {
         try {
             if (!medicoDAO.existeMedico(idMedico)) {

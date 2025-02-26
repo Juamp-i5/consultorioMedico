@@ -15,6 +15,15 @@ import java.sql.Statement;
 
 public class UsuarioDAO {
 
+    /**
+     * Agrega un nuevo usuario a la base de datos.
+     * Inserta un registro en la tabla "usuario" con los datos proporcionados y 
+     * devuelve el identificador generado para el nuevo usuario.
+     *
+     * @param usuario El objeto {@link Usuario} que contiene la información del usuario a registrar.
+     * @return El identificador único del usuario recién agregado.
+     * @throws PersistenciaException Si ocurre un error al realizar la operación en la base de datos.
+     */
     public int agregarUsuario(Usuario usuario) throws PersistenciaException {
         String consultaSQL = "INSERT INTO consultas_medicas.usuario (nombre, apellidoPaterno, apellidoMaterno, contrasenia) VALUES (?, ?, ?, ?)";
 
@@ -42,6 +51,14 @@ public class UsuarioDAO {
         }
     }
 
+    /**
+     * Obtiene el nombre de un usuario a partir de su identificador único.
+     *
+     * @param idUsuario El ID del usuario cuyo nombre se desea obtener.
+     * @return El nombre del usuario si se encuentra en la base de datos.
+     * @throws PersistenciaException Si no se encuentra el usuario o ocurre un error en la base de datos.
+     * @throws SQLException Si ocurre un error en la ejecución de la consulta SQL.
+     */
     public String obtenerNombre(int idUsuario) throws PersistenciaException, SQLException {
         String consultaSQL = "SELECT nombre FROM consultas_medicas.usuario WHERE id_usuario = ?";
 
@@ -60,6 +77,14 @@ public class UsuarioDAO {
         }
     }
 
+    /**
+     * Obtiene el identificador único (ID) de un usuario a partir de su nombre de usuario.
+     *
+     * @param nombreUsuario El nombre del usuario cuyo ID se desea obtener.
+     * @return El ID del usuario si se encuentra en la base de datos.
+     * @throws PersistenciaException Si no se encuentra el usuario o ocurre un error en la base de datos.
+     * @throws SQLException Si ocurre un error en la ejecución de la consulta SQL.
+     */
     public int obtenerIdUsuario(String nombreUsuario) throws PersistenciaException, SQLException {
         String consultaSQL = "SELECT id_usuario FROM consultas_medicas.usuario WHERE nombre = ?";
 
@@ -77,7 +102,14 @@ public class UsuarioDAO {
             throw new PersistenciaException("Error al obtener el id del usuario", e);
         }
     }
-
+    
+    /**
+     * Consulta un usuario en la base de datos a partir de su identificador único (ID).
+     *
+     * @param idUsuario El ID del usuario que se desea consultar.
+     * @return Un objeto {@code Usuario} con la información del usuario si se encuentra en la base de datos.
+     * @throws PersistenciaException Si no se encuentra el usuario o si ocurre un error en la base de datos.
+     */
     public Usuario consultarUsuarioPorId(int idUsuario) throws PersistenciaException, SQLException {
         String consultaSQL = "SELECT * FROM consultas_medicas.usuario WHERE id_usuario = ?";
 

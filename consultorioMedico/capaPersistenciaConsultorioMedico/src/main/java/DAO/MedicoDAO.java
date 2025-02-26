@@ -26,6 +26,15 @@ import utils.Password;
  */
 public class MedicoDAO implements IMedicoDAO {
 
+    /**
+     * Agrega un nuevo médico al sistema.
+     *
+     * @param medico El objeto {@link Medico} con los datos del médico a
+     * agregar.
+     * @return {@code true} si el médico se agregó exitosamente, {@code false}
+     * si hubo un error.
+     * @throws PersistenciaException Si ocurre un error al agregar el médico.
+     */
     @Override
     public boolean agregarMedico(Medico medico) throws PersistenciaException {
         String queryUsuario = "INSERT INTO consultas_medicas.usuario (nombre, apellido_paterno, apellido_materno, contrasenia) VALUES (?, ?, ?, ?);";
@@ -81,7 +90,14 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al conectar con la base de datos: " + e.getMessage(), e);
         }
     }
-
+   /**
+    * Consulta los datos de un médico dado su ID.
+    *
+    * @param idMedico El ID del médico que se desea consultar.
+    * @return Un objeto {@link Medico} con los datos del médico.
+    * @throws PersistenciaException Si no se encuentra el médico con el ID
+    * proporcionado o si ocurre un error en la consulta.
+    */
     @Override
     public Medico consultarMedico(int idMedico) throws PersistenciaException {
         String query = "SELECT m.id_medico, u.id_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, "
@@ -117,6 +133,14 @@ public class MedicoDAO implements IMedicoDAO {
         return medico;
     }
 
+    /**
+     * Consulta todos los médicos registrados en el sistema.
+     *
+     * @return Una lista de objetos {@link Medico} con los datos de todos los
+     * médicos.
+     * @throws PersistenciaException Si ocurre un error al consultar los
+     * médicos.
+    */
     @Override
     public List<Medico> consultarTodosLosMedicos() throws PersistenciaException {
         String query = "SELECT * FROM consultas_medicas.medico;";
@@ -138,7 +162,16 @@ public class MedicoDAO implements IMedicoDAO {
 
         return medicos;
     }
-
+    /**
+     * Actualiza los datos de un médico en el sistema.
+     *
+     * @param medico El objeto {@link Medico} con los nuevos datos que se desean
+     * actualizar.
+     * @return {@code true} si la actualización fue exitosa, {@code false} si
+     * hubo un error.
+     * @throws PersistenciaException Si ocurre un error al actualizar los datos
+     * del médico.
+     */
     @Override
     public boolean actualizarMedico(Medico medico) throws PersistenciaException {
         String query = "UPDATE consultas_medicas.medico SET especialidad = ?, cedula_profesional = ?, estado = ? WHERE id_medico = ?;";
@@ -154,7 +187,14 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al actualizarMedico: " + e.getMessage());
         }
     }
-
+    /**
+     * Verifica si existe un médico dado su ID.
+     *
+     * @param idMedico El ID del médico que se desea verificar.
+     * @return {@code true} si el médico existe, {@code false} si no existe.
+     * @throws PersistenciaException Si ocurre un error al verificar la
+     * existencia del médico.
+     */
     @Override
     public boolean existeMedico(int idMedico) throws PersistenciaException {
         String query = "SELECT COUNT(*) AS total FROM consultas_medicas.medico WHERE id_medico = ?;";
@@ -173,7 +213,15 @@ public class MedicoDAO implements IMedicoDAO {
 
         return false;
     }
-
+    /**
+     * Valida el inicio de sesión de un médico en el sistema.
+     *
+     * @param medico El objeto {@link Medico} con las credenciales a validar.
+     * @return El ID del médico si las credenciales son correctas, o un valor
+     * negativo si no son válidas.
+     * @throws PersistenciaException Si ocurre un error al validar las
+     * credenciales.
+     */
     @Override
     public int validarInicioSesion(Medico medico) throws PersistenciaException {
         if (!existeCedula(medico.getCedulaProfesional())) {
@@ -200,7 +248,16 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al validar inicio de sesion medico" + e.getMessage());
         }
     }
-
+    
+    /**
+     * Verifica si existe un médico con la cédula proporcionada.
+     *
+     * @param cedula La cédula del médico que se desea verificar.
+     * @return {@code true} si existe un médico con esa cédula, {@code false} si
+     * no.
+     * @throws PersistenciaException Si ocurre un error al verificar la
+     * existencia de la cédula.
+     */
     @Override
     public boolean existeCedula(String cedula) throws PersistenciaException {
         String query = "SELECT COUNT(*) FROM VistaInicioSesion WHERE cedula = ?";
@@ -220,6 +277,14 @@ public class MedicoDAO implements IMedicoDAO {
         }
     }
 
+    /**
+     * Obtiene la especialidad de un médico dado su ID.
+     *
+     * @param idMedico El ID del médico cuya especialidad se desea obtener.
+     * @return Un {@code String} con la especialidad del médico.
+     * @throws PersistenciaException Si ocurre un error al obtener la
+     * especialidad del médico.
+     */
     @Override
     public String obtenerEspecialidad(int idMedico) throws PersistenciaException {
         String consultaSQL = "SELECT especialidad FROM consultas_medicas.medico WHERE id_medico = ?";
@@ -237,7 +302,15 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al obtener la especialidad del médico", e);
         }
     }
-
+    /**
+     * Obtiene una lista de todas las especialidades de los médicos registrados
+     * en el sistema.
+     *
+     * @return Una lista de {@code String} con las especialidades de los
+     * médicos.
+     * @throws PersistenciaException Si ocurre un error al obtener las
+     * especialidades.
+     */
     @Override
     public List<String> obtenerEspecialidadesMedicos() throws PersistenciaException {
         List<String> listaEspecialidades = new LinkedList<>();
@@ -264,7 +337,16 @@ public class MedicoDAO implements IMedicoDAO {
 
         return listaEspecialidades;
     }
-
+    /**
+     * Obtiene una lista de los médicos activos por especialidad.
+     *
+     * @param especialidad La especialidad de los médicos que se desean
+     * consultar.
+     * @return Una lista de objetos {@link Medico} con los médicos que tienen la
+     * especialidad indicada.
+     * @throws PersistenciaException Si ocurre un error al obtener los médicos
+     * por especialidad.
+     */
     @Override
     public List<Medico> obtenerMedicosPorEspecialidadActivos(String especialidad) throws PersistenciaException {
         List<Medico> listaMedicosDisponiblesPorEspecialidad = new LinkedList<>();
@@ -319,7 +401,15 @@ public class MedicoDAO implements IMedicoDAO {
 
         return false;
     }
-
+    /**
+     * Da de baja a un médico en el sistema.
+     *
+     * @param idMedico El ID del médico que se desea dar de baja.
+     * @return {@code true} si la baja fue exitosa, {@code false} si hubo un
+     * error.
+     * @throws PersistenciaException Si ocurre un error al dar de baja al
+     * médico.
+     */
     @Override
     public boolean darBaja(int idMedico) throws PersistenciaException {
         String query = "UPDATE Medico SET estado = 'Inactivo' WHERE id_medico = ?";
@@ -334,7 +424,15 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al dar de baja al médico: " + e.getMessage());
         }
     }
-
+    /**
+     * Da de alta a un médico en el sistema.
+     *
+     * @param idMedico El ID del médico que se desea dar de alta.
+     * @return {@code true} si la alta fue exitosa, {@code false} si hubo un
+     * error.
+     * @throws PersistenciaException Si ocurre un error al dar de alta al
+     * médico.
+     */
     @Override
     public boolean darAlta(int idMedico) throws PersistenciaException {
         String query = "UPDATE Medico SET estado = 'Activo' WHERE id_medico = ?";
@@ -349,5 +447,6 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al dar de alta al médico: " + e.getMessage());
         }
     }
+    
 
 }
