@@ -77,17 +77,17 @@ public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
         jTable1.setBackground(new java.awt.Color(153, 153, 153));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Fecha_Hora", "Tipo", "Estado", "Especialidad", "Medico", "Diagnostico", "Tratamiento"
+                "Fecha_Hora", "Tipo", "Especialidad", "Medico", "Diagnostico", "Tratamiento"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -208,14 +208,13 @@ public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
                         // Obtener los datos para la fila
                         String fechaHora = consultaDAO.getFechaHora(consulta.getIdConsulta());
                         String tipo = consultaDAO.getTipoCita(consulta.getIdConsulta());
-                        String estado = consulta.getEstado();
                         especialidad = consultaDAO.obtenerEspecialidad(consulta.getIdConsulta());
                         String nombreMedico = consultaDAO.obtenerNombreMedico(consulta.getIdConsulta());
                         String diagnostico = consulta.getDiagnostico();
                         String tratamiento = consulta.getTratamiento();
 
                         // Agregar una fila con los datos de la consulta
-                        tableModel.addRow(new Object[]{fechaHora, tipo, estado, especialidad, nombreMedico, diagnostico, tratamiento});
+                        tableModel.addRow(new Object[]{fechaHora, tipo, especialidad, nombreMedico, diagnostico, tratamiento});
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "No se encontraron consultas en el rango y especialidad seleccionada.", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -311,7 +310,6 @@ public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
                 // Obtener los datos para la fila
                 String fechaHora = consultaDAO.getFechaHora(consulta.getIdConsulta());
                 String tipo = consultaDAO.getTipoCita(consulta.getIdConsulta()); // Puedes cambiar esto si hay diferentes tipos de consulta
-                String estado = consulta.getEstado();
                 String especialidad = consultaDAO.obtenerEspecialidad(consulta.getIdConsulta());
                 String nombreMedico = consultaDAO.obtenerNombreMedico(consulta.getIdConsulta());
 
@@ -319,7 +317,7 @@ public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
                 String tratamiento = consulta.getTratamiento();
 
                 // Agregar una fila con los datos de la consulta
-                tableModel.addRow(new Object[]{fechaHora, tipo, estado, especialidad, nombreMedico, diagnostico, tratamiento});
+                tableModel.addRow(new Object[]{fechaHora, tipo, especialidad, nombreMedico, diagnostico, tratamiento});
             }
         } catch (PersistenciaException ex) {
             Logger.getLogger(historialConsultasPacienteTableForm2.class.getName()).log(Level.SEVERE, null, ex);
