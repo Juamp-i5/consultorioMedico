@@ -26,8 +26,8 @@ public class MedicoBO {
 
     IMedicoDAO medicoDAO = new MedicoDAO();
     /**
-     * Agrega un nuevo paciente al sistema.
-     * @param pacienteNuevoDTO Datos del paciente a registrar.
+     * Agrega un nuevo Medico al sistema.
+     * @param MedicoNuevoDTO Datos del Medico a registrar.
      * @return true si se agregó correctamente, false en caso contrario.
      * @throws NegocioException Si ocurre un error durante el proceso.
      */
