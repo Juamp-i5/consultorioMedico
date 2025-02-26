@@ -67,7 +67,6 @@ public class agendarCitaForm extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -76,7 +75,6 @@ public class agendarCitaForm extends javax.swing.JPanel {
         jComboEspecialidades = new javax.swing.JComboBox<>();
         jComboMedicos = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
-        txtTipo = new javax.swing.JTextField();
         txtHoraConsulta = new javax.swing.JTextField();
 
         jTextField2.setText("jTextField2");
@@ -91,10 +89,6 @@ public class agendarCitaForm extends javax.swing.JPanel {
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         jPanel2.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 158, 30));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Tipo");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Fecha");
@@ -147,7 +141,6 @@ public class agendarCitaForm extends javax.swing.JPanel {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Hora consulta");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, -1, -1));
-        jPanel2.add(txtTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 330, 160, 30));
         jPanel2.add(txtHoraConsulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, 160, 30));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 380, 440));
@@ -185,8 +178,7 @@ public class agendarCitaForm extends javax.swing.JPanel {
         if (jDateChooser1.getDate() == null || 
             jComboEspecialidades.getSelectedItem() == null || 
             jComboMedicos.getSelectedItem() == null || 
-            txtHoraConsulta.getText().equals("HH:MM")  || 
-            txtTipo.getText().trim().isEmpty()) { 
+            txtHoraConsulta.getText().equals("HH:MM")) { 
             JOptionPane.showMessageDialog(null, "No puede haber campos vacíos");
         }
         
@@ -229,7 +221,7 @@ public class agendarCitaForm extends javax.swing.JPanel {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         // Convertir String a LocalTime
         LocalTime hora = LocalTime.parse(horaCita, formatter);
-        String tipo = txtTipo.getText(); //OBTENEMOS EL TIPO
+        String tipo = "Programada"; //OBTENEMOS EL TIPO
         
         CitaDTO citaDTO = new CitaDTO(tipo, null, fechaSeleccionada, hora, tipo, InicioSesion.getIdUsuario(), medico.getIdUsuario());
         
@@ -384,7 +376,6 @@ public class agendarCitaForm extends javax.swing.JPanel {
     private javax.swing.JComboBox<Medico> jComboMedicos;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -393,6 +384,5 @@ public class agendarCitaForm extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField txtHoraConsulta;
-    private javax.swing.JTextField txtTipo;
     // End of variables declaration//GEN-END:variables
 }
