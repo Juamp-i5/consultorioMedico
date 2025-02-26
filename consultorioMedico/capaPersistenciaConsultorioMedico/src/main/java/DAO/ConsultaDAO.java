@@ -79,7 +79,7 @@ public class ConsultaDAO implements IConsultaDAO {
 
     public List<Consulta> obtenerConsultasPaciente(int idPaciente) throws PersistenciaException {
         List<Consulta> consultas = new ArrayList<>();
-        String sql = "SELECT * FROM consulta as con join cita as cit on con.id_cita = cit.id_cita where id_paciente = ?;";
+        String sql = "SELECT * FROM consulta as con join cita as cit on con.id_cita = cit.id_cita where id_paciente = ? and con.estado = \"Atendida\";";
 
         try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idPaciente);
@@ -102,7 +102,7 @@ public class ConsultaDAO implements IConsultaDAO {
 
     public List<Consulta> obtenerConsultasFiltradas(int idPaciente, String especialidad, String fechaInicioStr, String fechaFinStr) throws PersistenciaException {
         List<Consulta> consultas = new ArrayList<>();
-        String sql = "SELECT * FROM consulta as con  join cita as cit on con.id_cita = cit.id_cita  join medico as m on m.id_medico = cit.id_medico where id_paciente = ?  and especialidad = ? and fecha_hora between ? and ? ";
+        String sql = "SELECT * FROM consulta as con  join cita as cit on con.id_cita = cit.id_cita  join medico as m on m.id_medico = cit.id_medico where id_paciente = ? and con.estado = \"Atendida\"  and especialidad = ? and fecha_hora between ? and ? ";
 
         // Convertir Strings a LocalDateTime
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
