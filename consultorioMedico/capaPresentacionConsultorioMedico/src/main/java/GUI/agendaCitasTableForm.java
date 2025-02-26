@@ -146,7 +146,7 @@ public class agendaCitasTableForm extends javax.swing.JPanel {
 
         try {
             // Utilizar el idPaciente pasado al constructor (falta agregar esa funcion)
-            List<Cita> citas = citaDAO.obtenerCitasActivasPaciente(utils.InicioSesion.getIdUsuario());
+            List<Cita> citas = citaDAO.obtenerCitasProgramadasPaciente(utils.InicioSesion.getIdUsuario());
             for (Cita cita : citas) { //buscar en cada cita 
                 // Obtener los datos necesarios para agregarlos a una fila en la tabla
                 String fechaHora = cita.getFechaHora().toString();

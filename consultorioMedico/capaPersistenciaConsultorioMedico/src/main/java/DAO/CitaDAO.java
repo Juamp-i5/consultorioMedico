@@ -312,4 +312,30 @@ public class CitaDAO implements ICita {
         }
 
     }
+    
+        public List<Cita> obtenerCitasProgramadasPaciente(int idPaciente) throws PersistenciaException {
+        List<Cita> listaCitasProgramadas = new LinkedList<>();
+        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_paciente = ? AND estado = 'Programado'";
+        
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
+            ps.setInt(1, idPaciente);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Cita cita = new Cita(
+                        rs.getInt("id_cita"),
+                        rs.getString("tipo"),
+                        rs.getString("folio"),
+                        rs.getTimestamp("fecha_hora").toLocalDateTime(),
+                        rs.getString("estado"),
+                        rs.getInt("id_paciente"),
+                        rs.getInt("id_medico"));
+                listaCitasProgramadas.add(cita);
+            }
+            return listaCitasProgramadas;
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al consultar las citas programadas del paciente", e);
+        }
+    }
 }
+

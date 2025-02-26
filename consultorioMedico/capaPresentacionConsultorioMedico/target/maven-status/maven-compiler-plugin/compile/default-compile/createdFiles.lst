@@ -3,12 +3,14 @@ GUI\datosConsultaForm$5.class
 GUI\menuMedicoForm$4.class
 GUI\inicioSesionForm$1.class
 GUI\editarCuentaHospitalForm$1.class
+GUI\historialConsultasPacienteTableForm2$1.class
 GUI\inicioSesionForm$4.class
 GUI\menuMedicoForm$1.class
 GUI\citaEmergenciaForm$2.class
 GUI\citasPendientesTableForm$ButtonEditor$1.class
 GUI\datosConsultaForm$2.class
 GUI\editarCuentaHospitalForm$4.class
+GUI\historialConsultasPacienteTableForm2$4.class
 GUI\iniciarConsultaForm$2.class
 GUI\historialConsultasPacienteTableForm$4.class
 utils\InicioSesion.class
@@ -29,6 +31,7 @@ GUI\citasPendientesTableForm$1.class
 GUI\citasPendientesTableForm$ButtonEditor.class
 GUI\historialConsultasPacienteTableForm$1.class
 GUI\editarCuentaHospitalForm$3.class
+GUI\historialConsultasPacienteTableForm2$3.class
 GUI\citasPendientesTableForm$2.class
 GUI\datosConsultaForm$7.class
 GUI\menuPacienteForm$5.class
@@ -66,11 +69,14 @@ GUI\historialConsultasMedicoTableForm$3.class
 GUI\agendarCitaForm$5.class
 GUI\datosPacienteForm$1.class
 GUI\menuPacienteForm$3.class
+GUI\historialConsultasPacienteTableForm2$2.class
 GUI\editarCuentaHospitalForm$2.class
 GUI\historialConsultasMedicoTableForm.class
 GUI\registrarCuentaForm$1.class
+GUI\historialConsultasPacienteTableForm2.class
 GUI\editarCuentaHospitalForm$5.class
 GUI\editarCuentaHospitalForm.class
+GUI\historialConsultasPacienteTableForm2$5.class
 GUI\datosConsultaForm$6.class
 GUI\agendaCitasTableForm$3.class
 GUI\editarCuentaHospitalForm$8.class
@@ -80,6 +86,7 @@ GUI\historialConsultasMedicoTableForm$5.class
 GUI\datosPacienteForm$2.class
 GUI\historialConsultasPacienteTableForm$3.class
 GUI\editarCuentaHospitalForm$6.class
+GUI\historialConsultasPacienteTableForm2$6.class
 GUI\datosConsultaForm$3.class
 GUI\menuPacienteForm$1.class
 GUI\agendarCitaForm$3.class
@@ -91,6 +98,7 @@ GUI\registrarCuentaForm.class
 GUI\datosConsultaForm.class
 GUI\editarCuentaHospitalForm$7.class
 GUI\menuPacienteForm$2.class
+GUI\historialConsultasPacienteTableForm2$7.class
 GUI\datosPacienteForm$3.class
 GUI\agendaCitasTableForm.class
 GUI\agendarCitaForm$4.class

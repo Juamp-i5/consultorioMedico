@@ -152,17 +152,15 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
                         String tipoCita = cita.getTipo();
                         String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
                         // Agregar la fila con los datos y los botones
-                        tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, "Iniciar consulta", "Ver historial"});
+                        boolean habilitado = "Emergencia".equals(tipoCita); // Solo habilitar si es emergencia
+                        Object iniciarConsulta = habilitado ? "Iniciar consulta" : "";  
+                        tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, iniciarConsulta, "Ver historial"});
                         jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
-                        jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente()));
+                        jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente(), habilitado));
                         jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
-                        jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm", cita.getIdPaciente()));
+                        jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm2", cita.getIdPaciente(), true));
                     }
                     
-//                    jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
-//                    jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente));
-//                    jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
-//                    jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm", cita.getIdPaciente()));
                 }
 
             } catch (PersistenciaException | SQLException ex) {
@@ -207,40 +205,43 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         jTextArea2.setForeground(new Color(153, 153, 153));
         }
     }//GEN-LAST:event_jTextArea2FocusLost
+
     private void cargarDatosEnTabla() {
-        // Instanciamos los DAOs para interactuar con las tablas en la base de datos
         CitaDAO citaDAO = new CitaDAO();
-        PacienteDAO pacienteDAO = new PacienteDAO();
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
-        tableModel.setRowCount(0); // Limpia la tabla antes de cargar datos nuevos      
 
         try {
-            // Obtener citas pendientes del médico actual
             List<Cita> citas = citaDAO.obtenerCitasPendientesMedico(utils.InicioSesion.getIdUsuario());
+            tableModel.setRowCount(0);
 
-            for (Cita cita : citas) { // Buscar en cada cita
-                // Obtener los datos necesarios
+            for (Cita cita : citas) {
                 String fechaHora = cita.getFechaHora().toString();
                 String tipoCita = cita.getTipo();
                 String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
-                // Agregar la fila con los datos y los botones
-                tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, "Iniciar consulta", "Ver historial"});
-                jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
-                jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente()));
-                jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
-                jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm", cita.getIdPaciente()));                
+
+                // Si es una cita de "Emergencia", agregar botón de "Iniciar consulta"
+                Object iniciarConsulta = tipoCita.equals("Emergencia") ? "Iniciar consulta" : "";
+
+                // Agregar la fila
+                tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, iniciarConsulta, "Ver historial"});
             }
 
-//            jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
-//            jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente()));
-//            jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
-//            jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm", cita.getIdPaciente()));
+            // Configurar el renderizado y editor de los botones
+            jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer());
+            jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm",utils.InicioSesion.getIdUsuario(), true));
+
+            jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
+            jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm2",utils.InicioSesion.getIdUsuario() ,true));
 
         } catch (PersistenciaException | SQLException ex) {
             Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
+
+
 
     class ButtonRenderer extends JButton implements TableCellRenderer { // Se encarga de mostrar un botón dentro de una celda de la JTable.
 
@@ -254,24 +255,32 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
             return this;
         }
     }
-
-    class ButtonEditor extends DefaultCellEditor { //permite que los botones dentro de la JTable sean clickeables
+ 
+    //permite que los botones dentro de la JTable sean clickeables
+    class ButtonEditor extends DefaultCellEditor {
 
         private JButton button;
         private String frameName;
         private int idPaciente;
+        private boolean habilitado;
+        private boolean clicked;
 
-        public ButtonEditor(JCheckBox checkBox, String frameName, int idPaciente) {
+        public ButtonEditor(JCheckBox checkBox, String frameName, int idPaciente, boolean habilitado) {
             super(checkBox);
             this.frameName = frameName;
             this.idPaciente = idPaciente;
+            this.habilitado = habilitado;
             button = new JButton();
             button.setOpaque(true);
+            button.setEnabled(habilitado);
 
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    clicked = true;
+                    if (habilitado) { // Solo abrir la ventana si el botón está habilitado
                     abrirJFrame(frameName, idPaciente);
+                    }
                     fireEditingStopped();
                 }
             });
@@ -280,12 +289,20 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             button.setText((value == null) ? "" : value.toString());
+            button.setEnabled(habilitado);
+            clicked = false;
             return button;
         }
 
         @Override
         public Object getCellEditorValue() {
-            return button.getText();
+            return clicked ? button.getText() : "";
+        }
+        
+        @Override
+        public boolean stopCellEditing() {
+            clicked = false; // Resetear el estado
+            return super.stopCellEditing();
         }
     }
 
@@ -296,8 +313,8 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
 
             if (panelName.equals("iniciarConsultaForm")) {
                 panel = new iniciarConsultaForm();
-            } else if (panelName.equals("historialConsultasPacienteTableForm")) {
-                panel = new historialConsultasPacienteTableForm(idPaciente);
+            } else if (panelName.equals("historialConsultasPacienteTableForm2")) {
+                panel = new historialConsultasPacienteTableForm2(idPaciente);
             } else {
                 throw new ClassNotFoundException("Panel no encontrado");
             }

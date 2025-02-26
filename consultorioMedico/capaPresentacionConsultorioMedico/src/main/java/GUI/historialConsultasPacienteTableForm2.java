@@ -27,14 +27,14 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Admin
  */
-public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
+public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
 
     public final int idPaciente;
 
     /**
      * Creates new form crearCuentaForm
      */
-    public historialConsultasPacienteTableForm(int idPaciente) {
+    public historialConsultasPacienteTableForm2(int idPaciente) {
         this.idPaciente = idPaciente;
         initComponents();
         cargarDatosEnTabla();
@@ -223,7 +223,7 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
                         tableModel.setRowCount(0); // Vaciar la tabla si no hay resultados
                     }
                 } catch (PersistenciaException ex) {
-                    Logger.getLogger(historialConsultasPacienteTableForm.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(historialConsultasPacienteTableForm2.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 boolean hayConsultas = pacienteDAO.filtroConsultasPaciente(idPaciente, especialidad, fechaInicio, fechaFin);
@@ -241,19 +241,9 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        javax.swing.JFrame frame = new javax.swing.JFrame("Menu Paciente");
-        menuPacienteForm datosPaciente = new menuPacienteForm();
-
-        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        frame.getContentPane().add(datosPaciente);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-        if (frameActual != null) {
-            frameActual.dispose();
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+        if (window != null) {
+            window.dispose(); // Cierra la ventana
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -324,7 +314,7 @@ public class historialConsultasPacienteTableForm extends javax.swing.JPanel {
                 tableModel.addRow(new Object[]{fechaHora, tipo, estado, especialidad, nombreMedico, diagnostico, tratamiento});
             }
         } catch (PersistenciaException ex) {
-            Logger.getLogger(historialConsultasPacienteTableForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(historialConsultasPacienteTableForm2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
