@@ -24,7 +24,12 @@ import utils.Password;
 public class PacienteBO {
 
     IPacienteDAO pacienteDAO = new PacienteDAO();
-
+    /**
+     * Agrega un nuevo paciente al sistema.
+     * @param pacienteNuevoDTO Datos del paciente a registrar.
+     * @return true si se agregó correctamente, false en caso contrario.
+     * @throws NegocioException Si ocurre un error durante el proceso.
+     */
     public boolean agregarPaciente(PacienteNuevoDTO pacienteNuevoDTO) throws NegocioException {
         if (pacienteNuevoDTO == null) {
             return false;
@@ -39,6 +44,13 @@ public class PacienteBO {
         }
     }
 
+    
+    /**
+     * Valida las credenciales de inicio de sesión de un paciente.
+     * @param pacienteInicioSesion Datos del paciente.
+     * @return ID del usuario si las credenciales son correctas.
+     * @throws NegocioException Si las credenciales son incorrectas o hay un error.
+     */
     public int inicioSesion(PacienteInicioSesionDTO pacienteInicioSesion) throws NegocioException {
         if (pacienteInicioSesion == null) {
             throw new NegocioException();
@@ -55,6 +67,14 @@ public class PacienteBO {
         }
     }
 
+    /**
+     * Valida los datos ingresados para registrar una cuenta.
+     * @param correo Correo del usuario.
+     * @param contraseña Contraseña del usuario.
+     * @param contraseñaRepetida Confirmación de la contraseña.
+     * @return true si los datos son válidos.
+     * @throws NegocioException Si los datos no cumplen con los requisitos.
+     */
     public boolean validarDatosRegistrarCuenta(String correo, String contraseña, String contraseñaRepetida) throws NegocioException {
         try {
             if (!validarCorreoElectronico(correo)) {
@@ -79,7 +99,13 @@ public class PacienteBO {
             throw new NegocioException("Error al validar los datos del primer registro: " + e.getMessage());
         }
     }
-
+    /**
+     * Actualiza la información de un paciente.
+     * @param idPaciente ID del paciente.
+     * @param paciente Datos actualizados del paciente.
+     * @return true si la actualización fue exitosa.
+     * @throws NegocioException Si ocurre un error al actualizar los datos.
+     */
     public boolean actualizarUsuario(int idPaciente, Paciente paciente) throws NegocioException{  
         try {
             pacienteDAO.actualizarPaciente(paciente);
@@ -90,7 +116,12 @@ public class PacienteBO {
         
         return true;
     }
-    
+    /**
+     * Consulta loPs datos de un paciente por su ID.
+     * @param idPaciente ID del paciente.
+     * @return Objeto Paciente con los datos del paciente.
+     * @throws NegocioException Si ocurre un error en la consulta.
+     */
     public Paciente consultarPacientePorId(int idPaciente) throws NegocioException{
         try {
             return pacienteDAO.consultarPaciente(idPaciente);
@@ -138,7 +169,21 @@ public class PacienteBO {
 
             return true;
     }
-
+    /**
+     * Valida los datos de un paciente antes de actualizar su información en el sistema.
+     *
+     * @param nombre Nombre del paciente.
+     * @param apellidoPaterno Apellido paterno del paciente.
+     * @param apellidoMaterno Apellido materno del paciente.
+     * @param numeroTelefono Número de teléfono del paciente.
+     * @param fechaNacimiento Fecha de nacimiento del paciente en formato "dd/MM/yyyy".
+     * @param calle Calle del domicilio del paciente.
+     * @param numero Número del domicilio del paciente.
+     * @param colonia Colonia del domicilio del paciente.
+     * @param codigoPostal Código postal del domicilio del paciente.
+     * @return true si los datos son válidos, de lo contrario lanza una excepción.
+     * @throws NegocioException Si algún dato no es válido.
+     */
     public boolean validarDatosPaciente(String nombre, String apellidoPaterno, String apellidoMaterno, String numeroTelefono, String fechaNacimiento, String calle, String numero, String colonia, String codigoPostal) throws NegocioException {
         try {
             if (pacienteDAO.existeCelular(numeroTelefono)) {
