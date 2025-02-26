@@ -52,7 +52,7 @@ CREATE TABLE Consulta (
     diagnostico VARCHAR(100) not null,
     tratamiento VARCHAR(50) not null,
     notas_medicas VARCHAR(100) not null,
-    estado enum("Atendida", "No Atendida"),
+    estado enum("Atendida", "No Atendida") default "Atendida",
     FOREIGN KEY (id_cita) REFERENCES Cita(id_cita)
 );
 
@@ -422,6 +422,47 @@ BEGIN
     WHERE id_usuario = best_doctor;
 
     SET folio_resultado = new_folio;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE AtenderCitaYCrearConsulta(
+    IN p_id_cita INT,               -- ID de la cita que se atenderá
+    IN p_diagnostico VARCHAR(100),  -- Diagnóstico de la consulta
+    IN p_tratamiento VARCHAR(50),   -- Tratamiento de la consulta
+    IN p_notas_medicas VARCHAR(100),-- Notas médicas de la consulta
+    OUT p_id_consulta INT           -- ID de la nueva consulta creada
+)
+BEGIN
+    DECLARE v_id_cita_valido INT;
+    DECLARE v_estado_cita VARCHAR(20);
+
+    -- Verificar si la cita existe y está en estado "Programado"
+    SELECT id_cita, estado INTO v_id_cita_valido, v_estado_cita
+    FROM Cita
+    WHERE id_cita = p_id_cita;
+
+    -- Si la cita no existe o no está programada, lanzar un error
+    IF v_id_cita_valido IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La cita no existe';
+    ELSEIF v_estado_cita != 'Programado' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La cita no está programada';
+    ELSE
+        -- Cambiar el estado de la cita a "Atendida"
+        UPDATE Cita
+        SET estado = 'Atendida'
+        WHERE id_cita = p_id_cita;
+
+        -- Insertar una nueva consulta asociada a la cita
+        INSERT INTO Consulta (id_cita, diagnostico, tratamiento, notas_medicas, estado)
+        VALUES (p_id_cita, p_diagnostico, p_tratamiento, p_notas_medicas, 'Atendida');
+
+        -- Obtener el ID de la nueva consulta creada
+        SET p_id_consulta = LAST_INSERT_ID();
+    END IF;
 END //
 
 DELIMITER ;    

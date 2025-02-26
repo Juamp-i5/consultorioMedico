@@ -26,15 +26,18 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Admin
  */
-public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
+public class historialConsultasPacienteTableForm3 extends javax.swing.JPanel {
 
     public final int idPaciente;
+    
+    int idCita;
 
     /**
      * Creates new form crearCuentaForm
      */
-    public historialConsultasPacienteTableForm2(int idPaciente) {
+    public historialConsultasPacienteTableForm3(int idPaciente, int idCita) {
         this.idPaciente = idPaciente;
+        this.idCita = idCita;
         initComponents();
         cargarDatosEnTabla();
     }
@@ -222,7 +225,7 @@ public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
                     tableModel.setRowCount(0); // Vaciar la tabla si no hay resultados
                 }
             } catch (PersistenciaException ex) {
-                Logger.getLogger(historialConsultasPacienteTableForm2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(historialConsultasPacienteTableForm3.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             boolean hayConsultas = pacienteDAO.filtroConsultasPaciente(idPaciente, especialidad, fechaInicio, fechaFin);
@@ -242,8 +245,8 @@ public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
-        javax.swing.JFrame frame = new javax.swing.JFrame("Citas pendientes");
-        citasPendientesTableForm agendaCitas = new citasPendientesTableForm();
+        javax.swing.JFrame frame = new javax.swing.JFrame("Consulta");
+        datosConsultaForm agendaCitas = new datosConsultaForm(idCita);
 
         frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(agendaCitas);
@@ -322,7 +325,7 @@ public class historialConsultasPacienteTableForm2 extends javax.swing.JPanel {
                 tableModel.addRow(new Object[]{fechaHora, tipo, estado, especialidad, nombreMedico, diagnostico, tratamiento});
             }
         } catch (PersistenciaException ex) {
-            Logger.getLogger(historialConsultasPacienteTableForm2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(historialConsultasPacienteTableForm3.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

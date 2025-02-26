@@ -125,7 +125,7 @@ public class CitaDAO implements ICita {
         List<Cita> listaCitasActivas = new LinkedList<>(); //Lista en la que se guardaran todas las citas disponibles
 
         //1. DEFINIR LA CONSULTA SQL PARA OBTENER TODA LA TABLA CON LAS CITAS
-        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_paciente= ? AND estado = 'Programado' ORDER BY fecha_hora";
+        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_paciente = ? AND estado = 'Programado' ORDER BY fecha_hora";
 
         //2. HACER LA CONEXION CON LA BASE DE DATOS
         try (Connection conexion = Conexion.getConnection()) {
@@ -180,7 +180,7 @@ public class CitaDAO implements ICita {
 
     public List<Cita> obtenerCitasActivasMedico(int idMedico) throws PersistenciaException {
         List<Cita> listaCitasActivas = new LinkedList<>();
-        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ?";
+        String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_medico = ? AND estado = 'Programado' ORDER BY fecha_hora";
 
         try (Connection conexion = Conexion.getConnection()) {
 
@@ -189,11 +189,28 @@ public class CitaDAO implements ICita {
                 ResultSet rs = ps.executeQuery();
 
                 while (rs.next()) {
+                    int idCita = rs.getInt("id_cita");
+                    LocalDateTime fechaHora = rs.getTimestamp("fecha_hora").toLocalDateTime();
+                    String tipo = rs.getString("tipo");
+                    
+                    if (tipo.equals("Emergencia")) {
+                        if (LocalDateTime.now().isAfter(fechaHora.plusMinutes(10))) { // Si la fecha hora actual es mayor a la fechaHora de la cita mas 10 minutos
+                            actualizarEstadoCitaNoAsistido(idCita);
+                            continue;
+                        }
+                    } else if (tipo.equals("Programada")) { // Si la fecha hora actual es mayor a la fechaHora de la cita mas 15 minutos
+                        if (LocalDateTime.now().isAfter(fechaHora.plusMinutes(15))) {
+                            actualizarEstadoCitaNoAsistido(idCita);
+                            continue;
+                        }
+                    }
+                    
+                    
                     Cita cita = new Cita(
-                            rs.getInt("id_cita"),
-                            rs.getString("tipo"),
+                            idCita,
+                            tipo,
                             rs.getString("folio"),
-                            rs.getTimestamp("fecha_hora").toLocalDateTime(),
+                            fechaHora,
                             rs.getString("estado"),
                             rs.getInt("id_paciente"),
                             rs.getInt("id_medico")
@@ -330,15 +347,15 @@ public class CitaDAO implements ICita {
         }
 
     }
-    
-        public List<Cita> obtenerCitasProgramadasPaciente(int idPaciente) throws PersistenciaException {
+
+    public List<Cita> obtenerCitasProgramadasPaciente(int idPaciente) throws PersistenciaException {
         List<Cita> listaCitasProgramadas = new LinkedList<>();
         String consultaSQL = "SELECT * FROM consultas_medicas.cita WHERE id_paciente = ? AND estado = 'Programado'";
-        
+
         try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
             ps.setInt(1, idPaciente);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 Cita cita = new Cita(
                         rs.getInt("id_cita"),
@@ -355,5 +372,22 @@ public class CitaDAO implements ICita {
             throw new PersistenciaException("Error al consultar las citas programadas del paciente", e);
         }
     }
-}
 
+    @Override
+    public void actualizarEstadoCitaNoAsistido(int idCita) throws PersistenciaException {
+        String consultaSQL = "UPDATE consultas_medicas.cita SET estado = 'No Asistió' WHERE id_cita = ?";
+
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement ps = conexion.prepareStatement(consultaSQL)) {
+
+            ps.setInt(1, idCita);
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas == 0) {
+                throw new PersistenciaException("No se encontró la cita con ID: " + idCita);
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al actualizar el estado de la cita", e);
+        }
+    }
+}

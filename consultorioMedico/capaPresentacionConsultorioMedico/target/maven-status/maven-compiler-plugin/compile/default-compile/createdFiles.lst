@@ -7,12 +7,12 @@ GUI\historialConsultasPacienteTableForm2$1.class
 GUI\inicioSesionForm$4.class
 GUI\menuMedicoForm$1.class
 GUI\citaEmergenciaForm$2.class
-GUI\citasPendientesTableForm$ButtonEditor$1.class
 GUI\datosConsultaForm$2.class
 GUI\editarCuentaHospitalForm$4.class
 GUI\historialConsultasPacienteTableForm2$4.class
 GUI\iniciarConsultaForm$2.class
 GUI\historialConsultasPacienteTableForm$4.class
+GUI\historialConsultasPacienteTableForm3$7.class
 utils\InicioSesion.class
 GUI\datosPacienteForm$10.class
 GUI\historialConsultasMedicoTableForm$1.class
@@ -28,7 +28,6 @@ GUI\datosPacienteForm$5.class
 GUI\inicioSesionForm.class
 GUI\menuPacienteForm$4.class
 GUI\citasPendientesTableForm$1.class
-GUI\citasPendientesTableForm$ButtonEditor.class
 GUI\historialConsultasPacienteTableForm$1.class
 GUI\editarCuentaHospitalForm$3.class
 GUI\historialConsultasPacienteTableForm2$3.class
@@ -36,6 +35,7 @@ GUI\citasPendientesTableForm$2.class
 GUI\datosConsultaForm$7.class
 GUI\menuPacienteForm$5.class
 GUI\historialConsultasMedicoTableForm$2.class
+GUI\historialConsultasPacienteTableForm3$1.class
 GUI\inicioSesionForm$3.class
 GUI\citaEmergenciaForm$3.class
 GUI\datosPacienteForm$6.class
@@ -45,6 +45,7 @@ GUI\editarCuentaHospitalForm$9.class
 GUI\datosPacienteForm.class
 GUI\historialConsultasPacienteTableForm.class
 GUI\agendarCitaForm$1.class
+GUI\historialConsultasPacienteTableForm3$2.class
 GUI\agendaCitasTableForm$2.class
 Excepciones\PresentacionException.class
 GUI\menuMedicoForm$2.class
@@ -56,9 +57,9 @@ GUI\inicioSesionForm$2.class
 GUI\datosPacienteForm$11.class
 GUI\historialConsultasPacienteTableForm$5.class
 GUI\datosPacienteForm$4.class
-GUI\citasPendientesTableForm$ButtonRenderer.class
 GUI\citaEmergenciaForm.class
 GUI\registrarCuentaForm$4.class
+GUI\historialConsultasPacienteTableForm3$6.class
 GUI\agendarCitaForm.class
 GUI\agendarCitaForm$2.class
 GUI\iniciarConsultaForm$1.class
@@ -77,12 +78,14 @@ GUI\historialConsultasPacienteTableForm2.class
 GUI\editarCuentaHospitalForm$5.class
 GUI\editarCuentaHospitalForm.class
 GUI\historialConsultasPacienteTableForm2$5.class
+GUI\historialConsultasPacienteTableForm3$3.class
 GUI\datosConsultaForm$6.class
 GUI\agendaCitasTableForm$3.class
 GUI\editarCuentaHospitalForm$8.class
 GUI\datosPacienteForm$9.class
 GUI\menuMedicoForm.class
 GUI\historialConsultasMedicoTableForm$5.class
+GUI\historialConsultasPacienteTableForm3.class
 GUI\datosPacienteForm$2.class
 GUI\historialConsultasPacienteTableForm$3.class
 GUI\editarCuentaHospitalForm$6.class
@@ -90,6 +93,7 @@ GUI\historialConsultasPacienteTableForm2$6.class
 GUI\datosConsultaForm$3.class
 GUI\menuPacienteForm$1.class
 GUI\agendarCitaForm$3.class
+GUI\historialConsultasPacienteTableForm3$4.class
 GUI\registrarCuentaForm$2.class
 GUI\iniciarConsultaForm$3.class
 GUI\datosConsultaForm$4.class
@@ -102,5 +106,6 @@ GUI\historialConsultasPacienteTableForm2$7.class
 GUI\datosPacienteForm$3.class
 GUI\agendaCitasTableForm.class
 GUI\agendarCitaForm$4.class
+GUI\historialConsultasPacienteTableForm3$5.class
 GUI\citaEmergenciaForm$1.class
 GUI\registrarCuentaForm$3.class

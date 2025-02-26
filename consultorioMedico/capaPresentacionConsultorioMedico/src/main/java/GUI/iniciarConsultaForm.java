@@ -4,6 +4,13 @@
  */
 package GUI;
 
+import BO.CitaBO;
+import entidades.Cita;
+import exception.NegocioException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
@@ -13,8 +20,12 @@ public class iniciarConsultaForm extends javax.swing.JPanel {
     /**
      * Creates new form crearCuentaForm
      */
-    public iniciarConsultaForm() {
+    int idCita;
+    
+    public iniciarConsultaForm(int idCita) {
         initComponents();
+        this.idCita = idCita;
+        
     }
 
     /**
@@ -101,7 +112,18 @@ public class iniciarConsultaForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try {
+            //Iniciar cita
+            String folio = jTextField1.getText();
+            Cita cita = new CitaBO().consultarCita(idCita);
+            if (cita.getFolio().equals(folio)) {
+                new citasPendientesTableForm().abirJFrameDatosConsultaForm(idCita);
+            } else {
+                JOptionPane.showMessageDialog(null, "FOLIO INCORRECTO");
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

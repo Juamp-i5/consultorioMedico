@@ -4,24 +4,23 @@
  */
 package GUI;
 
+import BO.CitaBO;
 import DAO.CitaDAO;
-import DAO.PacienteDAO;
 import DAO.UsuarioDAO;
 import entidades.Cita;
 import excepciones.PersistenciaException;
+import exception.NegocioException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -51,10 +50,6 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
 
         jTextField2.setText("jTextField2");
@@ -69,45 +64,26 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         jTable1.setBackground(new java.awt.Color(153, 153, 153));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Fecha_Hora", "Tipo", "Paciente", "Iniciar Consulta", "Historial"
+                "idCita", "Fecha_Hora", "Tipo", "idPaciente", "Paciente", "Iniciar Consulta", "Historial"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 740, 440));
-
-        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jCheckBox1.setText("Filtrar Citas");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, -1, -1));
-
-        jLabel2.setText("Fecha");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, -1, -1));
-
-        jTextArea2.setForeground(new java.awt.Color(153, 153, 153));
-        jTextArea2.setText("YYYY-MM-DD");
-        jTextArea2.setMinimumSize(new java.awt.Dimension(13, 10));
-        jTextArea2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextArea2FocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextArea2FocusLost(evt);
-            }
-        });
-        jScrollPane3.setViewportView(jTextArea2);
-
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 110, 30));
 
         jButton1.setBackground(new java.awt.Color(0, 0, 0));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -131,47 +107,6 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        CitaDAO citaDAO = new CitaDAO();
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
-        if (jCheckBox1.isSelected()) { 
-            String fechaFiltro = jTextArea2.getText();
-            int idMedico = utils.InicioSesion.getIdUsuario();
-            tableModel.setRowCount(0); // Limpia la tabla antes de cargar datos nuevos      
-
-            try {
-                // Obtener citas pendientes del médico actual
-                List<Cita> citasFiltradas = citaDAO.obtenerCitasFiltradas(idMedico, fechaFiltro);
-                
-                if (!citasFiltradas.isEmpty()) {
-                    tableModel.setRowCount(0);
-                    
-                    for(Cita cita: citasFiltradas){
-                        String fechaHora = cita.getFechaHora().toString();
-                        String tipoCita = cita.getTipo();
-                        String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
-                        // Agregar la fila con los datos y los botones
-                        boolean habilitado = "Emergencia".equals(tipoCita); // Solo habilitar si es emergencia
-                        Object iniciarConsulta = habilitado ? "Iniciar consulta" : "";  
-                        tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, iniciarConsulta, "Ver historial"});
-                        jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer()); // para q cargue bien el boton
-                        jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm", cita.getIdPaciente(), habilitado));
-                        jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
-                        jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm2", cita.getIdPaciente(), true));
-                    }
-                    
-                }
-
-            } catch (PersistenciaException | SQLException ex) {
-                Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
-            }    
-            }else{
-                System.out.println("Filtro desactivado");
-                cargarDatosEnTabla();
-            }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         //Regresar
         javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -190,22 +125,6 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTextArea2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusGained
-        // TODO add your handling code here:
-        if (jTextArea2.getText().trim().isEmpty()) {
-        jTextArea2.setText("YYYY-MM-DD");
-        jTextArea2.setForeground(new Color(153, 153, 153));
-        }
-    }//GEN-LAST:event_jTextArea2FocusGained
-
-    private void jTextArea2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea2FocusLost
-        // TODO add your handling code here:
-        if (jTextArea2.getText().trim().isEmpty()) {
-        jTextArea2.setText("YYYY-MM-DD");
-        jTextArea2.setForeground(new Color(153, 153, 153));
-        }
-    }//GEN-LAST:event_jTextArea2FocusLost
-
     private void cargarDatosEnTabla() {
         CitaDAO citaDAO = new CitaDAO();
         UsuarioDAO usuarioDAO = new UsuarioDAO();
@@ -216,132 +135,141 @@ public class citasPendientesTableForm extends javax.swing.JPanel {
             tableModel.setRowCount(0);
 
             for (Cita cita : citas) {
-                String fechaHora = cita.getFechaHora().toString();
+                int idCita = cita.getIdCita();
+                int idPaciente = cita.getIdPaciente();
+                LocalDateTime fechaHora = cita.getFechaHora();
                 String tipoCita = cita.getTipo();
-                String nombrePaciente = usuarioDAO.obtenerNombre(cita.getIdPaciente());
+                String nombrePaciente = usuarioDAO.obtenerNombre(idPaciente);
 
-                // Si es una cita de "Emergencia", agregar botón de "Iniciar consulta"
-                Object iniciarConsulta = tipoCita.equals("Emergencia") ? "Iniciar consulta" : "";
+                boolean consultaIniciable = false; // Inicializamos como false por defecto
+                LocalDateTime ahora = LocalDateTime.now();
+
+                // Verificar si la consulta es iniciable según el tipo de cita
+                if (tipoCita.equals("Emergencia")) {
+                    Duration duracion = Duration.between(fechaHora, ahora);
+                    // La consulta es iniciable si la hora actual es igual o posterior a fechaHora y no supera los 10 minutos
+                    if (!ahora.isBefore(fechaHora) && duracion.toMinutes() <= 10) {
+                        consultaIniciable = true;
+                    }
+                } else if (tipoCita.equals("Programada")) {
+                    Duration duracion = Duration.between(fechaHora, ahora);
+                    // La consulta es iniciable si la hora actual es igual o posterior a fechaHora y no supera los 15 minutos
+                    if (!ahora.isBefore(fechaHora) && duracion.toMinutes() <= 15) {
+                        consultaIniciable = true;
+                    }
+                }
 
                 // Agregar la fila
-                tableModel.addRow(new Object[]{fechaHora, tipoCita, nombrePaciente, iniciarConsulta, "Ver historial"});
+                tableModel.addRow(new Object[]{idCita, fechaHora, tipoCita, idPaciente, nombrePaciente, consultaIniciable ? "Iniciar consulta" : "", "Ver historial"});
             }
 
-            // Configurar el renderizado y editor de los botones
-            jTable1.getColumn("Iniciar Consulta").setCellRenderer(new ButtonRenderer());
-            jTable1.getColumn("Iniciar Consulta").setCellEditor(new ButtonEditor(new JCheckBox(), "iniciarConsultaForm",utils.InicioSesion.getIdUsuario(), true));
+            jTable1.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Obtener la fila y columna clicada
+                    int row = jTable1.rowAtPoint(e.getPoint());
+                    int col = jTable1.columnAtPoint(e.getPoint());
 
-            jTable1.getColumn("Historial").setCellRenderer(new ButtonRenderer());
-            jTable1.getColumn("Historial").setCellEditor(new ButtonEditor(new JCheckBox(), "historialConsultasPacienteTableForm2",utils.InicioSesion.getIdUsuario() ,true));
+                    // Verificar si el clic fue en una celda válida
+                    if (row >= 0 && col >= 0) {
+                        // Obtener los valores de la fila clicada
+                        int idCita = (int) jTable1.getValueAt(row, 0); // ID Cita (columna 0)
+                        int idPaciente = (int) jTable1.getValueAt(row, 3); // ID Paciente (columna 3)
+                        Object valorCelda = jTable1.getValueAt(row, col); // Valor de la celda clicada
+
+                        // Verificar si se hizo clic en "Iniciar consulta"
+                        if (col == 5 && "Iniciar consulta".equals(valorCelda)) {
+                            iniciarConsulta(idCita); // Llamar al método iniciarConsulta
+                        }
+
+                        // Verificar si se hizo clic en "Ver historial"
+                        if (col == 6 && "Ver historial".equals(valorCelda)) {
+                            verHistorial(idPaciente); // Llamar al método verHistorial
+                        }
+                    }
+                }
+            });
 
         } catch (PersistenciaException | SQLException ex) {
             Logger.getLogger(agendaCitasTableForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-
-
-
-
-    class ButtonRenderer extends JButton implements TableCellRenderer { // Se encarga de mostrar un botón dentro de una celda de la JTable.
-
-        public ButtonRenderer() {
-            setOpaque(true);
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText((value == null) ? "" : value.toString());
-            return this;
-        }
-    }
- 
-    //permite que los botones dentro de la JTable sean clickeables
-    class ButtonEditor extends DefaultCellEditor {
-
-        private JButton button;
-        private String frameName;
-        private int idPaciente;
-        private boolean habilitado;
-        private boolean clicked;
-
-        public ButtonEditor(JCheckBox checkBox, String frameName, int idPaciente, boolean habilitado) {
-            super(checkBox);
-            this.frameName = frameName;
-            this.idPaciente = idPaciente;
-            this.habilitado = habilitado;
-            button = new JButton();
-            button.setOpaque(true);
-            button.setEnabled(habilitado);
-
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    clicked = true;
-                    if (habilitado) { // Solo abrir la ventana si el botón está habilitado
-                    abrirJFrame(frameName, idPaciente);
-                    }
-                    fireEditingStopped();
-                }
-            });
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            button.setText((value == null) ? "" : value.toString());
-            button.setEnabled(habilitado);
-            clicked = false;
-            return button;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return clicked ? button.getText() : "";
-        }
-        
-        @Override
-        public boolean stopCellEditing() {
-            clicked = false; // Resetear el estado
-            return super.stopCellEditing();
-        }
-    }
-
-    private void abrirJFrame(String panelName, int idPaciente) {
+    public void iniciarConsulta(int idCita) {
         try {
-            JFrame frame = new JFrame();
-            JPanel panel;
-
-            if (panelName.equals("iniciarConsultaForm")) {
-                panel = new iniciarConsultaForm();
-            } else if (panelName.equals("historialConsultasPacienteTableForm2")) {
-                panel = new historialConsultasPacienteTableForm2(idPaciente);
-            } else {
-                throw new ClassNotFoundException("Panel no encontrado");
+            Cita cita = new CitaBO().consultarCita(idCita);
+            if (cita.getTipo().equals("Programada")) {
+                abirJFrameDatosConsultaForm(idCita);
+            } else if (cita.getTipo().equals("Emergencia")) {
+                abrirJFrameIniciarConsultaForm(idCita);
             }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
 
-            // Configurar el frame y agregar el panel
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setSize(850, 750);
-            frame.setLocationRelativeTo(null);
-            frame.add(panel);
-            frame.setVisible(true);
+    public void verHistorial(int idPaciente) {
+        abrirJFrameHistorial(idPaciente);
+    }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void abirJFrameDatosConsultaForm(int idCita) {
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Consulta");
+        datosConsultaForm agendaCitas = new datosConsultaForm(idCita);
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
+    }
+
+    private void abrirJFrameIniciarConsultaForm(int idCita) {
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Historial clinico paciente");
+        iniciarConsultaForm agendaCitas = new iniciarConsultaForm(idCita);
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
+        }
+    }
+
+    private void abrirJFrameHistorial(int idPaciente) {
+        javax.swing.JFrame frameActual = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Historial clinico paciente");
+        historialConsultasPacienteTableForm2 agendaCitas = new historialConsultasPacienteTableForm2(idPaciente);
+
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(agendaCitas);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        if (frameActual != null) {
+            frameActual.dispose();
         }
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

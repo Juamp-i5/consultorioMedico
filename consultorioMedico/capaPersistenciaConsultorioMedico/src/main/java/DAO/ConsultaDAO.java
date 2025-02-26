@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,11 +184,10 @@ public class ConsultaDAO implements IConsultaDAO {
     }
 
     public String getTipoCita(int idConsulta) {
-        String sql = "SELECT c.tipo FROM Cita c " +
-                     "JOIN Consulta co ON c.id_cita = co.id_cita " +
-                     "WHERE co.id_consulta = ?";
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        String sql = "SELECT c.tipo FROM Cita c "
+                + "JOIN Consulta co ON c.id_cita = co.id_cita "
+                + "WHERE co.id_consulta = ?";
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, idConsulta);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -201,15 +201,15 @@ public class ConsultaDAO implements IConsultaDAO {
 
     /**
      * Obtiene la fecha y hora de la cita asociada a una consulta.
+     *
      * @param idConsulta Identificador de la consulta.
      * @return Fecha y hora de la cita como String, o null si no se encuentra.
      */
     public String getFechaHora(int idConsulta) {
-        String sql = "SELECT c.fecha_hora FROM Cita c " +
-                     "JOIN Consulta co ON c.id_cita = co.id_cita " +
-                     "WHERE co.id_consulta = ?";
-        try (Connection conexion = Conexion.getConnection();
-             PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        String sql = "SELECT c.fecha_hora FROM Cita c "
+                + "JOIN Consulta co ON c.id_cita = co.id_cita "
+                + "WHERE co.id_consulta = ?";
+        try (Connection conexion = Conexion.getConnection(); PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, idConsulta);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -219,7 +219,7 @@ public class ConsultaDAO implements IConsultaDAO {
         } catch (SQLException e) {
         }
         return null;
-    }    
+    }
 
     public List<HistorialConsultaMedico> consultasMedico(int idMedico) throws PersistenciaException {
         List<HistorialConsultaMedico> consultas = new ArrayList<>();
@@ -250,5 +250,38 @@ public class ConsultaDAO implements IConsultaDAO {
         } catch (SQLException e) {
             throw new PersistenciaException("Error al obtener las consultas del medico: " + e.getMessage());
         }
+    }
+
+    public int atenderCitaYCrearConsulta(int idCita, String diagnostico, String tratamiento, String notasMedicas)
+            throws PersistenciaException {
+        int idConsulta = -1; // Valor por defecto en caso de error
+
+        // Consulta SQL para llamar al procedimiento almacenado
+        String sql = "{call AtenderCitaYCrearConsulta(?, ?, ?, ?, ?)}";
+
+        try (Connection conexion = Conexion.getConnection(); // Obtener la conexión a la BD
+                 CallableStatement cs = conexion.prepareCall(sql)) {
+
+            // Configurar los parámetros de entrada
+            cs.setInt(1, idCita);               // p_id_cita
+            cs.setString(2, diagnostico);        // p_diagnostico
+            cs.setString(3, tratamiento);       // p_tratamiento
+            cs.setString(4, notasMedicas);      // p_notas_medicas
+
+            // Configurar el parámetro de salida
+            cs.registerOutParameter(5, Types.INTEGER); // p_id_consulta
+
+            // Ejecutar el procedimiento almacenado
+            cs.execute();
+
+            // Obtener el valor del parámetro de salida
+            idConsulta = cs.getInt(5);
+
+        } catch (SQLException ex) {
+            // Lanzar una excepción personalizada con el mensaje de error
+            throw new PersistenciaException("Error al atender la cita y crear la consulta: " + ex.getMessage());
+        }
+
+        return idConsulta;
     }
 }
