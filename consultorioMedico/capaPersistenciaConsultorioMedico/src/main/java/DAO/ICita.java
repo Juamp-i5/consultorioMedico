@@ -41,4 +41,6 @@ public interface ICita {
     public int insertarCitaEmergencia(int idPaciente, String especialidad) throws PersistenciaException;
     
     public Cita obtenerCita(int idCita) throws PersistenciaException;
+    
+    public void actualizarEstadoCitaNoAsistido(int idCita) throws PersistenciaException;
 }

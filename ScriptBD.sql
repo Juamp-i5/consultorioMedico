@@ -41,7 +41,7 @@ CREATE TABLE Cita (
     tipo VARCHAR(50) not null,
     folio VARCHAR(8) unique,
     fecha_hora DATETIME NOT NULL,
-    estado enum("Programado", "No atendida", "Cancelada") not null,
+    estado enum("Programado", "Atendida", "No atendida", "Cancelada") not null,
     FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),
     FOREIGN KEY (id_medico) REFERENCES Medico(id_medico)
 );
